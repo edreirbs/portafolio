@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Estado | En aclaración |
+| Estado | Hecha |
 | Fase | F1 |
 | Depende de | 0000, 0001 (FR-0001-10 a 12), D-1, D-6, D-7 |
 | Plan | [plan.md](plan.md) · [tasks.md](tasks.md) |
@@ -40,11 +40,11 @@ Edrei y para qué puesto, y después invitar a recorrer el gabinete.
 
 ## Preguntas abiertas
 
-- [NECESITA ACLARACIÓN] **D-7.** Se construye con la mosca como ejemplar vivo salvo que
-  Edrei diga lo contrario.
+- **D-7:** se construyó con la mosca como ejemplar vivo; se cambia editando el campo `ejemplar` de otra pieza.
 
 ## Cambios
 
 | Fecha | Cambio |
 |---|---|
 | 2026-11-20 | Creada. |
+| 2026-11-20 | Aprobada por Edrei e implementada en la F1. |

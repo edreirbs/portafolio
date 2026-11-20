@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Estado | Borrador |
+| Estado | Aprobada |
 | Fase | F0 |
 | Depende de | 0000 (art. II, IV), 0001 |
 | Creada | 2026-11-20 |
@@ -21,7 +21,7 @@ sitio, el Acervo y el CV salen de la misma fuente.
 | FR-0002-01 | Cada pieza DEBE ser un archivo Markdown con encabezado YAML en `src/content/piezas/<sala>/<slug>.md`. El cuerpo es el texto largo de la vitrina. | Debe |
 | FR-0002-02 | El encabezado DEBE validarse contra el esquema en cada build; un error detiene la publicación y dice qué campo falla. | Debe |
 | FR-0002-03 | El número de catálogo DEBE tener la forma `SIGLA-AAAA-NNN` (`AF-2026-001`) y ser único. | Debe |
-| FR-0002-04 | Toda pieza pública DEBE tener al menos una evidencia, salvo las de Naturalia, que pueden tener solo `documento`. | Debe |
+| FR-0002-04 | Toda pieza pública DEBE tener al menos una evidencia. Fuera de Naturalia y Mirabilia, al menos una DEBE tener liga pública; en esas dos salas basta un documento (un acta, un diploma, un reconocimiento). | Debe |
 | FR-0002-05 | Como máximo seis piezas pueden tener `destacada: true`. | Debe |
 | FR-0002-06 | Una credencial con `vence` en el pasado DEBE mostrarse como vencida automáticamente. | Debe |
 | FR-0002-07 | Las piezas con `visible: false` NO DEBEN aparecer en el sitio, el Acervo, el CV ni el mapa del sitio. | Debe |
@@ -117,3 +117,4 @@ Ninguna que bloquee. Se ajustará al cargar el contenido real de Edrei.
 | Fecha | Cambio |
 |---|---|
 | 2026-11-20 | Creada. |
+| 2026-11-20 | FR-0002-04: Mirabilia también admite documentos sin liga pública. Se agregan `ejemplar` (Vestíbulo), `grado: articulo` y `fecha_fin: en curso`. Implementada en `src/content.config.ts`. |

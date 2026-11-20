@@ -1,0 +1,44 @@
+---
+import { Image } from 'astro:assets';
+import type { Pieza } from '../lib/piezas';
+import { INFO } from '../lib/salas';
+import { anio, periodoAnios } from '../lib/fechas';
+import { url } from '../lib/url';
+
+interface Props {
+  pieza: Pieza;
+  nivel?: 'h2' | 'h3';
+  prioridad?: boolean;
+}
+const { pieza, nivel = 'h3', prioridad = false } = Astro.props;
+const d = pieza.data;
+const Titulo = nivel;
+const cuando = d.sala === 'naturalia' && d.fecha_fin ? periodoAnios(d.fecha, d.fecha_fin) : anio(d.fecha);
+---
+
+<article class="pieza">
+  <div class="pieza__marco">
+    {
+      d.imagen ? (
+        <Image
+          src={d.imagen.src}
+          alt=""
+          widths={[400, 640, 960]}
+          sizes="(min-width: 1200px) 380px, (min-width: 700px) 45vw, 92vw"
+          loading={prioridad ? 'eager' : 'lazy'}
+        />
+      ) : (
+        <div class="especimen" aria-hidden="true">{d.catalogo.slice(0, 2)}</div>
+      )
+    }
+  </div>
+  <div class="pieza__cuerpo">
+    <span class="catalogo">{d.catalogo}</span>
+    <Titulo><a href={url(`piezas/${pieza.id}`)}>{d.titulo}</a></Titulo>
+    <p class="pieza__sub">{d.subtitulo}</p>
+    <div class="pieza__pie">
+      <span>{INFO[d.sala].nombre}</span>
+      <span>{cuando}</span>
+    </div>
+  </div>
+</article>

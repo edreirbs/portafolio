@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Estado | En aclaración |
+| Estado | Hecha |
 | Fase | F1 |
 | Depende de | 0000 (art. I), 0001 (FR-0001-30 a 32), 0002, D-5 |
 | Plan | [0004/plan.md](../0004-vestibulo/plan.md) |
@@ -50,11 +50,11 @@ dar un CV imprimible que salga de los mismos datos, para que nunca se contradiga
 
 ## Preguntas abiertas
 
-- [NECESITA ACLARACIÓN] **D-5.** ¿Qué contacto es público? Mientras no se decida, el único
-  contacto es LinkedIn.
+- **D-5** sigue abierta: mientras no se decida, el contacto público es LinkedIn (y GitHub).
 
 ## Cambios
 
 | Fecha | Cambio |
 |---|---|
 | 2026-11-20 | Creada. |
+| 2026-11-20 | Aprobada por Edrei e implementada en la F1. |

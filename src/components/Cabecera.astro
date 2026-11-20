@@ -1,0 +1,22 @@
+---
+import { url } from '../lib/url';
+const { actual } = Astro.props as { actual?: string };
+---
+
+<header class="cabecera">
+  <div class="contenedor cabecera__fila">
+    <a class="marca" href={url()} aria-label="Gabinete de Edrei Robles, inicio">
+      <span class="marca__sello" aria-hidden="true">ER</span>
+      <span class="marca__texto">Edrei Robles<small>Gabinete</small></span>
+    </a>
+    <nav class="navegacion" aria-label="Principal">
+      <a href={url('#plano')}>Salas</a>
+      <a href={url('cv')} aria-current={actual === 'cv' ? 'page' : undefined}>CV</a>
+      <!-- FR-0003-01 y 05: con JavaScript es un interruptor; sin él, una liga al CV. -->
+      <button type="button" class="boton interruptor" data-ficha-toggle aria-pressed="false" hidden>
+        Ficha rápida
+      </button>
+      <a class="boton interruptor" href={url('cv')} data-ficha-sin-js>Ficha rápida</a>
+    </nav>
+  </div>
+</header>

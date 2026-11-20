@@ -1,0 +1,97 @@
+---
+import '@fontsource-variable/fraunces/opsz.css';
+import '@fontsource-variable/inter';
+import '@fontsource/ibm-plex-mono/400.css';
+// Las dos tipografías que pintan el Vestíbulo se precargan (constitución, art. V).
+import frauncesLatin from '@fontsource-variable/fraunces/files/fraunces-latin-opsz-normal.woff2?url';
+import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import '../styles/global.css';
+import Cabecera from '../components/Cabecera.astro';
+import Pie from '../components/Pie.astro';
+import { url } from '../lib/url';
+
+interface Props {
+  titulo: string;
+  descripcion: string;
+  actual?: 'inicio' | 'cv' | string;
+  sinPie?: boolean;
+}
+
+const { titulo, descripcion, actual } = Astro.props;
+const canonica = new URL(Astro.url.pathname, Astro.site);
+const tituloCompleto = actual === 'inicio' ? titulo : `${titulo} · Edrei Robles`;
+---
+
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{tituloCompleto}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="canonical" href={canonica} />
+    <link rel="preload" href={frauncesLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
+    <meta name="theme-color" content="#eee9e0" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#15120f" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_MX" />
+    <meta property="og:title" content={tituloCompleto} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:url" content={canonica} />
+    <meta name="twitter:card" content="summary" />
+    <!-- Ficha rápida (FR-0003-02): se aplica antes de pintar para que no parpadee. -->
+    <script is:inline>
+      try {
+        if (localStorage.getItem('modo') === 'ficha') document.documentElement.dataset.modo = 'ficha';
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <a class="salto" href="#contenido">Saltar al contenido</a>
+    <Cabecera actual={actual} />
+    <main id="contenido" tabindex="-1">
+      <slot />
+    </main>
+    <Pie />
+    <script is:inline>
+      (function () {
+        var raiz = document.documentElement;
+        var botones = document.querySelectorAll('[data-ficha-toggle]');
+        function activa() {
+          return raiz.dataset.modo === 'ficha';
+        }
+        function sincroniza() {
+          botones.forEach(function (b) {
+            b.setAttribute('aria-pressed', String(activa()));
+          });
+        }
+        function alterna(evento) {
+          if (evento) evento.preventDefault();
+          if (activa()) delete raiz.dataset.modo;
+          else raiz.dataset.modo = 'ficha';
+          try {
+            localStorage.setItem('modo', activa() ? 'ficha' : 'museo');
+          } catch (e) {}
+          sincroniza();
+        }
+        botones.forEach(function (b) {
+          b.hidden = false;
+          b.addEventListener('click', alterna);
+        });
+        document.querySelectorAll('[data-ficha-sin-js]').forEach(function (a) {
+          a.hidden = true;
+        });
+        document.querySelectorAll('[data-activa-ficha]').forEach(function (a) {
+          a.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (!activa()) alterna();
+            window.scrollTo({ top: 0 });
+          });
+        });
+        sincroniza();
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,351 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { piezas } from '../lib/piezas';
+import { periodo, periodoAnios, anio } from '../lib/fechas';
+import { url } from '../lib/url';
+
+// Spec 0003: el CV sale de los mismos datos que el gabinete.
+const perfil = (await getEntry('perfil', 'edrei'))!.data;
+const todas = await piezas();
+const registro = (await getCollection('registro')).sort((a, b) => {
+  const ultimo = (r: typeof a) => r.data.puestos.map((p) => (p.hasta === 'hoy' ? '9999-99' : p.hasta)).sort().at(-1)!;
+  return ultimo(b).localeCompare(ultimo(a)) || b.data.puestos[0]!.desde.localeCompare(a.data.puestos[0]!.desde);
+});
+const grados = todas
+  .filter((p) => p.data.sala === 'naturalia' && p.data.grado && p.data.grado !== 'articulo')
+  .sort((a, b) => b.data.fecha.localeCompare(a.data.fecha));
+const publicaciones = todas.filter((p) => p.data.grado === 'articulo');
+const premios = todas.filter((p) => p.data.sala === 'mirabilia');
+const proyectos = todas.filter((p) => p.data.sala === 'artificialia' && p.data.destacada);
+const docencia = todas.filter((p) => p.data.sala === 'theatrum');
+// FR-0003-07: solo certificaciones con liga de verificación.
+const certificaciones = todas.filter((p) => p.data.sala === 'scientifica' && p.data.evidencia.some((e) => e.url));
+const ligaPrincipal = (p: (typeof todas)[number]) => p.data.evidencia.find((e) => e.url)?.url;
+---
+
+<Base titulo="Currículum" descripcion={`${perfil.nombre}, ${perfil.titulo}. ${perfil.promesa}`} actual="cv">
+  <article class="cv contenedor">
+    <header class="cv__cabeza">
+      <p class="etiqueta">{perfil.titulo}</p>
+      <h1>{perfil.nombre}</h1>
+      <p class="cv__promesa">{perfil.promesa}</p>
+      <p class="cv__pruebas">{perfil.pruebas.map((p) => p.texto).join(' · ')}</p>
+      <p class="cv__contacto">
+        {perfil.ubicacion}
+        {perfil.contacto.map((c) => (
+          <>
+            {' · '}
+            <a href={c.url} rel="me">{c.etiqueta}</a>
+          </>
+        ))}
+        {' · '}
+        <a href={new URL(import.meta.env.BASE_URL, Astro.site).href}>Portafolio</a>
+      </p>
+      <button type="button" class="boton cv__imprimir" data-imprimir hidden>Imprimir o guardar en PDF</button>
+    </header>
+
+    <section class="cv__seccion">
+      <h2>Perfil</h2>
+      <p>{perfil.resumen}</p>
+    </section>
+
+    <section class="cv__seccion">
+      <h2>Experiencia</h2>
+      {
+        registro.map((r) => (
+          <div class="cv__entrada">
+            <h3>{r.data.organizacion}</h3>
+            {r.data.puestos.map((p) => (
+              <p class="cv__puesto">
+                <span>{p.puesto}</span>
+                <span class="cv__fecha">{periodo(p.desde, p.hasta)}</span>
+              </p>
+            ))}
+            {r.data.alcance && <p>{r.data.alcance}</p>}
+            {r.data.logros.length > 0 && (
+              <ul>
+                {r.data.logros.map((l) => (
+                  <li>{l}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))
+      }
+    </section>
+
+    <section class="cv__seccion">
+      <h2>Formación</h2>
+      {
+        grados.map((g) => (
+          <div class="cv__entrada">
+            <p class="cv__puesto">
+              <a href={url(`piezas/${g.id}`)}>{g.data.titulo}</a>
+              <span class="cv__fecha">
+                {g.data.fecha_fin === 'en curso' ? `${anio(g.data.fecha)} – en curso` : g.data.fecha_fin ? periodoAnios(g.data.fecha, g.data.fecha_fin) : anio(g.data.fecha)}
+              </span>
+            </p>
+            <p class="cv__detalle">
+              {g.data.procedencia}
+              {g.data.tesis && <> · Tesis: {g.data.tesis}</>}
+            </p>
+          </div>
+        ))
+      }
+    </section>
+
+    {
+      publicaciones.length > 0 && (
+        <section class="cv__seccion">
+          <h2>Publicaciones</h2>
+          <ul>
+            {publicaciones.map((p) => (
+              <li>
+                <a href={ligaPrincipal(p)}>{p.data.titulo}</a>. {p.data.subtitulo.replace(/^Artículo · /, '')} ({anio(p.data.fecha)}).
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      premios.length > 0 && (
+        <section class="cv__seccion">
+          <h2>Reconocimientos</h2>
+          <ul>
+            {premios.map((p) => (
+              <li>
+                {p.data.titulo}. {p.data.procedencia}, {anio(p.data.fecha)}.
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      docencia.length > 0 && (
+        <section class="cv__seccion">
+          <h2>Docencia y conferencias</h2>
+          <ul>
+            {docencia.map((p) => (
+              <li>
+                {p.data.titulo}. {p.data.procedencia}, {anio(p.data.fecha)}.
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <section class="cv__seccion">
+      <h2>Proyectos destacados</h2>
+      <ul>
+        {
+          proyectos.map((p) => (
+            <li>
+              <a href={url(`piezas/${p.id}`)}>{p.data.titulo}</a>: {p.data.subtitulo}. {p.data.materiales.slice(0, 4).join(', ')}.
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    {
+      certificaciones.length > 0 && (
+        <section class="cv__seccion">
+          <h2>Certificaciones</h2>
+          <ul>
+            {certificaciones.map((p) => (
+              <li>
+                <a href={ligaPrincipal(p)}>{p.data.titulo}</a>. {p.data.procedencia}, {anio(p.data.fecha)}.
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <section class="cv__seccion cv__dos">
+      <div>
+        <h2>Competencias</h2>
+        <p>{perfil.competencias.join(' · ')}</p>
+      </div>
+      <div>
+        <h2>Idiomas</h2>
+        <p>{perfil.idiomas.map((i) => `${i.idioma} (${i.nivel.toLowerCase()})`).join(' · ')}</p>
+      </div>
+    </section>
+  </article>
+
+  <script is:inline>
+    (function () {
+      var b = document.querySelector('[data-imprimir]');
+      if (!b) return;
+      b.hidden = false;
+      b.addEventListener('click', function () {
+        window.print();
+      });
+    })();
+  </script>
+</Base>
+
+<style>
+  .cv {
+    max-width: 820px;
+    padding-block: clamp(24px, 5vw, 56px);
+  }
+
+  .cv__cabeza {
+    display: grid;
+    gap: 8px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--tinta);
+  }
+
+  .cv h1 {
+    font-size: clamp(2.4rem, 6vw, 3.4rem);
+  }
+
+  .cv__promesa {
+    font-size: 1.15rem;
+  }
+
+  .cv__pruebas,
+  .cv__contacto {
+    color: var(--tinta-suave);
+    font-size: 0.95rem;
+  }
+
+  .cv__imprimir {
+    justify-self: start;
+    margin-top: 8px;
+  }
+
+  .cv__seccion {
+    padding-block: 22px 6px;
+    border-bottom: 1px solid var(--linea);
+  }
+
+  .cv__seccion:last-child {
+    border-bottom: 0;
+  }
+
+  .cv__seccion h2 {
+    font-family: var(--f-mono);
+    font-size: 0.82rem;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--acento);
+    margin-bottom: 12px;
+  }
+
+  .cv__entrada {
+    margin-bottom: 18px;
+    break-inside: avoid;
+  }
+
+  .cv__entrada h3 {
+    font-family: var(--f-texto);
+    font-size: 1.08rem;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  .cv__puesto {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2px 16px;
+    font-weight: 500;
+  }
+
+  .cv__fecha {
+    font-family: var(--f-mono);
+    font-size: 0.82rem;
+    color: var(--tinta-suave);
+    white-space: nowrap;
+  }
+
+  .cv__detalle {
+    color: var(--tinta-suave);
+    font-size: 0.95rem;
+  }
+
+  .cv ul {
+    margin: 6px 0 0;
+    padding-left: 1.15em;
+  }
+
+  .cv li + li {
+    margin-top: 4px;
+  }
+
+  .cv li::marker {
+    color: var(--laton);
+  }
+
+  .cv__dos {
+    display: grid;
+    gap: 16px;
+  }
+
+  @media (min-width: 700px) {
+    .cv__dos {
+      grid-template-columns: 1.4fr 1fr;
+    }
+  }
+
+  /* FR-0003-04: impresión en carta, sin navegación, con ligas visibles. */
+  @media print {
+    @page {
+      size: letter;
+      margin: 14mm 16mm;
+    }
+
+    :global(.cabecera),
+    :global(.pie),
+    :global(.salto),
+    .cv__imprimir {
+      display: none !important;
+    }
+
+    :global(body) {
+      background: #fff !important;
+      color: #111 !important;
+      font-size: 10.5pt;
+    }
+
+    .cv {
+      max-width: none;
+      padding: 0;
+    }
+
+    .cv h1 {
+      font-size: 24pt;
+    }
+
+    .cv__seccion h2 {
+      color: #111;
+      break-after: avoid;
+    }
+
+    .cv a {
+      text-decoration: none;
+    }
+
+    .cv a[href^='http']::after {
+      content: ' (' attr(href) ')';
+      font-size: 8.5pt;
+      color: #555;
+      word-break: break-all;
+    }
+
+    .cv__contacto a[href^='http']::after {
+      content: ': ' attr(href);
+    }
+  }
+</style>

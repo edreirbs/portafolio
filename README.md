@@ -5,7 +5,7 @@ cada proyecto, certificación, curso o estudio es una **pieza catalogada** con s
 museográfica, en una sala que le corresponde. Un sitio que se recorre con curiosidad y que,
 aun así, un reclutador entiende en diez segundos.
 
-**Estado:** Fase 0 · Fundación. El sitio todavía no está publicado.
+**Estado:** Fase 1 · Rebanada vertical. Publicado en **https://edreirbs.github.io/portafolio/**.
 
 ## Cómo trabajamos (spec-driven development)
 
@@ -34,6 +34,8 @@ Nada se programa sin spec. Toda pieza que se muestra tiene evidencia.
 | `specs/0001-gabinete/` | El concepto: salas, recorrido, modo reclutador, dirección visual. |
 | `specs/0002-modelo-de-contenido/` | La cédula: qué datos tiene cada pieza y cómo se valida. |
 | `docs/adr/` | Decisiones de arquitectura (stack, despliegue). |
+| `src/content/` | **El contenido**: perfil, trayectoria y una pieza por archivo. |
+| `src/` (resto) | El sitio en Astro: páginas, componentes y estilos. |
 | `contenido/curaduria.md` | **Lista maestra**: todo lo que se exhibe, por sala, con evidencia y estado. |
 | `contenido/inventario.md` | Inventario de repos con sala y veredicto de curaduría. |
 | `contenido/intake.md` | Lo que Claude necesita de ti, por prioridad. |
@@ -42,8 +44,37 @@ Nada se programa sin spec. Toda pieza que se muestra tiene evidencia.
 
 | Fase | Entrega | Estado |
 |---|---|---|
-| **F0 · Fundación** | Constitución, concepto, modelo de contenido, inventario, intake | ◐ en curso |
-| **F1 · Rebanada vertical** | Stack + despliegue + Vestíbulo + Sala de proyectos con 3 piezas reales + Ficha rápida, **publicado** | ○ |
+| **F0 · Fundación** | Constitución, concepto, modelo de contenido, inventario, intake | ● hecha |
+| **F1 · Rebanada vertical** | Stack + despliegue + Vestíbulo + Sala de proyectos con 3 piezas reales + Ficha rápida, **publicado** | ● hecha |
 | **F2 · Colección completa** | Todas las salas, certificaciones, estudios, docencia, trayectoria | ○ |
 | **F3 · Pulido** | Microinteracciones, imágenes OG por pieza, inglés, CV en PDF generado | ○ |
 | **F4 · Lanzamiento** | Dominio, auditoría Lighthouse y accesibilidad, analítica, anuncio | ○ |
+
+## Agregar una pieza (cinco minutos)
+
+1. Copia una pieza parecida de `src/content/piezas/<sala>/` y renómbrala: el nombre del
+   archivo es su dirección (`tracky.md` → `/piezas/tracky/`).
+2. Llena la cédula: número de catálogo, título, fecha, procedencia y **al menos una
+   evidencia**. El esquema completo está en `src/content.config.ts` (spec 0002).
+3. Abre un PR. Si falta un dato, la compilación falla y dice qué archivo y qué campo.
+4. Al fusionar a `main`, el sitio se publica solo. La pieza aparece en su sala, en el plano,
+   en la vitrina (si es `destacada: true`) y en el CV.
+
+## Desarrollo
+
+Requiere Node 22.
+
+```bash
+npm ci
+```
+
+```bash
+npm run dev
+```
+
+```bash
+npm run verifica
+```
+
+`verifica` corre lo mismo que la integración continua: tipos y esquema de contenido,
+compilación y revisión de ligas internas.
