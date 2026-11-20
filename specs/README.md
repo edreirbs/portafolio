@@ -49,6 +49,7 @@ Las responde Edrei. Cada una bloquea lo que dice la última columna.
 | Fecha | Decisión | Dónde |
 |---|---|---|
 | 2026-11-20 | Claude crea ramas, commits y PRs y los fusiona sin pedir permiso. | `CLAUDE.md` |
+| 2026-11-20 | Alcance: solo lo personal. Nada del trabajo institucional del empleo actual de Edrei: ni sus proyectos, plataformas, métricas ni presentaciones internas. | Constitución, art. VIII |
 | 2026-11-20 | Stack: Astro estático + colecciones con esquema + GitHub Actions a Pages. | [ADR-0001](../docs/adr/0001-stack-astro-github-pages.md) |
 
 ## Cómo darme una spec
