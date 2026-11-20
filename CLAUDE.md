@@ -32,6 +32,10 @@ development*. Antes de tocar nada, lee `specs/README.md` y `specs/0000-constituc
 
 ## Privacidad
 
+- **Solo lo personal.** El portafolio exhibe lo que Edrei hace por su cuenta: sus proyectos,
+  cursos, certificaciones, estudios y docencia fuera de su empleo. Nada del trabajo
+  institucional de su empleo actual: ni proyectos, plataformas, métricas ni presentaciones
+  internas. Ante la duda, se pregunta.
 - Este repositorio es **público**. No se escriben aquí correo, teléfono ni domicilio salvo
   que la spec de contacto lo apruebe.
 - Los repos privados no se nombran en archivos de este repo sin el visto bueno de Edrei.

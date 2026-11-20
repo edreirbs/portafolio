@@ -13,8 +13,8 @@ Un reclutador ve cientos de portafolios idénticos: foto, tres tarjetas de proye
 habilidades. Se olvidan antes de cerrar la pestaña.
 
 El perfil de Edrei es **amplio**: construye productos con IA (Tracky, Content Agents), hace
-divulgación científica interactiva (una mosca con 1,408 neuronas simuladas), diseña material
-docente (Claude for Business en la Universidad Panamericana) y trabaja en IA educativa. En un
+divulgación científica interactiva (una mosca con 1,408 neuronas simuladas) y diseña e imparte
+cursos (Claude for Business en la Universidad Panamericana). En un
 portafolio convencional esa amplitud se lee como dispersión. En un **gabinete de
 curiosidades** se lee como lo que es: una colección coherente de alguien curioso que termina
 lo que empieza.
@@ -169,3 +169,4 @@ La identidad final se cierra en su propia spec, con un prototipo de alta fidelid
 | Fecha | Cambio |
 |---|---|
 | 2026-11-20 | Creada. |
+| 2026-11-20 | El perfil describe solo lo personal (constitución, art. VIII). |
