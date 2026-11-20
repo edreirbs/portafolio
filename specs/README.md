@@ -36,13 +36,16 @@ Las responde Edrei. Cada una bloquea lo que dice la última columna.
 
 | ID | Pregunta | Propuesta de Claude | Bloquea |
 |---|---|---|---|
-| D-1 | ¿A qué puestos o clientes apunta el portafolio? | Perfil híbrido: construye con IA, la enseña y la lleva a organizaciones. | Textos de 0001 y 0004 |
+| D-1 | ¿A qué puestos o clientes apunta el portafolio? | Frase de entrada: "Físico educativo que investiga, construye y enseña inteligencia artificial." | Textos de 0001 y 0004 |
 | D-2 | ¿Idiomas? | Español primero; inglés en F3. | 0009 |
-| D-3 | ¿URL? | Renombrar este repo a `edreirbs.github.io` para que la liga sea la raíz; dominio propio después. | 0011 |
+| D-3 | ¿URL? | El dominio propio `edreirobles.com` (hoy en Google Sites) apunta al gabinete; sus recursos migran como piezas. | 0011 |
 | D-4 | ¿Qué repos privados se pueden mostrar? | Como caso de estudio, sin código ni datos de clientes. | 0005 |
 | D-5 | ¿Qué contacto es público? | LinkedIn y un correo dedicado; nada de teléfono. | 0003, 0004 |
 | D-6 | ¿Retrato o ilustración? | Retrato real tratado como grabado, para que encaje con el gabinete. | 0004 |
 | D-7 | ¿La mosca de "Mátala si puedes" es el ejemplar vivo del Vestíbulo? | Sí, en versión ligera que carga al final. | 0004 |
+| D-8 | ¿El empleo actual aparece en el Registro? | Una línea con puesto y fechas, sin proyectos. | 0007 |
+| D-9 | ¿Se citan las recomendaciones públicas de LinkedIn? | Sí, con nombre y cargo. | 0007 |
+| D-10 | ¿Se publican los proyectos del programa de Agentic AI? | Sí, en GitHub, marcados como "proyecto del programa". | 0005 |
 
 ## Decisiones tomadas
 
