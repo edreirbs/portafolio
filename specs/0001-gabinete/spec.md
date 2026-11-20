@@ -4,7 +4,7 @@
 |---|---|
 | Estado | En aclaración |
 | Fase | F0 |
-| Depende de | 0000, D-1, D-6, D-7 |
+| Depende de | 0000, D-6, D-7 |
 | Creada | 2026-11-20 |
 
 ## Por qué
@@ -18,6 +18,20 @@ cursos (Claude for Business en la Universidad Panamericana). En un
 portafolio convencional esa amplitud se lee como dispersión. En un **gabinete de
 curiosidades** se lee como lo que es: una colección coherente de alguien curioso que termina
 lo que empieza.
+
+### Posicionamiento
+
+El portafolio apunta a **puestos directivos** en educación, aprendizaje corporativo y
+adopción de IA, en universidades y empresas (decisión D-1).
+
+| Elemento | Texto |
+|---|---|
+| Título | Estratega de IA para el aprendizaje |
+| Promesa | Diseño y dirijo la adopción de IA en universidades y empresas: de la visión al impacto medible. |
+| Pruebas | Doctorando en Ciencias (IPN) · Más de 10 años en educación · Ponente en 4 países |
+
+El gabinete refuerza esa lectura: un curador decide qué se exhibe y por qué. Curar es
+juicio estratégico, la misma habilidad que se le pide a un director.
 
 Las *Wunderkammern* de los siglos XVI y XVII ordenaban el mundo en cinco familias de objetos.
 El sitio toma esa taxonomía y la usa como arquitectura de información.
@@ -41,12 +55,13 @@ todo; las salas exhiben lo curado.
 
 ## Recorridos
 
-Tres personas visitan el gabinete. El diseño atiende a las tres sin obligar a ninguna a
+Cuatro personas visitan el gabinete. El diseño atiende a todas sin obligar a ninguna a
 recorrer lo que no necesita.
 
 | Persona | Tiempo | Quiere | Camino |
 |---|---|---|---|
-| **Reclutador** | 10–60 s | Saber si encaja con la vacante y cómo contactar | Vestíbulo → Ficha rápida → CV |
+| **Headhunter o reclutador** | 10–60 s | Saber si encaja con una vacante directiva y cómo contactar | Vestíbulo → Ficha rápida → CV |
+| **Comité de dirección** | 3–5 min | Juicio estratégico, liderazgo, alcance y resultados | Vestíbulo → Registro → Theatrum → una pieza destacada |
 | **Líder técnico** | 5–10 min | Profundidad: arquitectura, decisiones, código | Vestíbulo → Artificialia → vitrina de una pieza → repo |
 | **Cliente o colaborador** | 2–5 min | Ver qué sabe hacer y si lo ha enseñado | Vestíbulo → Theatrum o Artificialia → Despacho |
 
@@ -155,8 +170,6 @@ La identidad final se cierra en su propia spec, con un prototipo de alta fidelid
 
 ## Preguntas abiertas
 
-- [NECESITA ACLARACIÓN] **D-1.** ¿A qué puestos o clientes apuntas? Define la frase del
-  Vestíbulo, el orden de las salas y qué piezas se destacan.
 - [NECESITA ACLARACIÓN] **D-6.** ¿Retrato real o ilustración?
 - [NECESITA ACLARACIÓN] **D-7.** ¿La mosca de *Mátala si puedes* es el ejemplar vivo del
   Vestíbulo? Es la pieza más memorable del inventario y encaja literalmente con un gabinete
@@ -170,3 +183,4 @@ La identidad final se cierra en su propia spec, con un prototipo de alta fidelid
 |---|---|
 | 2026-11-20 | Creada. |
 | 2026-11-20 | El perfil describe solo lo personal (constitución, art. VIII). |
+| 2026-11-20 | Posicionamiento directivo (D-1) y persona "Comité de dirección". |

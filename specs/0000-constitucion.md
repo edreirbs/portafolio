@@ -60,7 +60,9 @@ Ningún cambio de comportamiento sin spec aprobada. Cada PR cita los requisitos 
 ## VIII. Privacidad mínima
 
 Solo se exhibe lo personal: lo que Edrei hace por su cuenta, nunca el trabajo institucional
-de su empleo actual. Solo se publica lo que Edrei aprobó. Nada de datos de terceros. Los repos privados aparecen
+de su empleo actual. El empleo actual aparece únicamente en el Registro: puesto, institución,
+fechas y una frase de alcance general, sin proyectos, plataformas, cifras ni presentaciones
+internas. Solo se publica lo que Edrei aprobó. Nada de datos de terceros. Los repos privados aparecen
 solo con permiso y como caso de estudio, sin código ni datos de clientes.
 
 ## IX. Mantenible por una persona en cinco minutos
@@ -85,3 +87,4 @@ constitución está vigente.
 |---|---|
 | 2026-11-20 | Creada. |
 | 2026-11-20 | Art. VIII: el portafolio exhibe solo lo personal, nada del trabajo institucional del empleo. |
+| 2026-11-20 | Art. VIII: el empleo actual aparece en el Registro con puesto y alcance general (D-8). |

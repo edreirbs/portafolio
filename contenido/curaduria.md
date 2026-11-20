@@ -114,7 +114,7 @@ Los repos públicos están en `inventario.md`. Además:
 
 | Periodo | Organización | Puesto |
 |---|---|---|
-| 2024 – hoy | Empleo actual | ? Una línea con puesto y fechas, o nada |
+| 2024 – hoy | Tecnológico de Monterrey | Líder de proyectos de IA educativa: dirige la cartera de proyectos de IA educativa de la institución. Profesor de cátedra de Física desde 2025. (D-8: sin proyectos, plataformas ni cifras) |
 | 2021 – 2024 | Universidad Tecmilenio (Digital NAO) | Coordinador de Experiencias de Aprendizaje → Coordinador de IA y datos para la empleabilidad |
 | 2023 – 2024 | Chegg Inc. | Learning Experience Designer, LATAM |
 | 2018 – 2021 | Aprende con Tabella | Diseñador instruccional → Líder de diseño instruccional (más de 1,000 videos y 10,000 preguntas) |
@@ -123,6 +123,11 @@ Los repos públicos están en `inventario.md`. Además:
 | 2013 – 2018 | CELEX, IPN | Diseñador instruccional (evaluación de francés según el MCER) |
 | 2016 – 2018 | Alianza Francesa de México | Profesor de francés |
 | 2015 – 2016 | Tutor Doctor | Tutor de francés, física y matemáticas |
+
+## Vestíbulo
+
+**Estratega de IA para el aprendizaje.** Diseño y dirijo la adopción de IA en universidades
+y empresas: de la visión al impacto medible.
 
 ## Cifras para el Vestíbulo
 
