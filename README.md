@@ -34,6 +34,7 @@ Nada se programa sin spec. Toda pieza que se muestra tiene evidencia.
 | `specs/0001-gabinete/` | El concepto: salas, recorrido, modo reclutador, dirección visual. |
 | `specs/0002-modelo-de-contenido/` | La cédula: qué datos tiene cada pieza y cómo se valida. |
 | `docs/adr/` | Decisiones de arquitectura (stack, despliegue). |
+| `contenido/curaduria.md` | **Lista maestra**: todo lo que se exhibe, por sala, con evidencia y estado. |
 | `contenido/inventario.md` | Inventario de repos con sala y veredicto de curaduría. |
 | `contenido/intake.md` | Lo que Claude necesita de ti, por prioridad. |
 

@@ -3,6 +3,20 @@
 Ordenado por lo que desbloquea. Contesta en el chat, en el orden y formato que quieras.
 Lo que no sepas, sáltalo.
 
+## Estado (2026-11-20)
+
+**Recibido:** CV de agosto de 2026, perfil de LinkedIn en PDF, exportación básica de
+LinkedIn, correo personal, Drive y repos públicos. Todo está consolidado en `curaduria.md`.
+
+**Falta:**
+
+1. Las ligas de verificación de Coursera, Anthropic Academy y LinkedIn Learning (requieren
+   tu sesión).
+2. El nombre exacto y el certificado del programa de Agentic AI de Johns Hopkins.
+3. Saber si completaste las 5 competencias de AI Engineer en Tecmilenio.
+4. El PDF de la tesis de maestría (el repositorio en línea ya no existe).
+5. Las decisiones D-1 a D-10 de `specs/README.md`.
+
 ## P0 · Desbloquea la Fase 1 (sitio publicado)
 
 1. **Rol objetivo (D-1).** ¿A qué puestos o clientes quieres impresionar? Ejemplos: líder de
