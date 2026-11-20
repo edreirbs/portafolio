@@ -27,6 +27,7 @@ ejemplar:
   alt: La mosca simulada sobre la mesa, con la mira del matamoscas alrededor.
 destacada: true
 orden: 1
+objeto: campana
 revisada: 2026-11
 ---
 

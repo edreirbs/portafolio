@@ -15,5 +15,6 @@ resumen: >-
 evidencia:
   - { tipo: documento, etiqueta: Diploma del Baccalauréat }
 orden: 5
+objeto: diploma
 revisada: 2026-11
 ---

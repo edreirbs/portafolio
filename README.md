@@ -5,7 +5,8 @@ cada proyecto, certificación, curso o estudio es una **pieza catalogada** con s
 museográfica, en una sala que le corresponde. Un sitio que se recorre con curiosidad y que,
 aun así, un reclutador entiende en diez segundos.
 
-**Estado:** Fase 1 · Rebanada vertical. Publicado en **https://edreirbs.github.io/portafolio/**.
+**Estado:** Fase 1 publicada en **https://edreirbs.github.io/portafolio/** y gabinete 3D en
+**https://edreirbs.github.io/portafolio/explorar/**.
 
 ## Cómo trabajamos (spec-driven development)
 
@@ -36,6 +37,8 @@ Nada se programa sin spec. Toda pieza que se muestra tiene evidencia.
 | `docs/adr/` | Decisiones de arquitectura (stack, despliegue). |
 | `src/content/` | **El contenido**: perfil, trayectoria y una pieza por archivo. |
 | `src/` (resto) | El sitio en Astro: páginas, componentes y estilos. |
+| `src/gabinete/` | El gabinete 3D en Three.js: escena, objetos propios y texturas dibujadas en código. |
+| `public/gabinete/` | Modelos y texturas CC0 optimizados ([créditos](docs/creditos.md)). |
 | `contenido/curaduria.md` | **Lista maestra**: todo lo que se exhibe, por sala, con evidencia y estado. |
 | `contenido/inventario.md` | Inventario de repos con sala y veredicto de curaduría. |
 | `contenido/intake.md` | Lo que Claude necesita de ti, por prioridad. |

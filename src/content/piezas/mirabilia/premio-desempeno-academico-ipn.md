@@ -14,5 +14,6 @@ resumen: >-
 evidencia:
   - { tipo: documento, etiqueta: Reconocimiento de la Ceremonia de Posgrado del IPN }
 orden: 1
+objeto: medalla
 revisada: 2026-11
 ---

@@ -6,6 +6,8 @@ import Plano from '../components/Plano.astro';
 import EjemplarVivo from '../components/EjemplarVivo.astro';
 import { piezas, porSala } from '../lib/piezas';
 import { url } from '../lib/url';
+import { Image } from 'astro:assets';
+import portada from '../assets/gabinete-portada.webp';
 
 const perfil = (await getEntry('perfil', 'edrei'))!.data;
 const todas = await piezas();
@@ -13,6 +15,7 @@ const destacadas = todas.filter((p) => p.data.destacada).slice(0, 6);
 const ejemplar = todas.find((p) => p.data.ejemplar);
 const conteo = await porSala();
 const linkedin = perfil.contacto.find((c) => c.etiqueta === 'LinkedIn') ?? perfil.contacto[0]!;
+
 ---
 
 <Base titulo={`${perfil.nombre} · ${perfil.titulo}`} descripcion={perfil.promesa} actual="inicio">
@@ -26,13 +29,31 @@ const linkedin = perfil.contacto.find((c) => c.etiqueta === 'LinkedIn') ?? perfi
           {perfil.pruebas.map((p) => <li title={p.fuente}>{p.texto}</li>)}
         </ul>
         <div class="acciones">
-          <a class="boton boton--principal" href="#plano">Recorrer el gabinete</a>
+          <a class="boton boton--principal" href={url('explorar')}>Entrar al gabinete</a>
           <a class="boton" href={url('cv')} data-activa-ficha>Ficha rápida</a>
           <a class="boton boton--texto" href={linkedin.url} rel="me">Contactar en {linkedin.etiqueta}</a>
         </div>
       </div>
       {ejemplar && <EjemplarVivo pieza={ejemplar} />}
     </div>
+  </section>
+
+  <section class="seccion contenedor deco" aria-labelledby="titulo-3d">
+    <a class="portal" href={url('explorar')}>
+      <Image
+        src={portada}
+        alt="El estudio del explorador en 3D: alacena con vitrina, gabinete gótico, reloj de pie, mesa con globo terráqueo y lámpara de aceite, y un sillón sobre alfombra persa."
+        widths={[640, 960, 1400]}
+        sizes="(min-width: 1200px) 1120px, 94vw"
+        loading="lazy"
+        fetchpriority="low"
+      />
+      <span class="portal__texto">
+        <span class="etiqueta">Nuevo · El gabinete en 3D</span>
+        <span class="portal__titulo" id="titulo-3d">Entra al estudio del explorador</span>
+        <span class="portal__sub">Recorre las salas, abre las vitrinas y elige qué pieza mirar.</span>
+      </span>
+    </a>
   </section>
 
   <section class="seccion contenedor" aria-labelledby="vitrina">
@@ -42,7 +63,7 @@ const linkedin = perfil.contacto.find((c) => c.etiqueta === 'LinkedIn') ?? perfi
       <p>Lo mejor de la colección. Cada pieza tiene su cédula y su evidencia: código, demo o documento.</p>
     </div>
     <ul class="vitrina">
-      {destacadas.map((p, i) => <li><TarjetaPieza pieza={p} prioridad={i < 2} /></li>)}
+      {destacadas.map((p) => <li><TarjetaPieza pieza={p} /></li>)}
     </ul>
   </section>
 

@@ -8,4 +8,6 @@ export default defineConfig({
   base: '/portafolio',
   trailingSlash: 'always',
   build: { format: 'directory', inlineStylesheets: 'always' },
+  // Three.js pesa ~170 KB gzip; el presupuesto del gabinete 3D es 250 KB (constitución, art. V).
+  vite: { build: { chunkSizeWarningLimit: 800 } },
 });

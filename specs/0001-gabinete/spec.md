@@ -156,7 +156,6 @@ La identidad final se cierra en su propia spec, con un prototipo de alta fidelid
 
 ## No-objetivos
 
-- Recorridos 3D en WebGL. Pesan, marean y fallan el artículo V.
 - Blog. Si llega, será otra spec.
 - Gestor de contenido (CMS). El contenido son archivos en el repo.
 - Analítica invasiva. Si hay analítica, es sin cookies.
@@ -184,3 +183,4 @@ La identidad final se cierra en su propia spec, con un prototipo de alta fidelid
 | 2026-11-20 | Creada. |
 | 2026-11-20 | El perfil describe solo lo personal (constitución, art. VIII). |
 | 2026-11-20 | Posicionamiento directivo (D-1) y persona "Comité de dirección". |
+| 2026-11-20 | El recorrido 3D deja de ser no-objetivo: ver spec 0012. |

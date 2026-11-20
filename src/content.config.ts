@@ -35,6 +35,8 @@ const piezas = defineCollection({
           .min(1, 'Toda pieza necesita al menos una evidencia (constitución, art. II)'),
         imagen: z.object({ src: image(), alt: z.string().min(1) }).optional(),
         ejemplar: z.object({ poster: image(), nombre: z.string(), alt: z.string() }).optional(),
+        // Spec 0012: qué objeto la representa en el gabinete 3D.
+        objeto: z.enum(['campana', 'reloj', 'periodicos', 'diploma', 'revista', 'medalla']).optional(),
         destacada: z.boolean().default(false),
         orden: z.number().default(99),
         visible: z.boolean().default(true),

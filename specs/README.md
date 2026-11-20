@@ -29,6 +29,7 @@ aprobación, salvo en la constitución (ver su sección de gobierno).
 | 0009 | Versión en inglés | Pendiente | F3 |
 | 0010 | SEO, imágenes OG, analítica y rendimiento | Pendiente | F3 |
 | 0011 | Lanzamiento | Pendiente | F4 |
+| [0012](0012-gabinete-3d/spec.md) | El gabinete en 3D · [plan](0012-gabinete-3d/plan.md) | Hecha (prototipo) | F2 |
 
 ## Decisiones pendientes
 
@@ -44,6 +45,7 @@ Las responde Edrei. Cada una bloquea lo que dice la última columna.
 | D-7 | ¿La mosca de "Mátala si puedes" es el ejemplar vivo del Vestíbulo? | Sí, en versión ligera que carga al final. | 0004 |
 | D-9 | ¿Se citan las recomendaciones públicas de LinkedIn? | Sí, con nombre y cargo. | 0007 |
 | D-10 | ¿Se publican los proyectos del programa de Agentic AI? | Sí, en GitHub, marcados como "proyecto del programa". | 0005 |
+| D-11 | ¿El gabinete 3D es la portada del sitio? | Sí, con la versión clásica como respaldo y ficha rápida, una vez medido en un teléfono real. | 0012 |
 
 ## Decisiones tomadas
 
@@ -53,6 +55,7 @@ Las responde Edrei. Cada una bloquea lo que dice la última columna.
 | 2026-11-20 | Alcance: solo lo personal. Nada del trabajo institucional del empleo actual de Edrei: ni sus proyectos, plataformas, métricas ni presentaciones internas. | Constitución, art. VIII |
 | 2026-11-20 | **D-1 · Posicionamiento directivo.** Título: "Estratega de IA para el aprendizaje". Promesa: "Diseño y dirijo la adopción de IA en universidades y empresas: de la visión al impacto medible." Pruebas: doctorando en Ciencias (IPN), más de 10 años en educación, ponente en 4 países. | 0001, 0004 |
 | 2026-11-20 | **D-8 · Empleo actual.** Aparece con puesto, institución, fechas y una frase de alcance general. Sin proyectos, plataformas, cifras ni presentaciones internas. | Constitución, art. VIII |
+| 2026-11-20 | **Gabinete 3D**: mundo navegable de explorador del siglo XIX con Three.js y modelos CC0; el 2D queda como respaldo y ficha rápida. | [ADR-0002](../docs/adr/0002-gabinete-3d-threejs.md), spec 0012 |
 | 2026-11-20 | Stack: Astro estático + colecciones con esquema + GitHub Actions a Pages. | [ADR-0001](../docs/adr/0001-stack-astro-github-pages.md) |
 
 ## Cómo darme una spec

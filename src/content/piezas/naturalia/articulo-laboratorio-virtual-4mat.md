@@ -14,5 +14,6 @@ resumen: >-
 evidencia:
   - { tipo: documento, url: "https://doi.org/10.55777/rea.v15i30.4524", etiqueta: "DOI 10.55777/rea.v15i30.4524" }
 orden: 3
+objeto: revista
 revisada: 2026-11
 ---
