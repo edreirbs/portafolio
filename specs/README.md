@@ -20,9 +20,9 @@ aprobación, salvo en la constitución (ver su sección de gobierno).
 | [0000](0000-constitucion.md) | Constitución | Aprobada | F0 |
 | [0001](0001-gabinete/spec.md) | El Gabinete: concepto y experiencia | En aclaración | F0 |
 | [0002](0002-modelo-de-contenido/spec.md) | Modelo de contenido: la cédula | Borrador | F0 |
-| 0003 | Ficha rápida (modo reclutador) y CV | Pendiente | F1 |
-| 0004 | Vestíbulo | Pendiente | F1 |
-| 0005 | Sala Artificialia (proyectos) | Pendiente | F1 |
+| [0003](0003-ficha-rapida/spec.md) | Ficha rápida (modo reclutador) y CV | En aclaración | F1 |
+| [0004](0004-vestibulo/spec.md) | Vestíbulo · [plan](0004-vestibulo/plan.md) y [tareas](0004-vestibulo/tasks.md) de la F1 | En aclaración | F1 |
+| [0005](0005-artificialia/spec.md) | Sala Artificialia (proyectos) | En aclaración | F1 |
 | 0006 | Salas Scientifica y Naturalia (credenciales y estudios) | Pendiente | F2 |
 | 0007 | Theatrum, Mirabilia, Exotica y Registro | Pendiente | F2 |
 | 0008 | Acervo: índice, filtros y búsqueda | Pendiente | F2 |
@@ -36,14 +36,12 @@ Las responde Edrei. Cada una bloquea lo que dice la última columna.
 
 | ID | Pregunta | Propuesta de Claude | Bloquea |
 |---|---|---|---|
-| D-1 | ¿A qué puestos o clientes apunta el portafolio? | Frase de entrada: "Físico educativo que investiga, construye y enseña inteligencia artificial." | Textos de 0001 y 0004 |
 | D-2 | ¿Idiomas? | Español primero; inglés en F3. | 0009 |
 | D-3 | ¿URL? | El dominio propio `edreirobles.com` (hoy en Google Sites) apunta al gabinete; sus recursos migran como piezas. | 0011 |
 | D-4 | ¿Qué repos privados se pueden mostrar? | Como caso de estudio, sin código ni datos de clientes. | 0005 |
 | D-5 | ¿Qué contacto es público? | LinkedIn y un correo dedicado; nada de teléfono. | 0003, 0004 |
 | D-6 | ¿Retrato o ilustración? | Retrato real tratado como grabado, para que encaje con el gabinete. | 0004 |
 | D-7 | ¿La mosca de "Mátala si puedes" es el ejemplar vivo del Vestíbulo? | Sí, en versión ligera que carga al final. | 0004 |
-| D-8 | ¿El empleo actual aparece en el Registro? | Una línea con puesto y fechas, sin proyectos. | 0007 |
 | D-9 | ¿Se citan las recomendaciones públicas de LinkedIn? | Sí, con nombre y cargo. | 0007 |
 | D-10 | ¿Se publican los proyectos del programa de Agentic AI? | Sí, en GitHub, marcados como "proyecto del programa". | 0005 |
 
@@ -53,6 +51,8 @@ Las responde Edrei. Cada una bloquea lo que dice la última columna.
 |---|---|---|
 | 2026-11-20 | Claude crea ramas, commits y PRs y los fusiona sin pedir permiso. | `CLAUDE.md` |
 | 2026-11-20 | Alcance: solo lo personal. Nada del trabajo institucional del empleo actual de Edrei: ni sus proyectos, plataformas, métricas ni presentaciones internas. | Constitución, art. VIII |
+| 2026-11-20 | **D-1 · Posicionamiento directivo.** Título: "Estratega de IA para el aprendizaje". Promesa: "Diseño y dirijo la adopción de IA en universidades y empresas: de la visión al impacto medible." Pruebas: doctorando en Ciencias (IPN), más de 10 años en educación, ponente en 4 países. | 0001, 0004 |
+| 2026-11-20 | **D-8 · Empleo actual.** Aparece con puesto, institución, fechas y una frase de alcance general. Sin proyectos, plataformas, cifras ni presentaciones internas. | Constitución, art. VIII |
 | 2026-11-20 | Stack: Astro estático + colecciones con esquema + GitHub Actions a Pages. | [ADR-0001](../docs/adr/0001-stack-astro-github-pages.md) |
 
 ## Cómo darme una spec
