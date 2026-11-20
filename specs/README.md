@@ -19,10 +19,10 @@ aprobación, salvo en la constitución (ver su sección de gobierno).
 |---|---|---|---|
 | [0000](0000-constitucion.md) | Constitución | Aprobada | F0 |
 | [0001](0001-gabinete/spec.md) | El Gabinete: concepto y experiencia | En aclaración | F0 |
-| [0002](0002-modelo-de-contenido/spec.md) | Modelo de contenido: la cédula | Borrador | F0 |
-| [0003](0003-ficha-rapida/spec.md) | Ficha rápida (modo reclutador) y CV | En aclaración | F1 |
-| [0004](0004-vestibulo/spec.md) | Vestíbulo · [plan](0004-vestibulo/plan.md) y [tareas](0004-vestibulo/tasks.md) de la F1 | En aclaración | F1 |
-| [0005](0005-artificialia/spec.md) | Sala Artificialia (proyectos) | En aclaración | F1 |
+| [0002](0002-modelo-de-contenido/spec.md) | Modelo de contenido: la cédula | Aprobada | F0 |
+| [0003](0003-ficha-rapida/spec.md) | Ficha rápida (modo reclutador) y CV | Hecha | F1 |
+| [0004](0004-vestibulo/spec.md) | Vestíbulo · [plan](0004-vestibulo/plan.md) y [tareas](0004-vestibulo/tasks.md) de la F1 | Hecha | F1 |
+| [0005](0005-artificialia/spec.md) | Sala Artificialia (proyectos) | Hecha | F1 |
 | 0006 | Salas Scientifica y Naturalia (credenciales y estudios) | Pendiente | F2 |
 | 0007 | Theatrum, Mirabilia, Exotica y Registro | Pendiente | F2 |
 | 0008 | Acervo: índice, filtros y búsqueda | Pendiente | F2 |

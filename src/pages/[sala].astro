@@ -1,0 +1,31 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../layouts/Base.astro';
+import TarjetaPieza from '../components/TarjetaPieza.astro';
+import { porSala } from '../lib/piezas';
+import { SALAS, INFO, SIGLAS, type Sala } from '../lib/salas';
+import { url } from '../lib/url';
+
+export const getStaticPaths = (async () => {
+  const conteo = await porSala();
+  // FR-0004-04: solo las salas con piezas tienen página; las demás están "en montaje".
+  return SALAS.filter((s) => conteo[s].length > 0).map((sala) => ({ params: { sala }, props: { sala, piezas: conteo[sala] } }));
+}) satisfies GetStaticPaths;
+
+const { sala, piezas } = Astro.props as { sala: Sala; piezas: Awaited<ReturnType<typeof porSala>>[Sala] };
+const info = INFO[sala];
+const numero = ['I', 'II', 'III', 'IV', 'V', 'VI'][SALAS.indexOf(sala)];
+---
+
+<Base titulo={`${info.nombre} · ${info.tema}`} descripcion={info.descripcion} actual={sala}>
+  <div class="contenedor">
+    <header class="encabezado">
+      <nav class="migas" aria-label="Ruta"><a href={url()}>Gabinete</a> / Sala {numero} · {SIGLAS[sala]}</nav>
+      <h1>{info.nombre}</h1>
+      <p><strong>{info.tema}.</strong> {info.descripcion}</p>
+    </header>
+    <ul class="vitrina">
+      {piezas.map((p, i) => <li><TarjetaPieza pieza={p} nivel="h2" prioridad={i < 2} /></li>)}
+    </ul>
+  </div>
+</Base>

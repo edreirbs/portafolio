@@ -1,0 +1,14 @@
+---
+import { fechaActualizacion, fechaLarga } from '../lib/build';
+const fecha = fechaActualizacion();
+---
+
+<footer class="pie">
+  <div class="contenedor pie__fila">
+    <p>Catálogo actualizado el <time datetime={fecha.toISOString()}>{fechaLarga(fecha)}</time>.</p>
+    <p>
+      Construido con <i>spec-driven development</i>.{' '}
+      <a href="https://github.com/edreirbs/portafolio">Ver el código y las specs</a>
+    </p>
+  </div>
+</footer>

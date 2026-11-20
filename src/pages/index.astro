@@ -1,0 +1,60 @@
+---
+import { getEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import TarjetaPieza from '../components/TarjetaPieza.astro';
+import Plano from '../components/Plano.astro';
+import EjemplarVivo from '../components/EjemplarVivo.astro';
+import { piezas, porSala } from '../lib/piezas';
+import { url } from '../lib/url';
+
+const perfil = (await getEntry('perfil', 'edrei'))!.data;
+const todas = await piezas();
+const destacadas = todas.filter((p) => p.data.destacada).slice(0, 6);
+const ejemplar = todas.find((p) => p.data.ejemplar);
+const conteo = await porSala();
+const linkedin = perfil.contacto.find((c) => c.etiqueta === 'LinkedIn') ?? perfil.contacto[0]!;
+---
+
+<Base titulo={`${perfil.nombre} · ${perfil.titulo}`} descripcion={perfil.promesa} actual="inicio">
+  <section class="vestibulo contenedor" aria-labelledby="nombre">
+    <div class="vestibulo__rejilla">
+      <div>
+        <p class="etiqueta">{perfil.titulo}</p>
+        <h1 id="nombre">{perfil.nombre}</h1>
+        <p class="promesa">{perfil.promesa}</p>
+        <ul class="pruebas" aria-label="Credenciales">
+          {perfil.pruebas.map((p) => <li title={p.fuente}>{p.texto}</li>)}
+        </ul>
+        <div class="acciones">
+          <a class="boton boton--principal" href="#plano">Recorrer el gabinete</a>
+          <a class="boton" href={url('cv')} data-activa-ficha>Ficha rápida</a>
+          <a class="boton boton--texto" href={linkedin.url} rel="me">Contactar en {linkedin.etiqueta}</a>
+        </div>
+      </div>
+      {ejemplar && <EjemplarVivo pieza={ejemplar} />}
+    </div>
+  </section>
+
+  <section class="seccion contenedor" aria-labelledby="vitrina">
+    <div class="seccion__cabeza">
+      <p class="etiqueta">Vitrina principal</p>
+      <h2 id="vitrina">Piezas destacadas</h2>
+      <p>Lo mejor de la colección. Cada pieza tiene su cédula y su evidencia: código, demo o documento.</p>
+    </div>
+    <ul class="vitrina">
+      {destacadas.map((p, i) => <li><TarjetaPieza pieza={p} prioridad={i < 2} /></li>)}
+    </ul>
+  </section>
+
+  <section class="seccion contenedor" id="plano" aria-labelledby="titulo-plano">
+    <div class="seccion__cabeza">
+      <p class="etiqueta">Plano del gabinete</p>
+      <h2 id="titulo-plano">Seis salas</h2>
+      <p>
+        Las <i>Wunderkammern</i> de los siglos XVI y XVII ordenaban el mundo en familias de objetos.
+        Este gabinete usa esa misma taxonomía para ordenar una trayectoria.
+      </p>
+    </div>
+    <Plano conteo={conteo} />
+  </section>
+</Base>

@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Estado | En aclaración |
+| Estado | Hecha |
 | Fase | F1 |
 | Depende de | 0001 (FR-0001-20 a 24), 0002, `contenido/inventario.md`, D-10 |
 | Plan | [0004/plan.md](../0004-vestibulo/plan.md) |
@@ -47,3 +47,4 @@ El resto de las piezas de `inventario.md` y `curaduria.md` entra en la F2.
 | Fecha | Cambio |
 |---|---|
 | 2026-11-20 | Creada. |
+| 2026-11-20 | Aprobada por Edrei e implementada en la F1. |

@@ -1,0 +1,60 @@
+---
+import { Image } from 'astro:assets';
+import type { Pieza } from '../lib/piezas';
+import { url } from '../lib/url';
+
+interface Props {
+  pieza: Pieza;
+}
+const { pieza } = Astro.props;
+const d = pieza.data;
+const demo = d.evidencia.find((e) => e.tipo === 'demo')?.url;
+const ejemplar = d.ejemplar!;
+---
+
+<figure class="ejemplar deco" data-ejemplar data-demo={demo}>
+  <div class="ejemplar__campana" data-campana>
+    <Image src={ejemplar.poster} alt={ejemplar.alt} widths={[380, 760]} sizes="(min-width: 900px) 380px, 90vw" loading="eager" />
+  </div>
+  <figcaption class="cedula">
+    <span class="catalogo">{d.catalogo} · ejemplar vivo</span>
+    <div class="cedula__nombre">{ejemplar.nombre}</div>
+    <div class="cedula__nota">{d.cifras.map((c) => `${c.valor} ${c.etiqueta}`).slice(0, 2).join(' · ')}</div>
+  </figcaption>
+  <div class="ejemplar__acciones">
+    {
+      demo && (
+        <button type="button" class="boton" data-despertar hidden>
+          Despertar al ejemplar
+        </button>
+      )
+    }
+    <a href={url(`piezas/${pieza.id}`)}>Leer su cédula</a>
+    {demo && <a href={demo} data-pantalla-completa hidden>Abrir a pantalla completa</a>}
+  </div>
+</figure>
+
+<script is:inline>
+  (function () {
+    var fig = document.querySelector('[data-ejemplar]');
+    if (!fig) return;
+    var boton = fig.querySelector('[data-despertar]');
+    var completa = fig.querySelector('[data-pantalla-completa]');
+    var demo = fig.getAttribute('data-demo');
+    if (!boton || !demo) return;
+    boton.hidden = false;
+    boton.addEventListener('click', function () {
+      // FR-0004-05: la simulación solo se descarga cuando alguien la pide.
+      var marco = document.createElement('iframe');
+      marco.src = demo;
+      marco.title = 'Mátala si puedes: la simulación en vivo';
+      marco.setAttribute('allow', 'fullscreen');
+      var campana = fig.querySelector('[data-campana]');
+      campana.replaceChildren(marco);
+      fig.setAttribute('data-despierto', '');
+      boton.remove();
+      if (completa) completa.hidden = false;
+      marco.focus();
+    });
+  })();
+</script>
