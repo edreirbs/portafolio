@@ -1,0 +1,286 @@
+// Objetos modelados en código. Representan las piezas propias de Edrei, así que son únicos.
+import {
+  BoxGeometry,
+  CylinderGeometry,
+  DoubleSide,
+  Group,
+  LatheGeometry,
+  Mesh,
+  MeshPhysicalMaterial,
+  MeshStandardMaterial,
+  PlaneGeometry,
+  SphereGeometry,
+  TorusGeometry,
+  Vector2,
+  type Material,
+  type Texture,
+} from 'three';
+
+export const MAT = {
+  laton: () => new MeshStandardMaterial({ color: 0xc29a55, metalness: 1, roughness: 0.32 }),
+  latonOscuro: () => new MeshStandardMaterial({ color: 0x8a6a33, metalness: 1, roughness: 0.45 }),
+  nogal: () => new MeshStandardMaterial({ color: 0x3b2416, roughness: 0.55 }),
+  nogalClaro: () => new MeshStandardMaterial({ color: 0x5a3820, roughness: 0.5 }),
+  terciopelo: () => new MeshStandardMaterial({ color: 0x5e1513, roughness: 0.95 }),
+  oro: () => new MeshStandardMaterial({ color: 0xe0b45a, metalness: 1, roughness: 0.22 }),
+  vidrio: () =>
+    new MeshPhysicalMaterial({
+      color: 0xffffff,
+      metalness: 0,
+      roughness: 0.04,
+      transparent: true,
+      opacity: 0.16,
+      clearcoat: 1,
+      clearcoatRoughness: 0.05,
+      envMapIntensity: 2.2,
+      side: DoubleSide,
+      depthWrite: false,
+    }),
+  quitina: () => new MeshPhysicalMaterial({ color: 0x1c1712, roughness: 0.35, clearcoat: 0.8, clearcoatRoughness: 0.3 }),
+};
+
+function malla(geo: ConstructorParameters<typeof Mesh>[0], mat: Material | Material[], sombra = true) {
+  const m = new Mesh(geo, mat);
+  m.castShadow = sombra;
+  m.receiveShadow = true;
+  return m;
+}
+
+/** AF-2026-001: modelo ampliado de Drosophila bajo campana de cristal. */
+export function campanaMosca(etiquetaTex: Texture): Group {
+  const g = new Group();
+  const base = malla(new CylinderGeometry(0.15, 0.16, 0.045, 48), MAT.nogal());
+  base.position.y = 0.0225;
+  g.add(base);
+  const moldura = malla(new TorusGeometry(0.152, 0.008, 12, 48), MAT.laton());
+  moldura.rotation.x = Math.PI / 2;
+  moldura.position.y = 0.045;
+  g.add(moldura);
+
+  // Pedestal de corcho y la mosca encima
+  const corcho = malla(new CylinderGeometry(0.035, 0.04, 0.05, 24), new MeshStandardMaterial({ color: 0x9c7a52, roughness: 1 }));
+  corcho.position.y = 0.07;
+  g.add(corcho);
+  const mosca = new Group();
+  const q = MAT.quitina();
+  const torax = malla(new SphereGeometry(1, 24, 16), q);
+  torax.scale.set(0.022, 0.02, 0.026);
+  const abdomen = malla(new SphereGeometry(1, 24, 16), new MeshPhysicalMaterial({ color: 0x3a2a14, roughness: 0.4, clearcoat: 0.6 }));
+  abdomen.scale.set(0.02, 0.017, 0.034);
+  abdomen.position.set(0, -0.002, -0.042);
+  const cabeza = malla(new SphereGeometry(1, 24, 16), q);
+  cabeza.scale.set(0.02, 0.017, 0.015);
+  cabeza.position.set(0, 0.002, 0.034);
+  const ojoMat = new MeshPhysicalMaterial({ color: 0x8f1d14, roughness: 0.3, clearcoat: 1 });
+  for (const s of [-1, 1]) {
+    const ojo = malla(new SphereGeometry(0.011, 16, 12), ojoMat);
+    ojo.position.set(s * 0.014, 0.006, 0.038);
+    mosca.add(ojo);
+    const ala = malla(
+      new PlaneGeometry(0.03, 0.07),
+      new MeshPhysicalMaterial({
+        color: 0xd7e6f2,
+        transparent: true,
+        opacity: 0.38,
+        roughness: 0.1,
+        iridescence: 1,
+        iridescenceIOR: 1.6,
+        side: DoubleSide,
+        depthWrite: false,
+      }),
+      false,
+    );
+    ala.rotation.set(-Math.PI / 2 + 0.25, 0, s * 0.35);
+    ala.position.set(s * 0.024, 0.018, -0.03);
+    mosca.add(ala);
+    for (let i = 0; i < 3; i++) {
+      const pata = malla(new CylinderGeometry(0.0016, 0.0012, 0.05, 6), q);
+      pata.position.set(s * 0.026, -0.016, 0.012 - i * 0.016);
+      pata.rotation.set(0.2 * (i - 1), 0, s * 0.9);
+      mosca.add(pata);
+    }
+  }
+  mosca.add(torax, abdomen, cabeza);
+  mosca.position.y = 0.128;
+  mosca.rotation.y = 0.5;
+  g.add(mosca);
+  g.userData.mosca = mosca;
+
+  // Campana
+  const perfil: Vector2[] = [];
+  const radio = 0.13;
+  const alto = 0.27;
+  for (let i = 0; i <= 10; i++) perfil.push(new Vector2(radio, 0.045 + (i / 10) * (alto - radio)));
+  for (let i = 1; i <= 16; i++) {
+    const a = (i / 16) * (Math.PI / 2);
+    perfil.push(new Vector2(Math.cos(a) * radio, 0.045 + alto - radio + Math.sin(a) * radio));
+  }
+  const campana = new Mesh(new LatheGeometry(perfil, 48), MAT.vidrio());
+  campana.renderOrder = 2;
+  g.add(campana);
+  const perilla = malla(new SphereGeometry(0.018, 16, 12), MAT.vidrio());
+  perilla.position.y = 0.045 + alto + 0.012;
+  g.add(perilla);
+
+  // Etiqueta al frente
+  const tag = malla(new PlaneGeometry(0.13, 0.05), new MeshStandardMaterial({ map: etiquetaTex, roughness: 0.9 }), false);
+  tag.position.set(0, 0.024, 0.162);
+  tag.rotation.x = -0.25;
+  g.add(tag);
+  return g;
+}
+
+/** AF-2026-003: pila de periódicos impresos. */
+export function periodicos(texturas: Texture[]): Group {
+  const g = new Group();
+  const papelLado = new MeshStandardMaterial({ color: 0xe6dcc2, roughness: 0.95 });
+  texturas.forEach((tex, i) => {
+    const caraSup = new MeshStandardMaterial({ map: tex, roughness: 0.92 });
+    const hoja = malla(new BoxGeometry(0.3, 0.012, 0.42), [papelLado, papelLado, caraSup, papelLado, papelLado, papelLado]);
+    hoja.position.y = 0.006 + i * 0.012;
+    hoja.rotation.y = (i % 2 ? -1 : 1) * (0.05 + i * 0.03);
+    hoja.position.x = (i % 2 ? 1 : -1) * 0.008 * i;
+    g.add(hoja);
+  });
+  return g;
+}
+
+/** Globo terráqueo con meridiano de latón sobre trípode de nogal. */
+export function globo(tex: Texture): Group {
+  const g = new Group();
+  const esfera = malla(new SphereGeometry(0.2, 48, 32), new MeshStandardMaterial({ map: tex, roughness: 0.55, metalness: 0.05 }));
+  esfera.position.y = 0.42;
+  esfera.rotation.z = 0.41;
+  g.add(esfera);
+  g.userData.esfera = esfera;
+  const meridiano = malla(new TorusGeometry(0.215, 0.008, 10, 64, Math.PI * 1.4), MAT.laton());
+  meridiano.position.y = 0.42;
+  meridiano.rotation.set(0, Math.PI / 2, 0.41 - Math.PI * 0.2);
+  g.add(meridiano);
+  const horizonte = malla(new TorusGeometry(0.23, 0.012, 10, 64), MAT.nogalClaro());
+  horizonte.rotation.x = Math.PI / 2;
+  horizonte.position.y = 0.42;
+  g.add(horizonte);
+  const eje = malla(new CylinderGeometry(0.012, 0.016, 0.22, 12), MAT.nogal());
+  eje.position.y = 0.11;
+  g.add(eje);
+  for (let i = 0; i < 3; i++) {
+    const pata = malla(new CylinderGeometry(0.008, 0.01, 0.22, 8), MAT.nogal());
+    const a = (i / 3) * Math.PI * 2;
+    pata.position.set(Math.cos(a) * 0.07, 0.1, Math.sin(a) * 0.07);
+    pata.rotation.set(Math.sin(a) * 0.5, 0, -Math.cos(a) * 0.5);
+    g.add(pata);
+  }
+  return g;
+}
+
+/** Carta extendida sobre una mesa. */
+export function cartaExtendida(tex: Texture, ancho = 0.62, fondo = 0.42): Mesh {
+  const m = malla(new PlaneGeometry(ancho, fondo), new MeshStandardMaterial({ map: tex, roughness: 0.9 }), false);
+  m.rotation.x = -Math.PI / 2;
+  return m;
+}
+
+/** Diploma enmarcado en dorado. */
+export function diplomaEnmarcado(tex: Texture, ancho = 0.5, alto = 0.37): Group {
+  const g = new Group();
+  const oro = MAT.oro();
+  const grosor = 0.035;
+  const piezas: [number, number, number, number][] = [
+    [0, alto / 2 + grosor / 2, ancho + grosor * 2, grosor],
+    [0, -alto / 2 - grosor / 2, ancho + grosor * 2, grosor],
+    [-ancho / 2 - grosor / 2, 0, grosor, alto],
+    [ancho / 2 + grosor / 2, 0, grosor, alto],
+  ];
+  for (const [x, y, w, h] of piezas) {
+    const m = malla(new BoxGeometry(w, h, 0.03), oro);
+    m.position.set(x, y, 0.015);
+    g.add(m);
+  }
+  const lamina = malla(new PlaneGeometry(ancho, alto), new MeshStandardMaterial({ map: tex, roughness: 0.85 }), false);
+  lamina.position.z = 0.012;
+  g.add(lamina);
+  return g;
+}
+
+/** Revista encuadernada, de pie sobre un atril pequeño. */
+export function revista(tex: Texture): Group {
+  const g = new Group();
+  const tapa = new MeshStandardMaterial({ map: tex, roughness: 0.7 });
+  const lomo = new MeshStandardMaterial({ color: 0x26402f, roughness: 0.7 });
+  const hojas = new MeshStandardMaterial({ color: 0xe9dfc6, roughness: 0.95 });
+  const libro = malla(new BoxGeometry(0.21, 0.29, 0.025), [hojas, lomo, hojas, hojas, tapa, lomo]);
+  libro.position.set(0, 0.155, 0);
+  libro.rotation.x = -0.2;
+  g.add(libro);
+  const soporte = malla(new BoxGeometry(0.16, 0.012, 0.06), MAT.latonOscuro());
+  soporte.position.set(0, 0.006, 0.02);
+  g.add(soporte);
+  return g;
+}
+
+/** MI-2022-001: medalla con listón guinda sobre cojín de terciopelo. */
+export function medallaEnCojin(): Group {
+  const g = new Group();
+  const cojin = malla(new BoxGeometry(0.3, 0.06, 0.24), MAT.terciopelo());
+  cojin.position.y = 0.03;
+  g.add(cojin);
+  const liston = malla(new BoxGeometry(0.05, 0.004, 0.13), new MeshStandardMaterial({ color: 0x6c1d45, roughness: 0.7 }));
+  liston.position.set(0, 0.062, -0.04);
+  g.add(liston);
+  const medalla = malla(new CylinderGeometry(0.052, 0.052, 0.008, 48), MAT.oro());
+  medalla.position.set(0, 0.066, 0.045);
+  g.add(medalla);
+  const relieve = malla(new TorusGeometry(0.04, 0.004, 8, 40), MAT.oro());
+  relieve.rotation.x = Math.PI / 2;
+  relieve.position.set(0, 0.071, 0.045);
+  g.add(relieve);
+  g.userData.medalla = medalla;
+  return g;
+}
+
+/** Pedestal de mármol oscuro para el busto. */
+export function pedestal(): Group {
+  const g = new Group();
+  const marmol = new MeshStandardMaterial({ color: 0x2b2622, roughness: 0.35 });
+  const base = malla(new BoxGeometry(0.46, 0.08, 0.46), marmol);
+  base.position.y = 0.04;
+  const fuste = malla(new BoxGeometry(0.34, 0.9, 0.34), marmol);
+  fuste.position.y = 0.53;
+  const capitel = malla(new BoxGeometry(0.44, 0.06, 0.44), marmol);
+  capitel.position.y = 1.01;
+  g.add(base, fuste, capitel);
+  return g;
+}
+
+/** Atril de latón con la placa de la estación (cédula de museo). */
+export function atrilPlaca(tex: Texture): Group {
+  const g = new Group();
+  const poste = malla(new CylinderGeometry(0.014, 0.018, 0.92, 12), MAT.latonOscuro());
+  poste.position.y = 0.46;
+  const pie = malla(new CylinderGeometry(0.12, 0.14, 0.02, 32), MAT.latonOscuro());
+  pie.position.y = 0.01;
+  const lamina = malla(new BoxGeometry(0.42, 0.14, 0.012), [
+    MAT.latonOscuro(),
+    MAT.latonOscuro(),
+    MAT.latonOscuro(),
+    MAT.latonOscuro(),
+    new MeshStandardMaterial({ map: tex, metalness: 0.75, roughness: 0.38 }),
+    MAT.latonOscuro(),
+  ]);
+  lamina.position.set(0, 0.96, 0.02);
+  lamina.rotation.x = -0.55;
+  g.add(pie, poste, lamina);
+  return g;
+}
+
+/** Soporte de terciopelo para el reloj de bolsillo. */
+export function soporteReloj(): Group {
+  const g = new Group();
+  const caja = malla(new BoxGeometry(0.16, 0.035, 0.13), MAT.nogal());
+  caja.position.y = 0.0175;
+  const forro = malla(new BoxGeometry(0.14, 0.004, 0.11), MAT.terciopelo());
+  forro.position.y = 0.037;
+  g.add(caja, forro);
+  return g;
+}

@@ -14,7 +14,7 @@ const ejemplar = d.ejemplar!;
 
 <figure class="ejemplar deco" data-ejemplar data-demo={demo}>
   <div class="ejemplar__campana" data-campana>
-    <Image src={ejemplar.poster} alt={ejemplar.alt} widths={[380, 760]} sizes="(min-width: 900px) 380px, 90vw" loading="eager" />
+    <Image src={ejemplar.poster} alt={ejemplar.alt} widths={[380, 760]} sizes="(min-width: 900px) 380px, 90vw" loading="eager" fetchpriority="high" />
   </div>
   <figcaption class="cedula">
     <span class="catalogo">{d.catalogo} · ejemplar vivo</span>

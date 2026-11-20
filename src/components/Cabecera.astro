@@ -10,6 +10,7 @@ const { actual } = Astro.props as { actual?: string };
       <span class="marca__texto">Edrei Robles<small>Gabinete</small></span>
     </a>
     <nav class="navegacion" aria-label="Principal">
+      <a href={url('explorar')}>Gabinete 3D</a>
       <a href={url('#plano')}>Salas</a>
       <a href={url('cv')} aria-current={actual === 'cv' ? 'page' : undefined}>CV</a>
       <!-- FR-0003-01 y 05: con JavaScript es un interruptor; sin él, una liga al CV. -->

@@ -19,6 +19,7 @@ imagen:
   alt: Portada del blog de Axon Labs generado por el motor, con la línea editorial y los últimos análisis.
 destacada: true
 orden: 3
+objeto: periodicos
 revisada: 2026-11
 ---
 

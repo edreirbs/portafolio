@@ -46,12 +46,15 @@ publica.
 | Accesibilidad | WCAG 2.2 AA, todo operable con teclado |
 | Movimiento | Respeta `prefers-reduced-motion` |
 | Sin JavaScript | Todo el contenido se lee; solo se pierden adornos |
+| Gabinete 3D | Se carga después del primer pintado: JS ≤ 250 KB gzip, modelos y texturas ≤ 5 MB por partes. Sin WebGL, el gabinete 2D |
 
-## VI. Elegancia de museo, no disfraz
+## VI. Gabinete de explorador, hecho con oficio
 
-Museografía contemporánea que exhibe objetos curiosos, no una tienda de antigüedades. Nada
-de engranajes steampunk, texturas pesadas ni pergamino falso. La tipografía, el espacio en
-blanco y las cédulas hacen el trabajo.
+El gabinete es el estudio de un explorador del siglo XIX: maderas oscuras, latón, vitrinas,
+cartografía y luz de lámpara de aceite. Inspiración histórica, no caricatura: nada de
+engranajes steampunk ni efectos baratos. Los modelos y texturas son originales o de dominio
+público (CC0), con créditos visibles. Fuera de la escena, la tipografía, el espacio y las
+cédulas hacen el trabajo.
 
 ## VII. Spec antes que código
 
@@ -88,3 +91,4 @@ constitución está vigente.
 | 2026-11-20 | Creada. |
 | 2026-11-20 | Art. VIII: el portafolio exhibe solo lo personal, nada del trabajo institucional del empleo. |
 | 2026-11-20 | Art. VIII: el empleo actual aparece en el Registro con puesto y alcance general (D-8). |
+| 2026-11-20 | Art. V y VI: el gabinete se vuelve un mundo 3D de explorador del siglo XIX, con presupuesto propio (spec 0012). |

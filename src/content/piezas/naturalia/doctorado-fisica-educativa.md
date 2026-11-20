@@ -16,6 +16,7 @@ resumen: >-
 evidencia:
   - { tipo: documento, etiqueta: Examen predoctoral aprobado (2025) }
 orden: 1
+objeto: diploma
 revisada: 2026-11
 ---
 

@@ -16,5 +16,6 @@ resumen: >-
 evidencia:
   - { tipo: credencial, url: "https://www.cedulaprofesional.sep.gob.mx/", etiqueta: Verificar la cédula en la SEP }
 orden: 4
+objeto: diploma
 revisada: 2026-11
 ---

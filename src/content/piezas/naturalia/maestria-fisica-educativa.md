@@ -19,5 +19,6 @@ evidencia:
   - { tipo: documento, url: "https://doi.org/10.55777/rea.v15i30.4524", etiqueta: Leer el artículo }
   - { tipo: credencial, url: "https://www.cedulaprofesional.sep.gob.mx/", etiqueta: Verificar la cédula en la SEP }
 orden: 2
+objeto: diploma
 revisada: 2026-11
 ---

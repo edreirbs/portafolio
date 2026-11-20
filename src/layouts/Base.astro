@@ -1,10 +1,9 @@
 ---
-import '@fontsource-variable/fraunces/opsz.css';
+import '@fontsource-variable/fraunces';
 import '@fontsource-variable/inter';
 import '@fontsource/ibm-plex-mono/400.css';
-// Las dos tipografías que pintan el Vestíbulo se precargan (constitución, art. V).
-import frauncesLatin from '@fontsource-variable/fraunces/files/fraunces-latin-opsz-normal.woff2?url';
-import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+// La tipografía del nombre se precarga (constitución, art. V); Inter llega sin bloquear.
+import frauncesLatin from '@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url';
 import '../styles/global.css';
 import Cabecera from '../components/Cabecera.astro';
 import Pie from '../components/Pie.astro';
@@ -30,8 +29,8 @@ const tituloCompleto = actual === 'inicio' ? titulo : `${titulo} · Edrei Robles
     <title>{tituloCompleto}</title>
     <meta name="description" content={descripcion} />
     <link rel="canonical" href={canonica} />
+    <slot name="head" />
     <link rel="preload" href={frauncesLatin} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
     <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
     <meta name="theme-color" content="#eee9e0" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#15120f" media="(prefers-color-scheme: dark)" />

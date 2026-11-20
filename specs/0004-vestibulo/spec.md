@@ -17,7 +17,7 @@ Edrei y para qué puesto, y después invitar a recorrer el gabinete.
 
 | ID | Requisito | Prioridad |
 |---|---|---|
-| FR-0004-01 | Sin desplazarse, en un teléfono de 375 × 667 y en escritorio, DEBEN verse: el título **Estratega de IA para el aprendizaje**, el nombre, la promesa, la línea de pruebas y tres acciones: *Recorrer el gabinete*, *Ficha rápida* y *Contactar*. | Debe |
+| FR-0004-01 | Sin desplazarse, en un teléfono de 375 × 667 y en escritorio, DEBEN verse: el título **Estratega de IA para el aprendizaje**, el nombre, la promesa, la línea de pruebas y tres acciones: *Entrar al gabinete* (3D, spec 0012), *Ficha rápida* y *Contactar*. | Debe |
 | FR-0004-02 | El título, la promesa y las pruebas DEBEN salir del archivo de perfil en `src/content/`, no del código. | Debe |
 | FR-0004-03 | Debajo DEBE estar la **vitrina principal**: hasta seis piezas destacadas, cada una con número de catálogo, nombre, subtítulo y sala. | Debe |
 | FR-0004-04 | DEBE existir el **plano del gabinete**: las salas con su número de piezas. Las salas aún vacías se muestran como *En montaje*, sin liga. | Debe |
@@ -48,3 +48,4 @@ Edrei y para qué puesto, y después invitar a recorrer el gabinete.
 |---|---|
 | 2026-11-20 | Creada. |
 | 2026-11-20 | Aprobada por Edrei e implementada en la F1. |
+| 2026-11-20 | La acción principal lleva al gabinete 3D, y una franja con la imagen del estudio invita a entrar. |

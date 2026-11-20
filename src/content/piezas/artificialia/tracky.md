@@ -20,6 +20,7 @@ imagen:
   alt: "Diagrama de arquitectura. El código vive en GitHub; Netlify publica la aplicación y sus funciones; Supabase guarda los datos con seguridad por renglón; la API de Claude se llama solo desde el servidor; y un puente local de Whisper transcribe el audio sin que salga de la computadora."
 destacada: true
 orden: 2
+objeto: reloj
 revisada: 2026-11
 ---
 
