@@ -1,0 +1,74 @@
+# Spec 0013: lo que dice y hace cada objeto del gabinete 3D (FR-0013-03).
+# acciones: girar · saltar · balancear · levantar · mirar · luz · penumbra · hora · sentarse · acercar · biblioteca
+- id: globo
+  nombre: Globo terráqueo
+  nota: Gíralo. Su dueño ha dado talleres y conferencias en cuatro países.
+  accion: girar
+- id: carta
+  nombre: Carta náutica
+  nota: "Mare Incognitum: lo que todavía falta por explorar."
+  accion: acercar
+- id: lampara
+  nombre: Lámpara de aceite
+  nota: Sube o baja la flama.
+  accion: luz
+- id: candelabro
+  nombre: Candelabro
+  nota: Apaga o enciende el estudio.
+  accion: penumbra
+- id: reloj-pie
+  nombre: Reloj de pie
+  nota: "En Monterrey son las {hora}."
+  accion: hora
+- id: sillon
+  nombre: Sillón del explorador
+  nota: Siéntate a mirar el estudio.
+  accion: sentarse
+- id: maletas
+  nombre: Maletas de viaje
+  nota: Han ido a México, Perú, Colombia y República Dominicana.
+  accion: saltar
+- id: linterna
+  nombre: Linterna de campo
+  nota: Enciéndela.
+  accion: luz
+- id: libros
+  nombre: Biblioteca de divulgación
+  nota: 19 artículos sobre IA y aprendizaje, publicados entre 2023 y 2024.
+  accion: biblioteca
+- id: microscopio
+  nombre: Microscopio
+  nota: Aquí llegarán las certificaciones verificables.
+  accion: acercar
+- id: brujula
+  nombre: Brújula de marino
+  nota: Siempre apunta al norte. Gírala.
+  accion: girar
+- id: binoculares
+  nombre: Binoculares
+  nota: Para mirar lejos.
+  accion: levantar
+- id: busto
+  nombre: Busto de mármol
+  nota: "Theatrum: aquí llegarán los cursos, talleres y conferencias."
+  accion: mirar
+- id: concha
+  nombre: Concha Lambis
+  nota: Caracol araña del Indo-Pacífico.
+  accion: girar
+- id: ballena
+  nombre: Ballena de bronce
+  nota: "Exotica: curiosidades en montaje."
+  accion: balancear
+- id: porcelana
+  nombre: Jarrón de porcelana
+  nota: Azul y blanco, con cuidado.
+  accion: balancear
+- id: cuadro
+  nombre: Paisaje al óleo
+  nota: Un paisaje para descansar la vista.
+  accion: acercar
+- id: gabinete-gotico
+  nombre: Gabinete gótico
+  nota: Aquí se guardan las piezas que todavía están en montaje.
+  accion: balancear

@@ -5,19 +5,21 @@ import '@fontsource/ibm-plex-mono/400.css';
 import '../styles/global.css';
 import frauncesLatin from '@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url';
 import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
-import { getEntry } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import { piezas, porSala } from '../lib/piezas';
 import { SALAS, INFO } from '../lib/salas';
 import { url } from '../lib/url';
 
-// Spec 0012: la escena se alimenta del contenido (FR-0012-08).
+// Spec 0012 y 0013: la escena se alimenta del contenido.
 const perfil = (await getEntry('perfil', 'edrei'))!.data;
 const todas = await piezas();
 const conteo = await porSala();
 const linkedin = perfil.contacto.find((c) => c.etiqueta === 'LinkedIn') ?? perfil.contacto[0]!;
+const articulos = (await getCollection('articulos')).map((a) => a.data).sort((a, b) => b.fecha.localeCompare(a.fecha));
 const datos = {
   base: import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`,
   salas: SALAS.map((s) => ({ id: s, nombre: INFO[s].nombre, tema: INFO[s].tema, piezas: conteo[s].length })),
+  curiosidades: (await getCollection('curiosidades')).map((c) => ({ id: c.id, ...c.data })),
   piezas: todas
     .filter((p) => p.data.objeto)
     .map((p) => ({
@@ -64,31 +66,86 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
         aria-label="El estudio de un explorador del siglo XIX: alacena con vitrina, pared de diplomas, baúl, cajonera de boticario, busto de mármol y mesa con globo terráqueo, iluminados por lámparas de aceite."
       ></canvas>
       <div class="g-vineta" aria-hidden="true"></div>
+      <!-- FR-0013-04: marcas doradas sobre los objetos a la vista (botones, se enfocan con Tab) -->
+      <div class="g-marcas" data-marcas aria-label="Objetos a la vista"></div>
+      <div class="g-etiqueta" data-etiqueta hidden aria-hidden="true"></div>
 
-      <header class="g-placa">
-        <p class="g-kicker">{perfil.titulo}</p>
-        <h1>{perfil.nombre}</h1>
-        <p class="g-promesa">{perfil.promesa}</p>
-        <p class="g-pruebas">{perfil.pruebas.map((p) => p.texto).join(' · ')}</p>
+      <!-- FR-0012-06 y FR-0013-05: placa que se pliega al explorar -->
+      <header class="g-placa" data-modo="abierta">
+        <div class="g-placa__fila">
+          <div>
+            <p class="g-kicker">{perfil.titulo}</p>
+            <h1>{perfil.nombre}</h1>
+          </div>
+          <button type="button" class="g-placa__toggle" data-placa-toggle aria-expanded="true" aria-controls="g-placa-mas" aria-label="Presentación">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </button>
+        </div>
+        <div class="g-placa__mas" id="g-placa-mas">
+          <p class="g-promesa">{perfil.promesa}</p>
+          <p class="g-pruebas">{perfil.pruebas.map((p) => p.texto).join(' · ')}</p>
+        </div>
         <div class="g-acciones">
           <a class="g-boton g-boton--principal" href={url('cv')}>Ficha rápida</a>
-          <a class="g-boton" href={url()}>Versión clásica</a>
           <a class="g-boton g-boton--texto" href={linkedin.url} rel="me">Contactar</a>
         </div>
       </header>
 
-      <nav class="g-indice" aria-label="Estaciones del gabinete">
-        <p class="g-indice__titulo">Estaciones</p>
+      <!-- FR-0013-06: guía de primera visita -->
+      <div class="g-guia" data-guia hidden>
+        <svg class="g-guia__mano" viewBox="0 0 64 64" width="44" height="44" aria-hidden="true">
+          <path d="M26 30V14a4 4 0 0 1 8 0v14l2-1a4 4 0 0 1 5 2l1 2 2-1a4 4 0 0 1 5 2v12c0 9-6 15-14 15h-3c-6 0-10-3-13-8l-6-10a4 4 0 0 1 6-5l7 6z" fill="#f2ece1" stroke="#15100b" stroke-width="2.4" stroke-linejoin="round"></path>
+        </svg>
+        <p>Arrastra para mirar<br />Toca los <span class="g-guia__punto" aria-hidden="true"></span> dorados</p>
+      </div>
+
+      <!-- Nota que dice cada objeto -->
+      <div class="g-nota" data-nota hidden role="status">
+        <strong data-n-nombre></strong>
+        <span data-n-texto></span>
+      </div>
+
+      <aside class="g-panel g-cedula" data-cedula hidden aria-labelledby="c-titulo">
+        <button type="button" class="g-cerrar" data-cerrar aria-label="Cerrar la cédula">×</button>
+        <p class="g-cat" data-c-catalogo></p>
+        <h2 id="c-titulo" tabindex="-1" data-c-titulo></h2>
+        <p class="g-sub" data-c-subtitulo></p>
+        <p class="g-resumen" data-c-resumen></p>
+        <div class="g-acciones" data-c-acciones></div>
+      </aside>
+
+      <!-- FR-0013-10: biblioteca de divulgación -->
+      <aside class="g-panel g-biblioteca" data-biblioteca hidden aria-labelledby="b-titulo">
+        <button type="button" class="g-cerrar" data-cerrar aria-label="Cerrar la biblioteca">×</button>
+        <p class="g-cat">Biblioteca de divulgación</p>
+        <h2 id="b-titulo" tabindex="-1">{articulos.length} artículos sobre IA y aprendizaje</h2>
+        <ol class="g-lista">
+          {
+            articulos.map((a) => (
+              <li>
+                <a href={a.url} target="_blank" rel="noopener">
+                  {a.titulo}
+                </a>
+                <span>{a.fecha.slice(0, 4)}</span>
+              </li>
+            ))
+          }
+        </ol>
+      </aside>
+
+      <!-- FR-0013-05: el índice completo vive detrás de "Mapa" -->
+      <div class="g-panel g-mapa" id="g-mapa" data-mapa hidden>
+        <p class="g-mapa__titulo">Mapa del gabinete</p>
         <ul>
           <li><button type="button" data-estacion="centro">Centro del estudio</button></li>
           {
             datos.salas.map((s) => (
               <li>
                 <button type="button" data-estacion={s.id}>
-                  {s.nombre} <small>{s.piezas ? `${s.tema}` : 'En montaje'}</small>
+                  {s.nombre} <small>{s.piezas ? s.tema : 'En montaje'}</small>
                 </button>
                 {datos.piezas.some((p) => p.sala === s.id) && (
-                  <ul class="g-indice__piezas">
+                  <ul class="g-mapa__piezas">
                     {datos.piezas
                       .filter((p) => p.sala === s.id)
                       .map((p) => (
@@ -104,25 +161,27 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
             ))
           }
         </ul>
-      </nav>
+        <p class="g-mapa__pie">
+          <a href={url()}>Versión clásica</a> · Modelos: <a href="https://polyhaven.com">Poly Haven</a> (CC0)
+        </p>
+      </div>
 
-      <aside class="g-cedula" data-cedula hidden aria-labelledby="c-titulo">
-        <button type="button" class="g-cerrar" data-cerrar aria-label="Cerrar la cédula">×</button>
-        <p class="g-cat" data-c-catalogo></p>
-        <h2 id="c-titulo" tabindex="-1" data-c-titulo></h2>
-        <p class="g-sub" data-c-subtitulo></p>
-        <p data-c-resumen></p>
-        <p class="g-proc" data-c-procedencia></p>
-        <div class="g-acciones" data-c-acciones></div>
-      </aside>
+      <nav class="g-dock" aria-label="Recorrido del gabinete">
+        <button type="button" class="g-dock__mapa" data-abrir-mapa aria-expanded="false" aria-controls="g-mapa">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2zM9 4v14M15 6v14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path></svg>
+          <span>Mapa</span>
+        </button>
+        <button type="button" class="g-dock__flecha" data-anterior aria-label="Estación anterior">‹</button>
+        <span class="g-dock__actual" data-estacion-actual aria-live="polite">Centro del estudio</span>
+        <button type="button" class="g-dock__flecha" data-siguiente aria-label="Estación siguiente">›</button>
+        <button type="button" class="g-dock__volver" data-volver hidden>Volver</button>
+      </nav>
 
       <div class="g-carga" role="status" aria-live="polite">
         <span class="g-carga__texto">Abriendo el gabinete</span>
         <span class="g-carga__num" data-progreso>0 %</span>
       </div>
       <p class="g-lento">La escena tarda en abrir. <a href={url()}>Ver la versión clásica</a></p>
-      <p class="g-pista" aria-hidden="true">Arrastra para mirar · Elige un mueble o una pieza</p>
-      <p class="g-creditos">Modelos y texturas: <a href="https://polyhaven.com">Poly Haven</a> (CC0)</p>
 
       <div class="g-respaldo">
         <h2>Este navegador no puede abrir el gabinete en 3D</h2>
@@ -161,7 +220,7 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     position: fixed;
     inset: 0;
     font-family: var(--f-texto);
-    --g-panel: rgb(16 11 8 / 0.78);
+    --g-panel: rgb(16 11 8 / 0.8);
     --g-borde: rgb(201 163 106 / 0.38);
     --g-tinta: #efe8dc;
     --g-suave: #c4b6a0;
@@ -189,30 +248,137 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     background: radial-gradient(120% 100% at 50% 45%, transparent 55%, rgb(0 0 0 / 0.55) 100%);
   }
 
+  /* ── Marcas doradas ── */
+  .g-marcas {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .g-marca {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 32px;
+    height: 32px;
+    margin: -16px 0 0 -16px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    pointer-events: auto;
+    border-radius: 50%;
+  }
+
+  .g-marca__punto {
+    display: block;
+    width: 12px;
+    height: 12px;
+    margin: 10px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #fff0c8, #c8923a);
+    box-shadow:
+      0 0 0 3px rgb(214 176 106 / 0.25),
+      0 0 12px rgb(255 196 110 / 0.55);
+    animation: g-latido 2.6s ease-in-out infinite;
+  }
+
+  .g-marca--pieza .g-marca__punto {
+    width: 14px;
+    height: 14px;
+    margin: 9px;
+    box-shadow:
+      0 0 0 4px rgb(214 176 106 / 0.32),
+      0 0 18px rgb(255 205 130 / 0.85);
+  }
+
+  .g-marca__nombre {
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    transform: translate(-50%, -2px);
+    white-space: nowrap;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--g-panel);
+    border: 1px solid var(--g-borde);
+    font: 600 0.78rem/1.2 var(--f-texto);
+    color: var(--g-tinta);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+  }
+
+  .g-marca:hover .g-marca__nombre,
+  .g-marca:focus-visible .g-marca__nombre {
+    opacity: 1;
+  }
+
+  .g-marca:focus-visible {
+    outline: 2px solid var(--g-laton);
+    outline-offset: 2px;
+  }
+
+  @keyframes g-latido {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.8;
+    }
+    50% {
+      transform: scale(1.3);
+      opacity: 1;
+    }
+  }
+
+  .g-etiqueta {
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 5px 11px;
+    border-radius: 999px;
+    background: var(--g-panel);
+    border: 1px solid var(--g-borde);
+    font: 600 0.82rem/1.2 var(--f-texto);
+    color: var(--g-tinta);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  /* ── Paneles ── */
   .g-placa,
-  .g-indice,
-  .g-cedula,
+  .g-panel,
+  .g-dock,
+  .g-nota,
   .g-respaldo {
     position: absolute;
     background: var(--g-panel);
     border: 1px solid var(--g-borde);
-    border-radius: 12px;
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    border-radius: 14px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     box-shadow: 0 18px 40px -20px rgb(0 0 0 / 0.9);
   }
 
   .g-placa {
-    top: max(16px, env(safe-area-inset-top));
-    left: 16px;
-    max-width: min(420px, calc(100vw - 32px));
-    padding: 16px 18px;
+    top: max(14px, env(safe-area-inset-top));
+    left: 14px;
+    max-width: min(400px, calc(100vw - 28px));
+    padding: 14px 16px;
+  }
+
+  .g-placa__fila {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
   }
 
   .g-kicker {
     margin: 0;
     font-family: var(--f-mono);
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--g-laton);
@@ -220,24 +386,71 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
 
   .g-placa h1 {
     font-family: var(--f-display);
-    font-variation-settings: 'opsz' 144;
-    font-size: clamp(1.9rem, 4vw, 2.6rem);
-    margin: 4px 0 6px;
+    font-size: clamp(1.8rem, 3.6vw, 2.4rem);
+    margin: 2px 0 0;
     color: var(--g-tinta);
+    line-height: 1.05;
+  }
+
+  .g-placa__toggle {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--g-borde);
+    background: transparent;
+    color: var(--g-tinta);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  .g-placa__mas {
+    margin-top: 8px;
   }
 
   .g-promesa {
     margin: 0;
-    font-size: 0.95rem;
+    font-size: 0.93rem;
     line-height: 1.45;
     color: var(--g-suave);
   }
 
   .g-pruebas {
-    margin: 8px 0 0;
-    font-size: 0.78rem;
+    margin: 6px 0 0;
+    font-size: 0.76rem;
     line-height: 1.4;
     color: var(--g-laton);
+  }
+
+  .g-placa[data-modo='compacta'] {
+    padding: 10px 12px;
+  }
+
+  .g-placa[data-modo='compacta'] .g-placa__mas {
+    display: none;
+  }
+
+  .g-placa[data-modo='compacta'] h1 {
+    font-size: 1.35rem;
+  }
+
+  .g-placa[data-modo='compacta'] .g-kicker {
+    font-size: 0.62rem;
+  }
+
+  .g-placa[data-modo='compacta'] .g-placa__toggle {
+    transform: rotate(180deg);
+  }
+
+  .g-placa[data-modo='compacta'] .g-acciones {
+    margin-top: 8px;
+  }
+
+  .g-placa[data-modo='compacta'] .g-boton {
+    min-height: 34px;
+    font-size: 0.82rem;
   }
 
   .g-acciones {
@@ -270,76 +483,100 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     text-decoration: underline;
   }
 
-  .g-indice {
-    top: max(16px, env(safe-area-inset-top));
-    right: 16px;
-    width: 250px;
-    max-height: calc(100vh - 120px);
-    overflow: auto;
-    padding: 12px;
+  /* ── Guía de primera visita ── */
+  .g-guia {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+    padding: 18px 22px;
+    border-radius: 16px;
+    background: rgb(16 11 8 / 0.72);
+    border: 1px solid var(--g-borde);
+    text-align: center;
+    pointer-events: none;
   }
 
-  .g-indice__titulo {
-    margin: 2px 6px 8px;
-    font-family: var(--f-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+  .g-guia p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--g-tinta);
+  }
+
+  .g-guia__mano {
+    animation: g-arrastre 1.8s ease-in-out infinite;
+  }
+
+  .g-guia__punto {
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    vertical-align: -1px;
+    background: radial-gradient(circle at 35% 35%, #fff0c8, #c8923a);
+    box-shadow: 0 0 10px rgb(255 196 110 / 0.7);
+  }
+
+  @keyframes g-arrastre {
+    0%,
+    100% {
+      transform: translateX(-18px);
+    }
+    50% {
+      transform: translateX(18px);
+    }
+  }
+
+  /* ── Nota de un objeto ── */
+  .g-nota {
+    left: 50%;
+    bottom: 84px;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: min(460px, calc(100vw - 28px));
+    padding: 10px 16px;
+    display: grid;
+    gap: 2px;
+    text-align: center;
+  }
+
+  .g-nota strong {
+    font-family: var(--f-display);
+    font-size: 1.05rem;
     color: var(--g-laton);
   }
 
-  .g-indice ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .g-indice button {
-    width: 100%;
-    text-align: left;
-    padding: 8px 10px;
-    border: 0;
-    border-radius: 8px;
-    background: transparent;
+  .g-nota span {
+    font-size: 0.9rem;
     color: var(--g-tinta);
-    font: 600 0.95rem/1.25 var(--f-display);
-    cursor: pointer;
   }
 
-  .g-indice button small {
-    display: block;
-    font: 400 0.75rem/1.3 var(--f-texto);
-    color: var(--g-suave);
-  }
-
-  .g-indice button:hover,
-  .g-indice button[aria-current='true'] {
-    background: rgb(214 176 106 / 0.16);
-  }
-
-  .g-indice__piezas button {
-    padding: 5px 10px 5px 22px;
-    font: 400 0.84rem/1.3 var(--f-texto);
-    color: var(--g-suave);
-  }
-
-  .g-cedula {
-    right: 16px;
-    bottom: 56px;
-    width: min(380px, calc(100vw - 32px));
-    padding: 20px 20px 18px;
+  /* ── Cédula y biblioteca ── */
+  .g-cedula,
+  .g-biblioteca {
+    right: 14px;
+    bottom: 84px;
+    width: min(380px, calc(100vw - 28px));
+    max-height: calc(100vh - 120px);
+    overflow: auto;
+    padding: 18px 20px;
     background: #f2ece1;
     color: #1a1612;
     border-color: #c9a36a;
   }
 
-  .g-cedula h2 {
+  .g-panel h2 {
     font-family: var(--f-display);
-    font-size: 1.45rem;
-    margin: 4px 0 6px;
+    font-size: 1.4rem;
+    margin: 2px 0 6px;
+    line-height: 1.15;
   }
 
-  .g-cedula h2:focus {
+  .g-panel h2:focus {
     outline: none;
   }
 
@@ -350,14 +587,15 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
   }
 
   .g-cat {
+    margin: 0;
     font-family: var(--f-mono);
-    font-size: 0.75rem !important;
+    font-size: 0.72rem !important;
     letter-spacing: 0.1em;
+    text-transform: uppercase;
     color: #8e2b22;
   }
 
-  .g-sub,
-  .g-proc {
+  .g-sub {
     color: #574b3f;
   }
 
@@ -369,6 +607,29 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
   .g-cedula .g-boton--principal {
     background: #1a1612;
     color: #f2ece1;
+  }
+
+  .g-lista {
+    margin: 10px 0 0;
+    padding-left: 1.3em;
+    display: grid;
+    gap: 8px;
+    font-size: 0.9rem;
+  }
+
+  .g-lista li::marker {
+    color: #8e2b22;
+  }
+
+  .g-lista a {
+    color: #1a1612;
+  }
+
+  .g-lista span {
+    margin-left: 6px;
+    font-family: var(--f-mono);
+    font-size: 0.72rem;
+    color: #574b3f;
   }
 
   .g-cerrar {
@@ -386,6 +647,130 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     cursor: pointer;
   }
 
+  /* ── Mapa ── */
+  .g-mapa {
+    left: 50%;
+    bottom: 84px;
+    transform: translateX(-50%);
+    width: min(320px, calc(100vw - 28px));
+    max-height: min(70vh, 560px);
+    overflow: auto;
+    padding: 12px;
+  }
+
+  .g-mapa__titulo {
+    margin: 2px 6px 8px;
+    font-family: var(--f-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--g-laton);
+  }
+
+  .g-mapa ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .g-mapa button {
+    width: 100%;
+    text-align: left;
+    padding: 7px 10px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--g-tinta);
+    font: 600 0.95rem/1.25 var(--f-display);
+    cursor: pointer;
+  }
+
+  .g-mapa button small {
+    display: block;
+    font: 400 0.74rem/1.3 var(--f-texto);
+    color: var(--g-suave);
+  }
+
+  .g-mapa button:hover,
+  .g-mapa button[aria-current='true'] {
+    background: rgb(214 176 106 / 0.16);
+  }
+
+  .g-mapa__piezas button {
+    padding: 4px 10px 4px 22px;
+    font: 400 0.84rem/1.3 var(--f-texto);
+    color: var(--g-suave);
+  }
+
+  .g-mapa__pie {
+    margin: 8px 6px 2px;
+    font-size: 0.74rem;
+    color: var(--g-suave);
+  }
+
+  .g-mapa__pie a {
+    color: inherit;
+  }
+
+  /* ── Barra de recorrido ── */
+  .g-dock {
+    left: 50%;
+    bottom: max(14px, env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px;
+    border-radius: 999px;
+    max-width: calc(100vw - 20px);
+  }
+
+  .g-dock button {
+    min-height: 44px;
+    min-width: 44px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--g-tinta);
+    font: 600 0.9rem/1 var(--f-texto);
+    cursor: pointer;
+  }
+
+  .g-dock button:hover {
+    background: rgb(214 176 106 / 0.16);
+  }
+
+  .g-dock__mapa {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 14px;
+  }
+
+  .g-dock__mapa[aria-expanded='true'] {
+    background: rgb(214 176 106 / 0.22) !important;
+  }
+
+  .g-dock__flecha {
+    font-size: 1.5rem !important;
+  }
+
+  .g-dock__actual {
+    min-width: 9.5em;
+    text-align: center;
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--g-laton);
+    white-space: nowrap;
+  }
+
+  .g-dock__volver {
+    padding: 0 14px;
+    border: 1px solid var(--g-borde) !important;
+  }
+
+  /* ── Carga y respaldo ── */
   .g-carga {
     position: absolute;
     left: 50%;
@@ -409,43 +794,19 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     color: var(--g-laton);
   }
 
-  .g-pista,
-  .g-creditos,
   .g-lento {
     position: absolute;
-    margin: 0;
-    font-size: 0.8rem;
-    color: var(--g-suave);
-  }
-
-  .g-pista {
-    left: 50%;
-    bottom: 18px;
-    transform: translateX(-50%);
-    padding: 6px 14px;
-    border-radius: 999px;
-    background: var(--g-panel);
-    white-space: nowrap;
-    opacity: 0;
-    transition: opacity 0.8s ease;
-  }
-
-  .g-creditos {
-    left: 16px;
-    bottom: 12px;
-    font-size: 0.72rem;
-  }
-
-  .g-creditos a,
-  .g-lento a {
-    color: inherit;
-  }
-
-  .g-lento {
     display: none;
     left: 50%;
     bottom: 30%;
     transform: translateX(-50%);
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--g-suave);
+  }
+
+  .g-lento a {
+    color: inherit;
   }
 
   .g[data-lento]:not([data-estado='listo']) .g-lento {
@@ -476,20 +837,20 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     display: block;
   }
 
+  .g:not([data-estado='listo']) .g-dock,
+  .g:not([data-estado='listo']) .g-guia {
+    visibility: hidden;
+  }
+
   .g[data-estado='listo'] .g-carga {
     opacity: 0;
     pointer-events: none;
   }
 
-  .g[data-estado='listo'] .g-pista {
-    opacity: 1;
-    animation: g-desvanecer 1s ease 7s forwards;
-  }
-
   .g[data-estado='respaldo'] .g-lienzo,
-  .g[data-estado='respaldo'] .g-indice,
   .g[data-estado='respaldo'] .g-carga,
-  .g[data-estado='respaldo'] .g-pista {
+  .g[data-estado='respaldo'] .g-dock,
+  .g[data-estado='respaldo'] .g-marcas {
     display: none;
   }
 
@@ -502,76 +863,58 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     margin: 16px auto;
   }
 
-  @keyframes g-desvanecer {
-    to {
-      opacity: 0;
-    }
-  }
-
-  /* Teléfono: placa compacta arriba, estaciones como tira abajo */
+  /* ── Teléfono ── */
   @media (max-width: 760px) {
-    .g-promesa {
-      display: none;
-    }
-
     .g-placa {
-      padding: 12px 14px;
-      right: 16px;
+      right: 14px;
     }
 
-    .g-placa h1 {
-      font-size: 1.7rem;
+    .g-dock {
+      left: 10px;
+      right: 10px;
+      transform: none;
+      justify-content: space-between;
     }
 
-    .g-indice {
-      top: auto;
-      right: 0;
-      left: 0;
-      bottom: 0;
-      width: auto;
-      max-height: none;
-      border-radius: 14px 14px 0 0;
-      padding: 8px 8px max(8px, env(safe-area-inset-bottom));
-      overflow-x: auto;
+    .g-dock__actual {
+      min-width: 0;
+      flex: 1;
+      font-size: 0.92rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .g-indice__titulo,
-    .g-indice__piezas {
+    .g-dock__mapa span {
       display: none;
     }
 
-    .g-indice > ul {
-      display: flex;
-      gap: 4px;
-    }
-
-    .g-indice button {
-      white-space: nowrap;
-    }
-
-    .g-cedula {
-      left: 12px;
-      right: 12px;
-      bottom: 86px;
+    .g-cedula,
+    .g-biblioteca {
+      left: 10px;
+      right: 10px;
       width: auto;
-      max-height: 55vh;
-      overflow: auto;
+      bottom: 78px;
+      max-height: 58vh;
     }
 
-    .g-creditos {
-      display: none;
+    .g-nota {
+      bottom: 78px;
     }
 
-    .g-pista {
-      bottom: 90px;
+    .g-mapa {
+      bottom: 78px;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .g-marca__punto,
+    .g-guia__mano {
+      animation: none;
+    }
+
     .g-carga,
-    .g-pista {
+    .g-placa__toggle {
       transition: none;
-      animation: none !important;
     }
   }
 </style>
