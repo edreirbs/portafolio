@@ -1,5 +1,5 @@
 import { defineCollection } from 'astro:content';
-import { glob } from 'astro/loaders';
+import { file, glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 import { SALAS, SIGLAS } from './lib/salas';
 
@@ -103,4 +103,20 @@ const registro = defineCollection({
   }),
 });
 
-export const collections = { piezas, perfil, registro };
+// Spec 0013: lo que dice y hace cada objeto del gabinete 3D.
+const curiosidades = defineCollection({
+  loader: file('src/content/curiosidades.yaml'),
+  schema: z.object({
+    nombre: z.string(),
+    nota: z.string().max(110),
+    accion: z.enum(['girar', 'saltar', 'balancear', 'levantar', 'mirar', 'luz', 'penumbra', 'hora', 'sentarse', 'acercar', 'biblioteca']),
+  }),
+});
+
+// Artículos de divulgación publicados en LinkedIn (biblioteca del gabinete).
+const articulos = defineCollection({
+  loader: file('src/content/articulos.json'),
+  schema: z.object({ titulo: z.string(), fecha: mes, url: z.url() }),
+});
+
+export const collections = { piezas, perfil, registro, curiosidades, articulos };

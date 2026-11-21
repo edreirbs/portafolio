@@ -117,10 +117,12 @@ export function campanaMosca(etiquetaTex: Texture): Group {
   }
   const campana = new Mesh(new LatheGeometry(perfil, 48), MAT.vidrio());
   campana.renderOrder = 2;
-  g.add(campana);
   const perilla = malla(new SphereGeometry(0.018, 16, 12), MAT.vidrio());
   perilla.position.y = 0.045 + alto + 0.012;
-  g.add(perilla);
+  const domo = new Group();
+  domo.add(campana, perilla);
+  g.add(domo);
+  g.userData.anima = domo;
 
   // Etiqueta al frente
   const tag = malla(new PlaneGeometry(0.13, 0.05), new MeshStandardMaterial({ map: etiquetaTex, roughness: 0.9 }), false);
@@ -153,6 +155,7 @@ export function globo(tex: Texture): Group {
   esfera.rotation.z = 0.41;
   g.add(esfera);
   g.userData.esfera = esfera;
+  g.userData.anima = esfera;
   const meridiano = malla(new TorusGeometry(0.215, 0.008, 10, 64, Math.PI * 1.4), MAT.laton());
   meridiano.position.y = 0.42;
   meridiano.rotation.set(0, Math.PI / 2, 0.41 - Math.PI * 0.2);
@@ -235,7 +238,13 @@ export function medallaEnCojin(): Group {
   relieve.rotation.x = Math.PI / 2;
   relieve.position.set(0, 0.071, 0.045);
   g.add(relieve);
-  g.userData.medalla = medalla;
+  const disco = new Group();
+  disco.position.set(0, 0.066, 0.045);
+  medalla.position.set(0, 0, 0);
+  relieve.position.set(0, 0.005, 0);
+  disco.add(medalla, relieve);
+  g.add(disco);
+  g.userData.anima = disco;
   return g;
 }
 
