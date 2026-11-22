@@ -33,3 +33,6 @@ jobs:
         run: npx astro build
       - name: Ligas internas
         run: node scripts/revisar-ligas.mjs dist /portafolio
+      - name: Candados del asistente (spec 0015)
+        working-directory: asistente
+        run: npm ci && npm run tipos && npm run prueba

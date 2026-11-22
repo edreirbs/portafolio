@@ -40,6 +40,7 @@ Nada se programa sin spec. Toda pieza que se muestra tiene evidencia.
 | `src/` (resto) | El sitio en Astro: páginas, componentes y estilos. |
 | `src/lib/secciones.ts` | Las secciones de la portada y qué sala del catálogo va en cada una. |
 | `src/gabinete/` | El gabinete 3D en Three.js: escena, objetos propios y texturas dibujadas en código. |
+| `src/asistente/`, `asistente/` | El asistente: la conversación en el navegador y su servidor en Netlify ([spec 0015](specs/0015-asistente/spec.md)). |
 | `public/gabinete/` | Modelos y texturas CC0 optimizados ([créditos](docs/creditos.md)). |
 | `contenido/curaduria.md` | **Lista maestra**: todo lo que se exhibe, por sala, con evidencia y estado. |
 | `contenido/inventario.md` | Inventario de repos con sala y veredicto de curaduría. |

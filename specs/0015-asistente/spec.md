@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Estado | Aprobada |
+| Estado | En construcción |
 | Fase | F2 |
 | Depende de | 0002, 0014, [ADR-0003](../../docs/adr/0003-asistente-netlify-claude.md) |
 | Creada | 2026-11-22 |
@@ -95,3 +95,4 @@ dinero sin control. Esta spec fija los candados.
 | Fecha | Cambio |
 |---|---|
 | 2026-11-22 | Creada y aprobada con las decisiones de Edrei del 2026-11-21. |
+| 2026-11-22 | La llave va en `ASISTENTE_ANTHROPIC_API_KEY`: el equipo de Netlify ya inyecta una `ANTHROPIC_API_KEY` compartida, sin el límite de USD 1. El botón aparece solo cuando el servidor tiene llave. |

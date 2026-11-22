@@ -7,6 +7,7 @@ import frauncesLatin from '@fontsource-variable/fraunces/files/fraunces-latin-wg
 import '../styles/global.css';
 import Cabecera from '../components/Cabecera.astro';
 import Pie from '../components/Pie.astro';
+import Asistente from '../components/Asistente.astro';
 import { url } from '../lib/url';
 
 interface Props {
@@ -56,6 +57,8 @@ const tituloCompleto = actual === 'inicio' ? titulo : `${titulo} · Edrei Robles
     <Pie />
     <!-- Spec 0014: el gabinete 3D se monta encima de la página cuando el navegador puede. -->
     <slot name="capa" />
+    <!-- Spec 0015: el asistente, en todas las páginas. -->
+    <Asistente />
     <script is:inline>
       (function () {
         var raiz = document.documentElement;

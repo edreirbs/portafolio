@@ -50,7 +50,7 @@ interface PiezaDato {
   evidencia: Evidencia[];
 }
 interface SeccionDato { id: string; nombre: string; corto: string; cuenta: string }
-type Accion = 'girar' | 'saltar' | 'balancear' | 'levantar' | 'mirar' | 'luz' | 'penumbra' | 'hora' | 'sentarse' | 'acercar' | 'biblioteca';
+type Accion = 'girar' | 'saltar' | 'balancear' | 'levantar' | 'mirar' | 'luz' | 'penumbra' | 'hora' | 'sentarse' | 'acercar' | 'biblioteca' | 'asistente';
 interface Curiosidad { id: string; nombre: string; nota: string; accion: Accion }
 interface Red { etiqueta: string; cuenta: string }
 interface Datos {
@@ -331,6 +331,7 @@ function interfaz(raiz: HTMLElement, datos: Datos) {
       const panel = document.querySelector<HTMLElement>(`.sp[data-seccion="${id}"]`);
       if (!panel) return false;
       ui.cerrarTodo();
+      window.dispatchEvent(new Event('asistente:cerrar'));
       panel.dataset.abierta = '';
       panel.scrollTop = 0;
       panel.querySelector<HTMLElement>('h2')?.focus({ preventScroll: true });
@@ -346,6 +347,7 @@ function interfaz(raiz: HTMLElement, datos: Datos) {
       const p = datos.piezas.find((x) => x.id === id);
       if (!p) return;
       ui.cerrarTodo();
+      window.dispatchEvent(new Event('asistente:cerrar'));
       cedula.querySelector('[data-c-catalogo]')!.textContent = p.catalogo;
       cedula.querySelector('[data-c-titulo]')!.textContent = p.titulo;
       cedula.querySelector('[data-c-subtitulo]')!.textContent = p.subtitulo;
@@ -584,7 +586,8 @@ export async function iniciar() {
   const correr = (dt: number) => {
     const w = lienzo.clientWidth;
     const h = lienzo.clientHeight;
-    const panel = document.querySelector<HTMLElement>('.sp[data-abierta]') ?? (cedulaEl.hidden ? null : cedulaEl);
+    const panel =
+      document.querySelector<HTMLElement>('.sp[data-abierta], .asis:not([hidden])') ?? (cedulaEl.hidden ? null : cedulaEl);
     const meta = panel && w > 760 ? Math.min(w * 0.3, (panel.offsetWidth + 28) / 2) : 0;
     if (Math.abs(meta - corrimiento) < 0.5) return;
     corrimiento += (meta - corrimiento) * (reducirMovimiento ? 1 : Math.min(1, dt * 7));
@@ -753,6 +756,14 @@ export async function iniciar() {
   // FR-0014-05 · Redes y contacto: la correspondencia sobre la mesa
   const cartas = poner(O.correspondencia(datos.redes.map((r, i) => T.sobre(r.etiqueta, r.cuenta, 21 + i))), [0.02, altoMesa + 0.006, 0.66], 0.05);
   registrar(cartas, { tipo: 'estacion', id: 'contacto', nombre: 'Redes y contacto' });
+  // Spec 0015 · FR-0015-01: el teléfono de latón abre el asistente, si el servidor está listo.
+  const ponerTelefono = () => {
+    if (telefono) return;
+    telefono = curiosidad(poner(O.telefono(), [-0.6, altoMesa, 0.66], 0.5, 1.4), 'telefono');
+  };
+  let telefono: Item | null = null;
+  if (document.documentElement.dataset.asistente === 'listo') ponerTelefono();
+  else window.addEventListener('asistente:listo', ponerTelefono, { once: true });
 
   // Atmósfera, también interactiva (FR-0013-02)
   curiosidad(poner(M.GothicCabinet_01, [-3.35, 0, -3.42], 0, 0.95), 'gabinete-gotico');
@@ -890,6 +901,11 @@ export async function iniciar() {
         irA('publicaciones');
         ui.abrirSeccion('publicaciones');
         return;
+      case 'asistente':
+        animar(anims, obj, 'levantar');
+        ui.cerrarTodo();
+        window.dispatchEvent(new Event('asistente:abrir'));
+        return;
       case 'mirar': {
         const v = camara.position.clone().sub(obj.getWorldPosition(new Vector3()));
         const objetivo = Math.atan2(v.x, v.z);
@@ -921,7 +937,7 @@ export async function iniciar() {
       ui.abrirCedula(d.id);
     } else {
       hacer(it, d.accion);
-      if (d.accion !== 'biblioteca') {
+      if (d.accion !== 'biblioteca' && d.accion !== 'asistente') {
         const hora = new Intl.DateTimeFormat('es-MX', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Monterrey' }).format(new Date());
         ui.mostrarNota(d.nombre, d.nota.replace('{hora}', hora));
       }
@@ -976,6 +992,7 @@ export async function iniciar() {
     if (hayPanel(id)) irASeccion(id);
   };
   window.addEventListener('hashchange', desdeAncla);
+  window.addEventListener('paneles:cerrar', () => ui.cerrarTodo());
   const paso = (d: number) => {
     const i = Math.max(0, RECORRIDO.indexOf(estacionActual));
     const sig = RECORRIDO[(i + d + RECORRIDO.length) % RECORRIDO.length]!;

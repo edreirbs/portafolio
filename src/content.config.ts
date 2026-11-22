@@ -109,7 +109,7 @@ const curiosidades = defineCollection({
   schema: z.object({
     nombre: z.string(),
     nota: z.string().max(110),
-    accion: z.enum(['girar', 'saltar', 'balancear', 'levantar', 'mirar', 'luz', 'penumbra', 'hora', 'sentarse', 'acercar', 'biblioteca']),
+    accion: z.enum(['girar', 'saltar', 'balancear', 'levantar', 'mirar', 'luz', 'penumbra', 'hora', 'sentarse', 'acercar', 'biblioteca', 'asistente']),
   }),
 });
 

@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Estado | Aprobada |
+| Estado | Hecha |
 | Fase | F2 |
 | Depende de | 0002, 0012, 0013 |
 | Creada | 2026-11-22 |
@@ -82,3 +82,4 @@ respaldo para quien no puede o no quiere ver el 3D.
 | Fecha | Cambio |
 |---|---|
 | 2026-11-22 | Creada a partir del pedido de Edrei del 2026-11-21. Aprobada en el chat ("1 si", "5 sigue siendo principal"). |
+| 2026-11-22 | Hecha y publicada (PR 8). La vista automática también descarta el WebGL por software (SwiftShader, llvmpipe) y los equipos con menos de 2 GB de memoria. |
