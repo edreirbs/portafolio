@@ -1,0 +1,22 @@
+{
+  "name": "portafolio-asistente",
+  "private": true,
+  "type": "module",
+  "description": "Spec 0015 · Servidor del asistente del portafolio (función de Netlify). Guarda la llave y aplica los candados.",
+  "scripts": {
+    "tipos": "tsc --noEmit -p .",
+    "prueba": "node --experimental-strip-types --test pruebas/*.test.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "1.12.0",
+    "@netlify/blobs": "11.1.9"
+  },
+  "devDependencies": {
+    "@netlify/functions": "6.1.1",
+    "@types/node": "22.20.5",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

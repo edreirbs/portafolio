@@ -31,8 +31,8 @@ aprobación, salvo en la constitución (ver su sección de gobierno).
 | 0011 | Lanzamiento | Pendiente | F4 |
 | [0012](0012-gabinete-3d/spec.md) | El gabinete en 3D · [plan](0012-gabinete-3d/plan.md) | Hecha (prototipo) | F2 |
 | [0013](0013-experiencia-gabinete/spec.md) | Experiencia del gabinete 3D | Hecha | F2 |
-| [0014](0014-portafolio-profesional/spec.md) | Portafolio profesional dentro del gabinete · [plan](0014-portafolio-profesional/plan.md) | En construcción | F2 |
-| [0015](0015-asistente/spec.md) | Asistente del portafolio · [ADR-0003](../docs/adr/0003-asistente-netlify-claude.md) | Aprobada | F2 |
+| [0014](0014-portafolio-profesional/spec.md) | Portafolio profesional dentro del gabinete · [plan](0014-portafolio-profesional/plan.md) | Hecha | F2 |
+| [0015](0015-asistente/spec.md) | Asistente del portafolio · [plan](0015-asistente/plan.md) · [ADR-0003](../docs/adr/0003-asistente-netlify-claude.md) | En construcción (falta la llave) | F2 |
 
 ## Decisiones pendientes
 

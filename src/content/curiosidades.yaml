@@ -72,3 +72,7 @@
   nombre: Gabinete gótico
   nota: Aquí se guardan las piezas que todavía están en montaje.
   accion: balancear
+- id: telefono
+  nombre: Pregúntale a mi asistente
+  nota: Un asistente con IA que responde sobre Edrei con lo publicado aquí.
+  accion: asistente

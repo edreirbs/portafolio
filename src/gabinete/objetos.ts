@@ -345,3 +345,38 @@ export function bitacora(paginas: Texture): Group {
   g.userData.anima = atril;
   return g;
 }
+
+/** Spec 0015 · El asistente: un teléfono de candelero de latón, con su auricular colgado. */
+export function telefono(): Group {
+  const g = new Group();
+  const negro = new MeshStandardMaterial({ color: 0x141110, roughness: 0.35, metalness: 0.2 });
+  const base = malla(new CylinderGeometry(0.06, 0.075, 0.03, 32), MAT.laton());
+  base.position.y = 0.015;
+  const tallo = malla(new CylinderGeometry(0.014, 0.018, 0.25, 16), MAT.laton());
+  tallo.position.y = 0.155;
+  const cuello = malla(new CylinderGeometry(0.02, 0.014, 0.03, 16), MAT.latonOscuro());
+  cuello.position.y = 0.295;
+  const bocina = new Group();
+  bocina.position.set(0, 0.31, 0.012);
+  bocina.rotation.x = 0.55;
+  const cono = malla(new CylinderGeometry(0.032, 0.012, 0.05, 24, 1, true), negro);
+  cono.position.y = 0.025;
+  bocina.add(cono);
+  g.add(base, tallo, cuello, bocina);
+  // Gancho y auricular
+  const gancho = malla(new BoxGeometry(0.05, 0.006, 0.01), MAT.laton());
+  gancho.position.set(0.035, 0.25, 0);
+  const auricular = new Group();
+  auricular.position.set(0.062, 0.2, 0);
+  const mango = malla(new CylinderGeometry(0.011, 0.011, 0.1, 16), negro);
+  const copa = malla(new CylinderGeometry(0.024, 0.012, 0.035, 24), negro);
+  copa.position.y = -0.065;
+  auricular.add(mango, copa);
+  // Cordón: un arco del auricular a la base
+  const cordon = malla(new TorusGeometry(0.06, 0.004, 8, 24, Math.PI), negro, false);
+  cordon.position.set(0.062, 0.105, 0.02);
+  cordon.rotation.set(0, Math.PI / 2, Math.PI);
+  g.add(gancho, auricular, cordon);
+  g.userData.anima = auricular;
+  return g;
+}

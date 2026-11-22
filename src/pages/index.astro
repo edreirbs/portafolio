@@ -89,6 +89,8 @@ const anios = (r: (typeof registro)[number]) => {
         <div class="acciones">
           <a class="boton boton--principal" href={`${url()}?vista=3d`} data-solo-3d>Entrar al gabinete 3D</a>
           <a class="boton" href={url('cv')}>Currículum</a>
+          <!-- Spec 0015: aparece solo cuando el asistente está listo. -->
+          <button type="button" class="boton" data-asistente-otro data-solo-asistente>Pregúntale a mi asistente</button>
           <a class="boton boton--texto" href={linkedin.url} rel="me">Escribirme en {linkedin.etiqueta}</a>
         </div>
       </div>

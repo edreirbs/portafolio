@@ -1,0 +1,8 @@
+# Spec 0015 · Sitio de Netlify que solo sirve la función del asistente.
+[build]
+  publish = "publico"
+  command = "npm run tipos"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"

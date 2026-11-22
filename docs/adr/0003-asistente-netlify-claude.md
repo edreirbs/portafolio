@@ -30,8 +30,11 @@ servidor pequeño que guarde la llave, aplique los candados y hable con Claude.
   de cada respuesta del asistente para rechazar historiales alterados.
 - **Gasto**: la llave vive en un espacio de trabajo de la consola de Anthropic con límite de
   USD 1 al mes. Es el candado final: si se alcanza, el asistente se apaga hasta el mes siguiente.
-- **La llave** la guarda Edrei en las variables de entorno de Netlify (`ANTHROPIC_API_KEY`,
-  marcada como secreta). Nunca pasa por el chat, el repositorio ni el navegador.
+- **La llave** la guarda Edrei en las variables de entorno del sitio de Netlify como
+  `ASISTENTE_ANTHROPIC_API_KEY`, marcada como secreta. Nunca pasa por el chat, el repositorio ni
+  el navegador. No se usa `ANTHROPIC_API_KEY`: el equipo de Netlify ya inyecta una con ese nombre
+  en todos sus sitios, sin el límite de USD 1. La función llama a `https://api.anthropic.com`
+  de forma explícita, para que ninguna dirección heredada desvíe las llamadas.
 
 ## Alternativas descartadas
 

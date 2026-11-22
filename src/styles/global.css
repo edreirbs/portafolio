@@ -885,6 +885,10 @@ html[data-puede3d='no'] [data-solo-3d] {
   display: none;
 }
 
+html:not([data-asistente='listo']) [data-solo-asistente] {
+  display: none;
+}
+
 .sp {
   position: relative;
   scroll-margin-top: 12px;
