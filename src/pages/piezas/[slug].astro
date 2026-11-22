@@ -5,7 +5,7 @@ import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import TarjetaPieza from '../../components/TarjetaPieza.astro';
 import { piezas, relacionadas, type Pieza } from '../../lib/piezas';
-import { INFO } from '../../lib/salas';
+import { INFO_SECCION, seccionDe } from '../../lib/secciones';
 import { mes } from '../../lib/fechas';
 import { url } from '../../lib/url';
 
@@ -30,7 +30,7 @@ const sinLiga = d.evidencia.filter((e) => !e.url);
   <div class="contenedor">
     <header class="encabezado">
       <nav class="migas" aria-label="Ruta">
-        <a href={url()}>Gabinete</a> / <a href={url(d.sala)}>{INFO[d.sala].nombre}</a> / {d.catalogo}
+        <a href={url()}>Portafolio</a> / <a href={url(`#${seccionDe(pieza)}`)}>{INFO_SECCION[seccionDe(pieza)].nombre}</a> / {d.catalogo}
       </nav>
       <h1>{d.titulo}</h1>
       <p>{d.subtitulo}</p>

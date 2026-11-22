@@ -1,0 +1,28 @@
+---
+// Spec 0014 · Ficha compacta de una pieza: título, procedencia, fechas y evidencia.
+import type { Pieza } from '../lib/piezas';
+import { anio, periodoAnios } from '../lib/fechas';
+import { url } from '../lib/url';
+
+interface Props {
+  pieza: Pieza;
+}
+const { pieza } = Astro.props;
+const d = pieza.data;
+const cuando = d.fecha_fin ? periodoAnios(d.fecha, d.fecha_fin) : anio(d.fecha);
+const ligas = d.evidencia.filter((e) => e.url).slice(0, 2);
+---
+
+<article class="ficha">
+  <p class="ficha__meta">{cuando} · {d.otorgante ?? d.institucion ?? d.procedencia}</p>
+  <h3><a href={url(`piezas/${pieza.id}`)}>{d.titulo}</a></h3>
+  <p class="ficha__sub">{d.subtitulo}</p>
+  <p class="ficha__acciones">
+    {ligas.map((e) => <a href={e.url} rel="noopener">{e.etiqueta}</a>)}
+    {d.objeto && (
+      <button type="button" class="ficha__mirar" data-mirar={pieza.id} hidden>
+        Mirar en el gabinete
+      </button>
+    )}
+  </p>
+</article>

@@ -22,6 +22,12 @@ contacto:
     url: https://www.linkedin.com/in/edrei-robles-ai-in-education/
   - etiqueta: GitHub
     url: https://github.com/edreirbs
+  - etiqueta: YouTube
+    url: https://www.youtube.com/@edreirobles
+  - etiqueta: X
+    url: https://x.com/edrei_robles
+  - etiqueta: Sitio web
+    url: https://www.edreirobles.com/
 idiomas:
   - { idioma: Español, nivel: Nativo }
   - { idioma: Francés, nivel: Nativo (bachillerato francés) }

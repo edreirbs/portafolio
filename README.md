@@ -5,8 +5,9 @@ cada proyecto, certificación, curso o estudio es una **pieza catalogada** con s
 museográfica, en una sala que le corresponde. Un sitio que se recorre con curiosidad y que,
 aun así, un reclutador entiende en diez segundos.
 
-**Estado:** Fase 1 publicada en **https://edreirbs.github.io/portafolio/** y gabinete 3D en
-**https://edreirbs.github.io/portafolio/explorar/**.
+**Estado:** publicado en **https://edreirbs.github.io/portafolio/**. La portada es el gabinete
+3D con las secciones del portafolio (proyectos, títulos, experiencia, publicaciones y redes); si
+el navegador no puede con el 3D, la misma página se ve en su versión clásica.
 
 ## Cómo trabajamos (spec-driven development)
 
@@ -34,9 +35,10 @@ Nada se programa sin spec. Toda pieza que se muestra tiene evidencia.
 | `specs/0000-constitucion.md` | Los principios no negociables del portafolio. |
 | `specs/0001-gabinete/` | El concepto: salas, recorrido, modo reclutador, dirección visual. |
 | `specs/0002-modelo-de-contenido/` | La cédula: qué datos tiene cada pieza y cómo se valida. |
-| `docs/adr/` | Decisiones de arquitectura (stack, despliegue). |
+| `docs/adr/` | Decisiones de arquitectura (stack, gabinete 3D, asistente). |
 | `src/content/` | **El contenido**: perfil, trayectoria y una pieza por archivo. |
 | `src/` (resto) | El sitio en Astro: páginas, componentes y estilos. |
+| `src/lib/secciones.ts` | Las secciones de la portada y qué sala del catálogo va en cada una. |
 | `src/gabinete/` | El gabinete 3D en Three.js: escena, objetos propios y texturas dibujadas en código. |
 | `public/gabinete/` | Modelos y texturas CC0 optimizados ([créditos](docs/creditos.md)). |
 | `contenido/curaduria.md` | **Lista maestra**: todo lo que se exhibe, por sala, con evidencia y estado. |

@@ -1,10 +1,24 @@
 ---
+import { getEntry } from 'astro:content';
 import { fechaActualizacion, fechaLarga } from '../lib/build';
 const fecha = fechaActualizacion();
+const perfil = (await getEntry('perfil', 'edrei'))!.data;
 ---
 
 <footer class="pie">
   <div class="contenedor pie__fila">
+    <!-- FR-0014-07: las redes también viven en el pie. -->
+    <ul class="pie__redes" aria-label="Redes">
+      {
+        perfil.contacto.map((c) => (
+          <li>
+            <a href={c.url} rel="me">
+              {c.etiqueta}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
     <p>Catálogo actualizado el <time datetime={fecha.toISOString()}>{fechaLarga(fecha)}</time>.</p>
     <p>
       Construido con <i>spec-driven development</i>.{' '}

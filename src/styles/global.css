@@ -583,129 +583,7 @@ p {
   color: var(--en-papel-suave);
 }
 
-/* ───────────────────────── Portal al gabinete 3D (spec 0012) ───────────────────────── */
-.portal {
-  position: relative;
-  display: block;
-  border-radius: var(--radio);
-  overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--laton) 55%, transparent);
-  box-shadow: var(--sombra);
-  text-decoration: none;
-  color: #efe8dc;
-  background: #0d0907;
-}
-
-.portal img {
-  width: 100%;
-  aspect-ratio: 16 / 8;
-  object-fit: cover;
-  transition: transform 0.6s ease;
-}
-
-.portal:hover img {
-  transform: scale(1.02);
-}
-
-.portal__texto {
-  position: absolute;
-  inset: auto 0 0 0;
-  display: grid;
-  gap: 6px;
-  padding: clamp(16px, 4vw, 40px);
-  background: linear-gradient(transparent, rgb(8 5 3 / 0.88) 45%);
-}
-
-.portal .etiqueta {
-  color: #d6b06a;
-}
-
-.portal__titulo {
-  font-family: var(--f-display);
-  font-weight: 600;
-  font-size: clamp(1.6rem, 4vw, 2.8rem);
-  line-height: 1.1;
-}
-
-.portal__sub {
-  color: #d8ccb8;
-  font-size: 1.02rem;
-}
-
-/* ───────────────────────── Plano del gabinete ───────────────────────── */
-.plano {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  border-top: 1px solid var(--linea);
-  border-left: 1px solid var(--linea);
-}
-
-.sala {
-  position: relative;
-  display: grid;
-  gap: 6px;
-  align-content: start;
-  min-height: 190px;
-  padding: 22px;
-  background: var(--muro);
-  border-right: 1px solid var(--linea);
-  border-bottom: 1px solid var(--linea);
-  transition: background-color 0.2s ease;
-}
-
-.sala h3 {
-  font-size: 1.7rem;
-}
-
-.sala h3 a {
-  text-decoration: none;
-}
-
-.sala h3 a::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-}
-
-.sala--abierta:hover {
-  background: var(--muro-2);
-}
-
-.sala__tema {
-  font-weight: 600;
-}
-
-.sala__desc {
-  color: var(--tinta-suave);
-  font-size: 0.93rem;
-}
-
-.sala__cuenta {
-  margin-top: auto;
-  padding-top: 10px;
-  font-family: var(--f-mono);
-  font-size: 0.78rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--acento);
-}
-
-.sala--montaje {
-  color: var(--tinta-suave);
-}
-
-.sala--montaje h3 {
-  color: var(--tinta-suave);
-}
-
-.sala--montaje .sala__cuenta {
-  color: var(--tinta-suave);
-}
-
-/* ───────────────────────── Sala ───────────────────────── */
+/* ───────────────────────── Encabezado de página ───────────────────────── */
 .encabezado {
   padding-block: clamp(28px, 5vw, 64px) clamp(28px, 4vw, 48px);
   display: grid;
@@ -937,12 +815,6 @@ html[data-modo='ficha'] .sala__desc {
 }
 
 html[data-modo='ficha'] .vitrina,
-html[data-modo='ficha'] .plano {
-  grid-template-columns: 1fr;
-  gap: 0;
-  border: 0;
-}
-
 html[data-modo='ficha'] .pieza,
 html[data-modo='ficha'] .cedula-grande {
   background: none;
@@ -1005,5 +877,320 @@ html[data-modo='ficha'] .pieza:hover {
   *::after {
     transition: none !important;
     animation: none !important;
+  }
+}
+
+/* ───────────────────────── Spec 0014 · Secciones del portafolio ───────────────────────── */
+html[data-puede3d='no'] [data-solo-3d] {
+  display: none;
+}
+
+.sp {
+  position: relative;
+  scroll-margin-top: 12px;
+}
+
+.sp__sub {
+  margin: 28px 0 12px;
+  font-size: 1.2rem;
+}
+
+.indice {
+  padding-block: 0 8px;
+}
+
+.indice ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.indice a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--linea);
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 0.92rem;
+}
+
+.indice a:hover {
+  border-color: var(--acento);
+  color: var(--acento);
+}
+
+.pieza__ligas {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-size: 0.9rem;
+}
+
+.pieza__ligas a {
+  color: var(--en-papel);
+}
+
+/* Fichas compactas (títulos, certificaciones, publicaciones) */
+.fichas {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ficha {
+  display: grid;
+  gap: 6px;
+  height: 100%;
+  padding: 16px 18px 18px;
+  border: 1px solid var(--linea);
+  border-left: 3px solid var(--laton);
+  border-radius: var(--radio);
+}
+
+.ficha__meta {
+  font-family: var(--f-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+}
+
+.ficha h3 {
+  font-size: 1.2rem;
+  line-height: 1.25;
+}
+
+.ficha h3 a {
+  text-decoration: none;
+}
+
+.ficha h3 a:hover {
+  text-decoration: underline;
+}
+
+.ficha__sub {
+  color: var(--tinta-suave);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.ficha__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 14px;
+  font-size: 0.9rem;
+}
+
+.ficha__acciones:empty {
+  display: none;
+}
+
+.ficha__mirar {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--acento);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--acento);
+  font: 600 0.82rem/1 var(--f-texto);
+  cursor: pointer;
+}
+
+.ficha__mirar[hidden] {
+  display: none;
+}
+
+/* Experiencia: línea de tiempo */
+.linea {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+}
+
+.linea__item {
+  display: grid;
+  grid-template-columns: 8.5rem 1fr;
+  gap: 6px 22px;
+  padding-block: 18px;
+  border-top: 1px solid var(--linea);
+}
+
+.linea__item:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.linea__anios {
+  font-family: var(--f-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  color: var(--acento);
+  padding-top: 4px;
+}
+
+.linea h3 {
+  font-size: 1.2rem;
+}
+
+.linea__lugar {
+  font-size: 0.88rem;
+  color: var(--tinta-suave);
+}
+
+.linea__puestos {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+  font-size: 0.95rem;
+}
+
+.linea__puestos span {
+  color: var(--tinta-suave);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+
+.linea__texto,
+.linea__logros {
+  margin-top: 8px;
+  font-size: 0.93rem;
+  line-height: 1.5;
+  color: var(--tinta-suave);
+}
+
+.linea__logros {
+  padding-left: 1.1em;
+  display: grid;
+  gap: 4px;
+}
+
+@media (max-width: 600px) {
+  .linea__item {
+    grid-template-columns: 1fr;
+  }
+}
+
+html[data-vista='3d'] .linea__item {
+  grid-template-columns: 1fr;
+  gap: 2px;
+}
+
+/* Publicaciones de divulgación */
+.articulos {
+  columns: 2 22rem;
+  column-gap: 40px;
+  margin: 0;
+  padding-left: 1.4em;
+  font-size: 0.95rem;
+}
+
+.articulos li {
+  break-inside: avoid;
+  margin-bottom: 8px;
+}
+
+.articulos li::marker {
+  color: var(--lacre);
+  font-family: var(--f-mono);
+  font-size: 0.8em;
+}
+
+.articulos span {
+  font-family: var(--f-mono);
+  font-size: 0.74rem;
+  color: var(--tinta-suave);
+}
+
+/* Redes y contacto */
+.redes {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.red {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 64px;
+  padding: 10px 16px;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  text-decoration: none;
+  transition: border-color 0.18s ease, transform 0.18s ease;
+}
+
+.red:hover {
+  border-color: var(--acento);
+  transform: translateY(-1px);
+}
+
+.red__sello {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--lacre);
+  color: #f6e3d6;
+  font: 600 0.9rem/1 var(--f-display);
+  box-shadow: inset 0 0 0 3px rgb(0 0 0 / 0.12);
+}
+
+.red__texto {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.red__texto small {
+  color: var(--tinta-suave);
+  font-size: 0.84rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pie__redes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-basis: 100%;
+}
+
+@media (max-width: 900px) {
+  .navegacion__seccion {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .navegacion__3d {
+    display: none;
   }
 }

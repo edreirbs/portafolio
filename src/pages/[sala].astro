@@ -1,31 +1,25 @@
 ---
+// FR-0014-09: las salas de la F1 ahora son secciones de la portada.
 import type { GetStaticPaths } from 'astro';
-import Base from '../layouts/Base.astro';
-import TarjetaPieza from '../components/TarjetaPieza.astro';
-import { porSala } from '../lib/piezas';
-import { SALAS, INFO, SIGLAS, type Sala } from '../lib/salas';
+import Redireccion from '../components/Redireccion.astro';
+import { SALAS, type Sala } from '../lib/salas';
 import { url } from '../lib/url';
+import { portafolio } from '../lib/portafolio';
 
-export const getStaticPaths = (async () => {
-  const conteo = await porSala();
-  // FR-0004-04: solo las salas con piezas tienen página; las demás están "en montaje".
-  return SALAS.filter((s) => conteo[s].length > 0).map((sala) => ({ params: { sala }, props: { sala, piezas: conteo[sala] } }));
-}) satisfies GetStaticPaths;
+const DESTINO: Record<Sala, string> = {
+  artificialia: 'proyectos',
+  theatrum: 'experiencia',
+  scientifica: 'certificaciones',
+  naturalia: 'titulos',
+  mirabilia: 'titulos',
+  exotica: 'proyectos',
+};
 
-const { sala, piezas } = Astro.props as { sala: Sala; piezas: Awaited<ReturnType<typeof porSala>>[Sala] };
-const info = INFO[sala];
-const numero = ['I', 'II', 'III', 'IV', 'V', 'VI'][SALAS.indexOf(sala)];
+export const getStaticPaths = (() => SALAS.map((sala) => ({ params: { sala } }))) satisfies GetStaticPaths;
+const { sala } = Astro.params as { sala: Sala };
+const { visibles } = await portafolio();
+const seccion = DESTINO[sala];
+const destino = (visibles as string[]).includes(seccion) ? url(`#${seccion}`) : url();
 ---
 
-<Base titulo={`${info.nombre} · ${info.tema}`} descripcion={info.descripcion} actual={sala}>
-  <div class="contenedor">
-    <header class="encabezado">
-      <nav class="migas" aria-label="Ruta"><a href={url()}>Gabinete</a> / Sala {numero} · {SIGLAS[sala]}</nav>
-      <h1>{info.nombre}</h1>
-      <p><strong>{info.tema}.</strong> {info.descripcion}</p>
-    </header>
-    <ul class="vitrina">
-      {piezas.map((p, i) => <li><TarjetaPieza pieza={p} nivel="h2" prioridad={i < 2} /></li>)}
-    </ul>
-  </div>
-</Base>
+<Redireccion destino={destino} />

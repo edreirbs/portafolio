@@ -1,0 +1,1022 @@
+---
+// Specs 0012, 0013 y 0014 · El gabinete 3D, montado encima de la portada. Las secciones del
+// portafolio viven en la página (SeccionPro) y aquí se vuelven los paneles de cada mueble.
+import { getCollection } from 'astro:content';
+import { INFO_SECCION, seccionDe, type Seccion } from '../lib/secciones';
+import type { Portafolio } from '../lib/portafolio';
+import { url } from '../lib/url';
+
+interface Props {
+  p: Portafolio;
+}
+const { p } = Astro.props;
+const { perfil, todas, porSeccion, registro, articulos, visibles } = p;
+const cuenta: Record<Seccion, string> = {
+  proyectos: `${porSeccion.proyectos.length} proyectos`,
+  titulos: `${porSeccion.titulos.length} piezas`,
+  certificaciones: `${porSeccion.certificaciones.length} piezas`,
+  experiencia: `${registro.length} lugares`,
+  publicaciones: `${porSeccion.publicaciones.length + articulos.length} textos`,
+  contacto: `${perfil.contacto.length} redes`,
+};
+const datos = {
+  base: import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`,
+  secciones: visibles.map((s) => ({ id: s, nombre: INFO_SECCION[s].nombre, corto: INFO_SECCION[s].corto, cuenta: cuenta[s] })),
+  curiosidades: (await getCollection('curiosidades')).map((c) => ({ id: c.id, ...c.data })),
+  redes: perfil.contacto.map((c) => ({ etiqueta: c.etiqueta, cuenta: cuentaDe(c.url) })),
+  bitacora: registro.slice(0, 8).map((r) => {
+    const desde = r.data.puestos.map((x) => x.desde).sort()[0]!.slice(0, 4);
+    const hastas = r.data.puestos.map((x) => x.hasta);
+    const hasta = hastas.includes('hoy') ? 'hoy' : hastas.sort().at(-1)!.slice(0, 4);
+    return { anios: desde === hasta ? desde : `${desde} – ${hasta}`, texto: r.data.organizacion };
+  }),
+  piezas: todas
+    .filter((x) => x.data.objeto)
+    .map((x) => ({
+      id: x.id,
+      catalogo: x.data.catalogo,
+      titulo: x.data.titulo,
+      subtitulo: x.data.subtitulo,
+      resumen: x.data.resumen,
+      seccion: seccionDe(x),
+      fecha: x.data.fecha,
+      procedencia: x.data.procedencia,
+      objeto: x.data.objeto,
+      url: url(`piezas/${x.id}`),
+      evidencia: x.data.evidencia.filter((e) => e.url).map((e) => ({ etiqueta: e.etiqueta, url: e.url! })),
+    })),
+};
+
+function cuentaDe(direccion: string): string {
+  const u = new URL(direccion);
+  const ruta = u.pathname.replace(/^\/(in\/)?|\/$/g, '');
+  if (u.hostname.endsWith('x.com')) return `@${ruta}`;
+  return ruta || u.hostname.replace(/^www\./, '');
+}
+---
+
+<div class="g" data-gabinete data-estado="cargando">
+      <canvas
+      class="g-lienzo"
+      data-lienzo
+      role="img"
+      aria-label="El estudio de un explorador del siglo XIX: alacena con vitrina, pared de diplomas, baúl, cajonera de boticario, busto de mármol y mesa con globo terráqueo, iluminados por lámparas de aceite."
+    ></canvas>
+    <div class="g-vineta" aria-hidden="true"></div>
+    <!-- FR-0013-04: marcas doradas sobre los objetos a la vista (botones, se enfocan con Tab) -->
+    <div class="g-marcas" data-marcas aria-label="Objetos a la vista"></div>
+    <div class="g-etiqueta" data-etiqueta hidden aria-hidden="true"></div>
+
+    <!-- FR-0012-06 y FR-0013-05: placa que se pliega al explorar -->
+    <header class="g-placa" data-modo="abierta">
+      <div class="g-placa__fila">
+        <div>
+          <p class="g-kicker">{perfil.titulo}</p>
+          <h1>{perfil.nombre}</h1>
+        </div>
+        <button type="button" class="g-placa__toggle" data-placa-toggle aria-expanded="true" aria-controls="g-placa-mas" aria-label="Presentación">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </button>
+      </div>
+      <div class="g-placa__mas" id="g-placa-mas">
+        <p class="g-promesa">{perfil.promesa}</p>
+        <p class="g-pruebas">{perfil.pruebas.map((p) => p.texto).join(' · ')}</p>
+      </div>
+      <div class="g-acciones">
+        <a class="g-boton g-boton--principal" href={url('cv')}>Currículum</a>
+        <button type="button" class="g-boton" data-seccion-ir="contacto">Contacto</button>
+      </div>
+    </header>
+
+    <!-- FR-0013-06: guía de primera visita -->
+    <div class="g-guia" data-guia hidden>
+      <svg class="g-guia__mano" viewBox="0 0 64 64" width="44" height="44" aria-hidden="true">
+        <path d="M26 30V14a4 4 0 0 1 8 0v14l2-1a4 4 0 0 1 5 2l1 2 2-1a4 4 0 0 1 5 2v12c0 9-6 15-14 15h-3c-6 0-10-3-13-8l-6-10a4 4 0 0 1 6-5l7 6z" fill="#f2ece1" stroke="#15100b" stroke-width="2.4" stroke-linejoin="round"></path>
+      </svg>
+      <p>Arrastra para mirar<br />Toca los <span class="g-guia__punto" aria-hidden="true"></span> dorados</p>
+    </div>
+
+    <!-- Nota que dice cada objeto -->
+    <div class="g-nota" data-nota hidden role="status">
+      <strong data-n-nombre></strong>
+      <span data-n-texto></span>
+    </div>
+
+    <aside class="g-panel g-cedula" data-cedula hidden aria-labelledby="c-titulo">
+      <button type="button" class="g-cerrar" data-cerrar aria-label="Cerrar la cédula">×</button>
+      <p class="g-cat" data-c-catalogo></p>
+      <h2 id="c-titulo" tabindex="-1" data-c-titulo></h2>
+      <p class="g-sub" data-c-subtitulo></p>
+      <p class="g-resumen" data-c-resumen></p>
+      <div class="g-acciones" data-c-acciones></div>
+    </aside>
+
+    <!-- FR-0014-03: menú de secciones, siempre a la vista en pantallas anchas -->
+      <nav class="g-nav" aria-label="Secciones del portafolio">
+        {datos.secciones.map((s) => (
+          <button type="button" data-seccion-ir={s.id}>
+            {s.corto}
+          </button>
+        ))}
+        <a class="g-nav__clasica" href={`${url()}?vista=clasica`}>Vista clásica</a>
+      </nav>
+
+      <!-- FR-0014-03: en el teléfono, el menú vive detrás de "Secciones" -->
+      <div class="g-panel g-mapa" id="g-mapa" data-mapa hidden>
+        <p class="g-mapa__titulo">Secciones</p>
+        <ul>
+          <li><button type="button" data-estacion="centro">Centro del estudio</button></li>
+          {
+            datos.secciones.map((s) => (
+              <li>
+                <button type="button" data-seccion-ir={s.id}>
+                  {s.nombre} <small>{s.cuenta}</small>
+                </button>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="g-mapa__pie">
+          <a href={`${url()}?vista=clasica`}>Vista clásica</a> · Modelos: <a href="https://polyhaven.com">Poly Haven</a> (CC0)
+        </p>
+      </div>
+
+      <nav class="g-dock" aria-label="Recorrido del gabinete">
+        <button type="button" class="g-dock__mapa" data-abrir-mapa aria-expanded="false" aria-controls="g-mapa" aria-label="Secciones">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>
+          <span>Secciones</span>
+        </button>
+        <button type="button" class="g-dock__flecha" data-anterior aria-label="Sección anterior">‹</button>
+        <span class="g-dock__actual" data-estacion-actual aria-live="polite">Centro del estudio</span>
+        <button type="button" class="g-dock__flecha" data-siguiente aria-label="Sección siguiente">›</button>
+        <button type="button" class="g-dock__volver" data-volver hidden>Volver</button>
+      </nav>
+
+      <div class="g-carga" role="status" aria-live="polite">
+        <span class="g-carga__texto">Abriendo el gabinete</span>
+        <span class="g-carga__num" data-progreso>0 %</span>
+      </div>
+      <p class="g-lento">La escena tarda en abrir. <a href={`${url()}?vista=clasica`}>Ver la versión clásica</a></p>
+</div>
+
+<script id="datos-gabinete" type="application/json" set:html={JSON.stringify(datos)} />
+<script>
+  // FR-0014-01: three.js solo se descarga si la portada eligió la vista 3D.
+  if (document.documentElement.dataset.vista === '3d') {
+    import('../gabinete/main')
+      .then((m) => m.iniciar())
+      .catch((e) => {
+        console.error(e);
+        document.documentElement.dataset.vista = 'clasica';
+      });
+  }
+</script>
+
+<style is:global>
+  html[data-vista='3d'] body {
+    background: #0d0907;
+    color: #efe8dc;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  html:not([data-vista='3d']) .g {
+    display: none;
+  }
+
+  .g {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    font-family: var(--f-texto);
+    --g-panel: rgb(16 11 8 / 0.8);
+    --g-borde: rgb(201 163 106 / 0.38);
+    --g-tinta: #efe8dc;
+    --g-suave: #c4b6a0;
+    --g-laton: #d6b06a;
+  }
+
+  .g-lienzo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: grab;
+    touch-action: none;
+  }
+
+  .g-lienzo:active {
+    cursor: grabbing;
+  }
+
+  .g-vineta {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(120% 100% at 50% 45%, transparent 55%, rgb(0 0 0 / 0.55) 100%);
+  }
+
+  /* ── Marcas doradas ── */
+  .g-marcas {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .g-marca {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 32px;
+    height: 32px;
+    margin: -16px 0 0 -16px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    pointer-events: auto;
+    border-radius: 50%;
+  }
+
+  .g-marca__punto {
+    display: block;
+    width: 12px;
+    height: 12px;
+    margin: 10px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #fff0c8, #c8923a);
+    box-shadow:
+      0 0 0 3px rgb(214 176 106 / 0.25),
+      0 0 12px rgb(255 196 110 / 0.55);
+    animation: g-latido 2.6s ease-in-out infinite;
+  }
+
+  .g-marca--pieza .g-marca__punto {
+    width: 14px;
+    height: 14px;
+    margin: 9px;
+    box-shadow:
+      0 0 0 4px rgb(214 176 106 / 0.32),
+      0 0 18px rgb(255 205 130 / 0.85);
+  }
+
+  .g-marca__nombre {
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    transform: translate(-50%, -2px);
+    white-space: nowrap;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--g-panel);
+    border: 1px solid var(--g-borde);
+    font: 600 0.78rem/1.2 var(--f-texto);
+    color: var(--g-tinta);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+  }
+
+  .g-marca:hover .g-marca__nombre,
+  .g-marca:focus-visible .g-marca__nombre {
+    opacity: 1;
+  }
+
+  .g-marca:focus-visible {
+    outline: 2px solid var(--g-laton);
+    outline-offset: 2px;
+  }
+
+  @keyframes g-latido {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.8;
+    }
+    50% {
+      transform: scale(1.3);
+      opacity: 1;
+    }
+  }
+
+  .g-etiqueta {
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 5px 11px;
+    border-radius: 999px;
+    background: var(--g-panel);
+    border: 1px solid var(--g-borde);
+    font: 600 0.82rem/1.2 var(--f-texto);
+    color: var(--g-tinta);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  /* ── Paneles ── */
+  .g-placa,
+  .g-panel,
+  .g-dock,
+  .g-nav,
+  .g-nota {
+    position: absolute;
+    background: var(--g-panel);
+    border: 1px solid var(--g-borde);
+    border-radius: 14px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 18px 40px -20px rgb(0 0 0 / 0.9);
+  }
+
+  .g-placa {
+    top: max(14px, env(safe-area-inset-top));
+    left: 14px;
+    max-width: min(400px, calc(100vw - 28px));
+    padding: 14px 16px;
+  }
+
+  .g-placa__fila {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .g-kicker {
+    margin: 0;
+    font-family: var(--f-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--g-laton);
+  }
+
+  .g-placa h1 {
+    font-family: var(--f-display);
+    font-size: clamp(1.8rem, 3.6vw, 2.4rem);
+    margin: 2px 0 0;
+    color: var(--g-tinta);
+    line-height: 1.05;
+  }
+
+  .g-placa__toggle {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--g-borde);
+    background: transparent;
+    color: var(--g-tinta);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  .g-placa__mas {
+    margin-top: 8px;
+  }
+
+  .g-promesa {
+    margin: 0;
+    font-size: 0.93rem;
+    line-height: 1.45;
+    color: var(--g-suave);
+  }
+
+  .g-pruebas {
+    margin: 6px 0 0;
+    font-size: 0.76rem;
+    line-height: 1.4;
+    color: var(--g-laton);
+  }
+
+  .g-placa[data-modo='compacta'] {
+    padding: 10px 12px;
+  }
+
+  .g-placa[data-modo='compacta'] .g-placa__mas {
+    display: none;
+  }
+
+  .g-placa[data-modo='compacta'] h1 {
+    font-size: 1.35rem;
+  }
+
+  .g-placa[data-modo='compacta'] .g-kicker {
+    font-size: 0.62rem;
+  }
+
+  .g-placa[data-modo='compacta'] .g-placa__toggle {
+    transform: rotate(180deg);
+  }
+
+  .g-placa[data-modo='compacta'] .g-acciones {
+    margin-top: 8px;
+  }
+
+  .g-placa[data-modo='compacta'] .g-boton {
+    min-height: 34px;
+    font-size: 0.82rem;
+  }
+
+  .g-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .g-boton {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0.45em 1em;
+    border-radius: 999px;
+    border: 1.5px solid var(--g-laton);
+    color: var(--g-tinta);
+    font: 600 0.9rem/1.2 var(--f-texto);
+    text-decoration: none;
+    background: transparent;
+  }
+
+  .g-boton--principal {
+    background: var(--g-laton);
+    color: #15100b;
+  }
+
+  .g-boton--texto {
+    border-color: transparent;
+    text-decoration: underline;
+  }
+
+  /* ── Guía de primera visita ── */
+  .g-guia {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+    padding: 18px 22px;
+    border-radius: 16px;
+    background: rgb(16 11 8 / 0.72);
+    border: 1px solid var(--g-borde);
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .g-guia p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--g-tinta);
+  }
+
+  .g-guia__mano {
+    animation: g-arrastre 1.8s ease-in-out infinite;
+  }
+
+  .g-guia__punto {
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    vertical-align: -1px;
+    background: radial-gradient(circle at 35% 35%, #fff0c8, #c8923a);
+    box-shadow: 0 0 10px rgb(255 196 110 / 0.7);
+  }
+
+  @keyframes g-arrastre {
+    0%,
+    100% {
+      transform: translateX(-18px);
+    }
+    50% {
+      transform: translateX(18px);
+    }
+  }
+
+  /* ── Nota de un objeto ── */
+  .g-nota {
+    left: 50%;
+    bottom: 84px;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: min(460px, calc(100vw - 28px));
+    padding: 10px 16px;
+    display: grid;
+    gap: 2px;
+    text-align: center;
+  }
+
+  .g-nota strong {
+    font-family: var(--f-display);
+    font-size: 1.05rem;
+    color: var(--g-laton);
+  }
+
+  .g-nota span {
+    font-size: 0.9rem;
+    color: var(--g-tinta);
+  }
+
+  /* ── Cédula y biblioteca ── */
+  .g-cedula {
+    right: 14px;
+    bottom: 84px;
+    width: min(380px, calc(100vw - 28px));
+    max-height: calc(100vh - 120px);
+    overflow: auto;
+    padding: 18px 20px;
+    background: #f2ece1;
+    color: #1a1612;
+    border-color: #c9a36a;
+  }
+
+  .g-panel h2 {
+    font-family: var(--f-display);
+    font-size: 1.4rem;
+    margin: 2px 0 6px;
+    line-height: 1.15;
+  }
+
+  .g-panel h2:focus {
+    outline: none;
+  }
+
+  .g-cedula p {
+    margin: 0 0 8px;
+    font-size: 0.93rem;
+    line-height: 1.5;
+  }
+
+  .g-cat {
+    margin: 0;
+    font-family: var(--f-mono);
+    font-size: 0.72rem !important;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #8e2b22;
+  }
+
+  .g-sub {
+    color: #574b3f;
+  }
+
+  .g-cedula .g-boton {
+    color: #1a1612;
+    border-color: #1a1612;
+  }
+
+  .g-cedula .g-boton--principal {
+    background: #1a1612;
+    color: #f2ece1;
+  }
+
+  .g-lista {
+    margin: 10px 0 0;
+    padding-left: 1.3em;
+    display: grid;
+    gap: 8px;
+    font-size: 0.9rem;
+  }
+
+  .g-lista li::marker {
+    color: #8e2b22;
+  }
+
+  .g-lista a {
+    color: #1a1612;
+  }
+
+  .g-lista span {
+    margin-left: 6px;
+    font-family: var(--f-mono);
+    font-size: 0.72rem;
+    color: #574b3f;
+  }
+
+  .g-cerrar {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    font-size: 1.6rem;
+    line-height: 1;
+    color: #1a1612;
+    cursor: pointer;
+  }
+
+  /* ── Mapa ── */
+  .g-mapa {
+    left: 50%;
+    bottom: 84px;
+    transform: translateX(-50%);
+    width: min(320px, calc(100vw - 28px));
+    max-height: min(70vh, 560px);
+    overflow: auto;
+    padding: 12px;
+  }
+
+  .g-mapa__titulo {
+    margin: 2px 6px 8px;
+    font-family: var(--f-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--g-laton);
+  }
+
+  .g-mapa ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .g-mapa button {
+    width: 100%;
+    text-align: left;
+    padding: 7px 10px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--g-tinta);
+    font: 600 0.95rem/1.25 var(--f-display);
+    cursor: pointer;
+  }
+
+  .g-mapa button small {
+    display: block;
+    font: 400 0.74rem/1.3 var(--f-texto);
+    color: var(--g-suave);
+  }
+
+  .g-mapa button:hover,
+  .g-mapa button[aria-current='true'] {
+    background: rgb(214 176 106 / 0.16);
+  }
+
+  .g-mapa__piezas button {
+    padding: 4px 10px 4px 22px;
+    font: 400 0.84rem/1.3 var(--f-texto);
+    color: var(--g-suave);
+  }
+
+  .g-mapa__pie {
+    margin: 8px 6px 2px;
+    font-size: 0.74rem;
+    color: var(--g-suave);
+  }
+
+  .g-mapa__pie a {
+    color: inherit;
+  }
+
+  /* ── Barra de recorrido ── */
+  .g-dock {
+    left: 50%;
+    bottom: max(14px, env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px;
+    border-radius: 999px;
+    max-width: calc(100vw - 20px);
+  }
+
+  .g-dock button {
+    min-height: 44px;
+    min-width: 44px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--g-tinta);
+    font: 600 0.9rem/1 var(--f-texto);
+    cursor: pointer;
+  }
+
+  .g-dock button:hover {
+    background: rgb(214 176 106 / 0.16);
+  }
+
+  .g-dock__mapa {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 14px;
+  }
+
+  .g-dock__mapa[aria-expanded='true'] {
+    background: rgb(214 176 106 / 0.22) !important;
+  }
+
+  .g-dock__flecha {
+    font-size: 1.5rem !important;
+  }
+
+  .g-dock__actual {
+    min-width: 9.5em;
+    text-align: center;
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--g-laton);
+    white-space: nowrap;
+  }
+
+  .g-dock__volver {
+    padding: 0 14px;
+    border: 1px solid var(--g-borde) !important;
+  }
+
+  /* ── Carga ── */
+  .g-carga {
+    position: absolute;
+    left: 50%;
+    bottom: 40%;
+    transform: translateX(-50%);
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    color: var(--g-suave);
+    font-family: var(--f-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    transition: opacity 0.6s ease;
+  }
+
+  .g-carga__num {
+    font-family: var(--f-display);
+    font-size: 2.4rem;
+    letter-spacing: 0;
+    color: var(--g-laton);
+  }
+
+  .g-lento {
+    position: absolute;
+    display: none;
+    left: 50%;
+    bottom: 30%;
+    transform: translateX(-50%);
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--g-suave);
+  }
+
+  .g-lento a {
+    color: inherit;
+  }
+
+  .g[data-lento]:not([data-estado='listo']) .g-lento {
+    display: block;
+  }
+
+  .g:not([data-estado='listo']) .g-dock,
+  .g:not([data-estado='listo']) .g-nav,
+  .g:not([data-estado='listo']) .g-guia {
+    visibility: hidden;
+  }
+
+  .g[data-estado='listo'] .g-carga {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* ── Spec 0014 · Menú de secciones ── */
+  .g-nav {
+    top: max(14px, env(safe-area-inset-top));
+    right: 14px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 5px;
+    border-radius: 999px;
+  }
+
+  .g-nav button,
+  .g-nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 38px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--g-tinta);
+    font: 600 0.86rem/1 var(--f-texto);
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .g-nav button:hover,
+  .g-nav button[aria-current='true'] {
+    background: rgb(214 176 106 / 0.2);
+    color: #fff3d6;
+  }
+
+  .g-nav .g-nav__clasica {
+    color: var(--g-suave);
+    font-weight: 500;
+  }
+
+  .g-nav :focus-visible,
+  .g-mapa :focus-visible,
+  .g-dock :focus-visible,
+  .g-placa :focus-visible {
+    outline: 2px solid var(--g-laton);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 1120px) {
+    .g-nav {
+      display: none;
+    }
+  }
+
+  /* ── Spec 0014 · Las secciones de la página se vuelven paneles ── */
+  html[data-vista='3d'] .cabecera,
+  html[data-vista='3d'] .pie,
+  html[data-vista='3d'] .portada,
+  html[data-vista='3d'] .indice,
+  html[data-vista='3d'] .salto {
+    display: none;
+  }
+
+  html[data-vista='3d'] .sp {
+    --tinta: #1a1612;
+    --tinta-suave: #574b3f;
+    --acento: #7a5a2b;
+    --sobre-acento: #fbf8f2;
+    --linea: rgb(26 22 18 / 0.16);
+    --papel: #fbf8f2;
+    --en-papel: #1a1612;
+    --en-papel-suave: #574b3f;
+    --muro-2: #e4ddd0;
+    --linea-papel: rgb(26 22 18 / 0.14);
+    display: none;
+    position: fixed;
+    z-index: 40;
+    top: 74px;
+    right: 14px;
+    bottom: 84px;
+    width: min(460px, calc(100vw - 28px));
+    max-width: none;
+    margin: 0;
+    padding: 20px 22px 26px;
+    overflow: auto;
+    overscroll-behavior: contain;
+    border: 1px solid #c9a36a;
+    border-radius: 14px;
+    background: #f2ece1;
+    color: #1a1612;
+    box-shadow: 0 18px 40px -20px rgb(0 0 0 / 0.9);
+  }
+
+  html[data-vista='3d'] .sp[data-abierta] {
+    display: block;
+  }
+
+  html[data-vista='3d'] .sp .seccion__cabeza {
+    margin-bottom: 16px;
+    padding-right: 36px;
+  }
+
+  html[data-vista='3d'] .sp .seccion__cabeza h2 {
+    font-size: 1.65rem;
+  }
+
+  html[data-vista='3d'] .sp h2:focus {
+    outline: none;
+  }
+
+  html[data-vista='3d'] .sp .vitrina,
+  html[data-vista='3d'] .sp .fichas,
+  html[data-vista='3d'] .sp .redes {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  html[data-vista='3d'] .sp .pieza {
+    box-shadow: none;
+    border: 1px solid var(--linea);
+  }
+
+  html[data-vista='3d'] .sp .pieza:hover {
+    transform: none;
+  }
+
+  html[data-vista='3d'] .sp .pieza__marco {
+    display: none;
+  }
+
+  html[data-vista='3d'] .sp .articulos {
+    columns: 1;
+  }
+
+  .sp__cerrar {
+    display: none;
+  }
+
+  html[data-vista='3d'] .sp__cerrar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    font-size: 1.6rem;
+    line-height: 1;
+    color: #1a1612;
+    cursor: pointer;
+  }
+
+  html[data-vista='3d'] .sp__cerrar:hover {
+    background: rgb(26 22 18 / 0.08);
+  }
+
+  @media (max-width: 1120px) {
+    html[data-vista='3d'] .sp {
+      top: max(14px, env(safe-area-inset-top));
+    }
+  }
+
+  @media (max-width: 760px) {
+    html[data-vista='3d'] .sp {
+      top: auto;
+      left: 10px;
+      right: 10px;
+      bottom: 78px;
+      width: auto;
+      max-height: 64vh;
+      padding: 18px 16px 22px;
+    }
+  }
+
+  /* ── Teléfono ── */
+  @media (max-width: 760px) {
+    .g-placa {
+      right: 14px;
+    }
+
+    .g-dock {
+      left: 10px;
+      right: 10px;
+      transform: none;
+      justify-content: space-between;
+    }
+
+    .g-dock__actual {
+      min-width: 0;
+      flex: 1;
+      font-size: 0.92rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .g-dock__mapa span {
+      display: none;
+    }
+
+    .g-cedula {
+      left: 10px;
+      right: 10px;
+      width: auto;
+      bottom: 78px;
+      max-height: 58vh;
+    }
+
+    .g-nota {
+      bottom: 78px;
+    }
+
+    .g-mapa {
+      bottom: 78px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .g-marca__punto,
+    .g-guia__mano {
+      animation: none;
+    }
+
+    .g-carga,
+    .g-placa__toggle {
+      transition: none;
+    }
+  }
+</style>

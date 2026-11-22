@@ -1,4 +1,5 @@
-// Spec 0012 y 0013 · El gabinete en 3D: el estudio de un explorador del siglo XIX.
+// Specs 0012, 0013 y 0014 · El gabinete en 3D: el estudio de un explorador del siglo XIX,
+// con un mueble por cada sección del portafolio.
 import {
   ACESFilmicToneMapping,
   Box3,
@@ -41,17 +42,25 @@ interface PiezaDato {
   titulo: string;
   subtitulo: string;
   resumen: string;
-  sala: string;
+  seccion: string;
   fecha: string;
   procedencia: string;
   objeto?: string;
   url: string;
   evidencia: Evidencia[];
 }
-interface SalaDato { id: string; nombre: string; tema: string; piezas: number }
+interface SeccionDato { id: string; nombre: string; corto: string; cuenta: string }
 type Accion = 'girar' | 'saltar' | 'balancear' | 'levantar' | 'mirar' | 'luz' | 'penumbra' | 'hora' | 'sentarse' | 'acercar' | 'biblioteca';
 interface Curiosidad { id: string; nombre: string; nota: string; accion: Accion }
-interface Datos { base: string; piezas: PiezaDato[]; salas: SalaDato[]; curiosidades: Curiosidad[] }
+interface Red { etiqueta: string; cuenta: string }
+interface Datos {
+  base: string;
+  piezas: PiezaDato[];
+  secciones: SeccionDato[];
+  curiosidades: Curiosidad[];
+  redes: Red[];
+  bitacora: { anios: string; texto: string }[];
+}
 
 type Vec3 = [number, number, number];
 interface Estacion { nombre: string; vista: { cam: Vec3; mira: Vec3 }; atril?: Vec3; atrilRot?: number }
@@ -60,17 +69,17 @@ const ANCHO = 10;
 const FONDO = 8;
 const ALTO = 3.6;
 const OJOS = 1.62;
+// FR-0014-05: cada sección tiene su mueble y su punto de vista.
 const ESTACIONES: Record<string, Estacion> = {
   centro: { nombre: 'Centro del estudio', vista: { cam: [0, OJOS, 3.55], mira: [0, 1.05, -1.6] } },
-  artificialia: { nombre: 'Artificialia', vista: { cam: [0, 1.58, -1.2], mira: [0, 1.08, -3.5] }, atril: [-1.45, 0, -2.75], atrilRot: 0.5 },
-  mirabilia: { nombre: 'Mirabilia', vista: { cam: [2.55, 1.45, -2.2], mira: [4.3, 0.72, -2.2] }, atril: [3.6, 0, -1.05], atrilRot: -2.2 },
-  scientifica: { nombre: 'Scientifica', vista: { cam: [2.15, 1.72, 0.45], mira: [4.4, 1.35, 0.45] }, atril: [3.7, 0, 1.45], atrilRot: -2.1 },
-  exotica: { nombre: 'Exotica', vista: { cam: [2.75, 1.45, 2.6], mira: [4.4, 1.0, 2.85] }, atril: [3.6, 0, 3.55], atrilRot: -2.0 },
-  theatrum: { nombre: 'Theatrum', vista: { cam: [-2.4, 1.55, 2.35], mira: [-4.35, 1.35, 2.35] }, atril: [-3.75, 0, 3.3], atrilRot: 2.0 },
-  naturalia: { nombre: 'Naturalia', vista: { cam: [-2.35, 1.6, -1.25], mira: [-4.9, 1.45, -1.25] }, atril: [-3.85, 0, -0.1], atrilRot: 2.2 },
+  proyectos: { nombre: 'Proyectos', vista: { cam: [0, 1.58, -1.2], mira: [0, 1.08, -3.5] }, atril: [-1.45, 0, -2.75], atrilRot: 0.5 },
+  titulos: { nombre: 'Títulos y diplomas', vista: { cam: [-2.35, 1.6, -1.25], mira: [-4.9, 1.45, -1.25] }, atril: [-3.85, 0, -0.1], atrilRot: 2.2 },
+  certificaciones: { nombre: 'Certificaciones y cursos', vista: { cam: [2.15, 1.72, 0.45], mira: [4.4, 1.35, 0.45] }, atril: [3.7, 0, 1.45], atrilRot: -2.1 },
+  experiencia: { nombre: 'Experiencia', vista: { cam: [-2.45, 1.62, 1.75], mira: [-4.2, 1.0, 1.45] }, atril: [-3.5, 0, 2.75], atrilRot: 2.1 },
+  publicaciones: { nombre: 'Publicaciones', vista: { cam: [2.55, 1.45, -2.2], mira: [4.3, 0.72, -2.2] }, atril: [3.6, 0, -1.05], atrilRot: -2.2 },
+  contacto: { nombre: 'Redes y contacto', vista: { cam: [0.3, 1.5, 1.95], mira: [0.05, 0.9, 0.55] } },
+  curiosidades: { nombre: 'Curiosidades', vista: { cam: [2.75, 1.45, 2.6], mira: [4.4, 1.0, 2.85] } },
 };
-/** Recorrido con las flechas de la barra: una vuelta al salón. */
-const RECORRIDO = ['centro', 'artificialia', 'mirabilia', 'scientifica', 'exotica', 'theatrum', 'naturalia'];
 
 const reducirMovimiento = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const tactil = matchMedia('(pointer: coarse)').matches;
@@ -300,7 +309,6 @@ function interfaz(raiz: HTMLElement, datos: Datos) {
   const $ = <E extends Element>(s: string) => raiz.querySelector<E>(s)!;
   const cedula = $<HTMLElement>('[data-cedula]');
   const nota = $<HTMLElement>('[data-nota]');
-  const biblioteca = $<HTMLElement>('[data-biblioteca]');
   const mapa = $<HTMLElement>('[data-mapa]');
   const botonMapa = $<HTMLButtonElement>('[data-abrir-mapa]');
   const placa = $<HTMLElement>('.g-placa');
@@ -316,7 +324,23 @@ function interfaz(raiz: HTMLElement, datos: Datos) {
     cerrarTodo() {
       cedula.hidden = true;
       nota.hidden = true;
-      biblioteca.hidden = true;
+      ui.cerrarSeccion();
+    },
+    /** FR-0014-04: el panel de una sección es la misma sección de la página. */
+    abrirSeccion(id: string) {
+      const panel = document.querySelector<HTMLElement>(`.sp[data-seccion="${id}"]`);
+      if (!panel) return false;
+      ui.cerrarTodo();
+      panel.dataset.abierta = '';
+      panel.scrollTop = 0;
+      panel.querySelector<HTMLElement>('h2')?.focus({ preventScroll: true });
+      return true;
+    },
+    cerrarSeccion() {
+      document.querySelectorAll<HTMLElement>('.sp[data-abierta]').forEach((s) => delete s.dataset.abierta);
+    },
+    seccionAbierta() {
+      return document.querySelector('.sp[data-abierta]') !== null;
     },
     abrirCedula(id: string) {
       const p = datos.piezas.find((x) => x.id === id);
@@ -351,14 +375,10 @@ function interfaz(raiz: HTMLElement, datos: Datos) {
       window.clearTimeout(relojNota);
       relojNota = window.setTimeout(() => (nota.hidden = true), 6500);
     },
-    abrirBiblioteca() {
-      ui.cerrarTodo();
-      biblioteca.hidden = false;
-      biblioteca.querySelector<HTMLElement>('h2')!.focus({ preventScroll: true });
-    },
     estacion(id: string) {
       $<HTMLElement>('[data-estacion-actual]').textContent = ESTACIONES[id]?.nombre ?? 'El estudio';
       raiz.querySelectorAll('[data-estacion]').forEach((b) => b.setAttribute('aria-current', String(b.getAttribute('data-estacion') === id)));
+      raiz.querySelectorAll('[data-seccion-ir]').forEach((b) => b.setAttribute('aria-current', String(b.getAttribute('data-seccion-ir') === id)));
       $<HTMLButtonElement>('[data-volver]').hidden = id === 'centro';
     },
     alternarMapa(abrir = mapa.hidden) {
@@ -411,7 +431,7 @@ export async function iniciar() {
   // FR-0012-09: sin WebGL o con ahorro de datos, el gabinete 2D.
   const ahorro = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
   if (!webglDisponible() || ahorro) {
-    raiz.dataset.estado = 'respaldo';
+    document.documentElement.dataset.vista = 'clasica';
     return;
   }
   const respaldoTardio = window.setTimeout(() => {
@@ -548,6 +568,7 @@ export async function iniciar() {
   const anims: Anim[] = [];
   const capaMarcas = raiz.querySelector<HTMLElement>('[data-marcas]')!;
   let fovBase = 58;
+  let corrimiento = 0;
   const ajustar = () => {
     const w = lienzo.clientWidth;
     const h = lienzo.clientHeight;
@@ -555,7 +576,22 @@ export async function iniciar() {
     camara.aspect = w / h;
     fovBase = w < h ? 72 : 58;
     camara.fov = fovBase * mirada.zoom;
+    if (corrimiento > 0) camara.setViewOffset(w, h, corrimiento, 0, w, h);
     camara.updateProjectionMatrix();
+  };
+  // FR-0014-04: con un panel abierto a la derecha, la escena se corre para que el mueble se vea.
+  const cedulaEl = raiz.querySelector<HTMLElement>('[data-cedula]')!;
+  const correr = (dt: number) => {
+    const w = lienzo.clientWidth;
+    const h = lienzo.clientHeight;
+    const panel = document.querySelector<HTMLElement>('.sp[data-abierta]') ?? (cedulaEl.hidden ? null : cedulaEl);
+    const meta = panel && w > 760 ? Math.min(w * 0.3, (panel.offsetWidth + 28) / 2) : 0;
+    if (Math.abs(meta - corrimiento) < 0.5) return;
+    corrimiento += (meta - corrimiento) * (reducirMovimiento ? 1 : Math.min(1, dt * 7));
+    if (meta === 0 && corrimiento < 1) {
+      corrimiento = 0;
+      camara.clearViewOffset();
+    } else camara.setViewOffset(w, h, corrimiento, 0, w, h);
   };
   new ResizeObserver(ajustar).observe(lienzo);
   ajustar();
@@ -590,6 +626,7 @@ export async function iniciar() {
     const dt = Math.min(0.05, (ahora - previo) / 1000);
     previo = ahora;
     mirada.actualizar(dt, fovBase);
+    correr(dt);
     avanzar(anims, dt);
     const flama = reducirMovimiento ? 0 : Math.sin(ahora * 0.011) * 0.18 + Math.sin(ahora * 0.037) * 0.12;
     lampara.intensity = (2.4 + flama) * brillo.lampara;
@@ -692,7 +729,7 @@ export async function iniciar() {
     medalla: 'levantar',
   };
   const pieza = (raizObj: Object3D, p: PiezaDato) =>
-    registrar(raizObj, { tipo: 'pieza', id: p.id, estacion: p.sala, nombre: p.titulo, animacion: ANIMACION_PIEZA[p.objeto ?? ''] ?? 'saltar' });
+    registrar(raizObj, { tipo: 'pieza', id: p.id, estacion: p.seccion, nombre: p.titulo, animacion: ANIMACION_PIEZA[p.objeto ?? ''] ?? 'saltar' });
 
   // Centro: mesa del explorador
   const mesaCentro = poner(M.wooden_table_02, [0, 0, 0.35], 0.1, 1.15);
@@ -713,6 +750,9 @@ export async function iniciar() {
   const candelabro = poner(M.lantern_chandelier_01, [0, ALTO, 0.3], 0, 1.2);
   candelabro.traverse((o) => (o.castShadow = false));
   curiosidad(candelabro, 'candelabro');
+  // FR-0014-05 · Redes y contacto: la correspondencia sobre la mesa
+  const cartas = poner(O.correspondencia(datos.redes.map((r, i) => T.sobre(r.etiqueta, r.cuenta, 21 + i))), [0.02, altoMesa + 0.006, 0.66], 0.05);
+  registrar(cartas, { tipo: 'estacion', id: 'contacto', nombre: 'Redes y contacto' });
 
   // Atmósfera, también interactiva (FR-0013-02)
   curiosidad(poner(M.GothicCabinet_01, [-3.35, 0, -3.42], 0, 0.95), 'gabinete-gotico');
@@ -723,9 +763,9 @@ export async function iniciar() {
   luzLinterna.position.set(-3.1, 0.7, 3.5);
   curiosidad(linterna, 'linterna');
 
-  // Artificialia: alacena victoriana
+  // Proyectos: alacena victoriana
   const alacena = poner(M.vintage_cabinet_01, [0, 0, -3.62], 0, 1.05);
-  registrar(alacena, { tipo: 'estacion', id: 'artificialia', nombre: 'Artificialia' }, false);
+  registrar(alacena, { tipo: 'estacion', id: 'proyectos', nombre: 'Proyectos' }, false);
   const yAlacena = superficie(alacena, 0, -3.36) || 0.95;
   const [pMosca] = piezaPor('campana');
   if (pMosca) pieza(poner(O.campanaMosca(T.etiqueta('Drosophila melanogaster', 'Modelo ampliado · 1,408 neuronas')), [-0.48, yAlacena, -3.33], 0.15, 1.15), pMosca);
@@ -746,11 +786,12 @@ export async function iniciar() {
     pieza(poner(O.periodicos(titulares.map((t, i) => T.periodico('Gaceta de Axon', t, 5 + i))), [0.55, yAlacena, -3.34], 0.12, 0.85), pPrensa);
   }
 
-  // Naturalia: pared de diplomas y consola con libros
+  // Títulos y diplomas: pared de diplomas y consola con la medalla
   const consola = poner(M.wooden_table_02.clone(), [-4.6, 0, -1.25], Math.PI / 2, 1);
-  registrar(consola, { tipo: 'estacion', id: 'naturalia', nombre: 'Naturalia' }, false);
+  registrar(consola, { tipo: 'estacion', id: 'titulos', nombre: 'Títulos y diplomas' }, false);
   const yConsola = superficie(consola, -4.6, -1.25) || 0.8;
-  curiosidad(poner(M.book_encyclopedia_set_01, [-4.66, yConsola, -1.62], Math.PI / 2, 0.9), 'libros');
+  const [pMedalla] = piezaPor('medalla');
+  if (pMedalla) pieza(poner(O.medallaEnCojin(), [-4.55, yConsola, -1.25], Math.PI / 2), pMedalla);
   const grados = piezaPor('diploma').sort((a, b) => b.fecha.localeCompare(a.fecha));
   const posDiplomas: Vec3[] = [
     [-1.62, 2.25, 0.5],
@@ -762,42 +803,47 @@ export async function iniciar() {
     const [z, y, w] = posDiplomas[i] ?? [-0.5 - i * 0.6, 1.8, 0.45];
     pieza(poner(O.diplomaEnmarcado(T.diploma(p.titulo, p.procedencia, p.fecha.slice(0, 4), 9 + i), w, w * 0.74), [-4.96, y, z], Math.PI / 2), p);
   });
-  const [pRevista] = piezaPor('revista');
-  if (pRevista) pieza(poner(O.revista(T.portadaRevista(pRevista.titulo, 'Revista Estilos de Aprendizaje')), [-4.55, yConsola, -0.95], Math.PI / 2 - 0.1), pRevista);
 
-  // Theatrum: busto sobre pedestal
-  registrar(poner(O.pedestal(), [-4.35, 0, 2.35], Math.PI / 2), { tipo: 'estacion', id: 'theatrum', nombre: 'Theatrum' }, false);
+  // Experiencia: bitácora abierta junto al busto
+  registrar(poner(O.pedestal(), [-4.35, 0, 2.35], Math.PI / 2), { tipo: 'estacion', id: 'experiencia', nombre: 'Experiencia' }, false);
   curiosidad(poner(M.marble_bust_01, [-4.35, 1.04, 2.35], Math.PI / 2, 1.2), 'busto');
+  const bitacora = poner(O.bitacora(T.paginasBitacora('Bitácora', datos.bitacora)), [-4.15, 0, 1.4], Math.PI / 2);
+  registrar(bitacora, { tipo: 'estacion', id: 'experiencia', nombre: 'Experiencia' });
 
-  // Mirabilia: baúl del explorador con la medalla
+  // Publicaciones: baúl del explorador con la revista y los artículos
   const baul = poner(M.treasure_chest, [4.3, 0, -2.2], -Math.PI / 2, 1);
-  registrar(baul, { tipo: 'estacion', id: 'mirabilia', nombre: 'Mirabilia' }, false);
-  const [pMedalla] = piezaPor('medalla');
-  if (pMedalla) pieza(poner(O.medallaEnCojin(), [4.28, superficie(baul, 4.3, -2.2) || 0.62, -2.2], -Math.PI / 2), pMedalla);
+  registrar(baul, { tipo: 'estacion', id: 'publicaciones', nombre: 'Publicaciones' }, false);
+  const yBaul = superficie(baul, 4.3, -2.2) || 0.62;
+  curiosidad(poner(M.book_encyclopedia_set_01, [4.3, yBaul, -2.5], -Math.PI / 2, 0.62), 'libros');
+  const [pRevista] = piezaPor('revista');
+  if (pRevista) pieza(poner(O.revista(T.portadaRevista(pRevista.titulo, 'Revista Estilos de Aprendizaje')), [4.25, yBaul, -1.95], -Math.PI / 2 + 0.1), pRevista);
 
-  // Scientifica: cajonera con instrumentos
+  // Certificaciones y cursos: cajonera con instrumentos
   const cajonera = poner(M.vintage_wooden_drawer_01, [4.45, 0, 0.45], -Math.PI / 2, 1);
-  registrar(cajonera, { tipo: 'estacion', id: 'scientifica', nombre: 'Scientifica' }, false);
+  registrar(cajonera, { tipo: 'estacion', id: 'certificaciones', nombre: 'Certificaciones y cursos' }, false);
   const yCaj = superficie(cajonera, 4.45, 0.45) || 1.09;
   curiosidad(poner(M.vintage_microscope, [4.42, yCaj, 0.05], -Math.PI / 2 - 0.4, 1.3), 'microscopio');
   curiosidad(poner(M.seadogs_compass, [4.4, yCaj, 0.55], -Math.PI / 2, 1.6), 'brujula');
   curiosidad(poner(M.vintage_binocular, [4.45, yCaj + 0.03, 0.95], -Math.PI / 2 + 0.6, 1.2), 'binoculares');
 
-  // Exotica: mesa de curiosidades
+  // Mesa de curiosidades
   const mesaExo = poner(M.wooden_table_02.clone(), [4.35, 0, 2.75], -Math.PI / 2, 1);
-  registrar(mesaExo, { tipo: 'estacion', id: 'exotica', nombre: 'Exotica' }, false);
+  registrar(mesaExo, { tipo: 'estacion', id: 'curiosidades', nombre: 'Curiosidades' }, false);
   const yExo = superficie(mesaExo, 4.35, 2.75) || 0.8;
   curiosidad(poner(M.lambis_shell, [4.3, yExo, 2.45], -1.2, 1.8), 'concha');
   curiosidad(poner(M.bronze_whale_statue, [4.4, yExo, 2.9], -Math.PI / 2 - 0.5, 0.42), 'ballena');
   curiosidad(poner(M.antique_ceramic_vase_01, [4.45, yExo, 3.25], 0, 0.9), 'porcelana');
 
-  // Atriles con placa de latón: llevan a su estación
-  for (const sala of datos.salas) {
-    const est = ESTACIONES[sala.id];
+  // Atriles con placa de latón: uno por sección visible, llevan a su mueble
+  for (const sec of datos.secciones) {
+    const est = ESTACIONES[sec.id];
     if (!est?.atril) continue;
-    const a = poner(O.atrilPlaca(T.placa(sala.nombre, sala.tema, sala.piezas === 0)), est.atril, est.atrilRot ?? 0);
-    registrar(a, { tipo: 'estacion', id: sala.id, nombre: `Ir a ${sala.nombre}` }, false);
+    const a = poner(O.atrilPlaca(T.placa(sec.nombre, sec.cuenta, false)), est.atril, est.atrilRot ?? 0);
+    registrar(a, { tipo: 'estacion', id: sec.id, nombre: sec.nombre }, false);
   }
+  const hayPanel = (id: string) => datos.secciones.some((x) => x.id === id);
+  /** Recorrido con las flechas de la barra: el centro y luego las secciones en orden. */
+  const RECORRIDO = ['centro', ...datos.secciones.map((x) => x.id)];
   ui.progreso(1);
 
   // ── Acciones (FR-0013-02) ──
@@ -841,7 +887,8 @@ export async function iniciar() {
         acercarA(it);
         break;
       case 'biblioteca':
-        ui.abrirBiblioteca();
+        irA('publicaciones');
+        ui.abrirSeccion('publicaciones');
         return;
       case 'mirar': {
         const v = camara.position.clone().sub(obj.getWorldPosition(new Vector3()));
@@ -867,6 +914,7 @@ export async function iniciar() {
     if (d.tipo === 'estacion') {
       ui.cerrarTodo();
       irA(d.id);
+      if (hayPanel(d.id)) ui.abrirSeccion(d.id);
     } else if (d.tipo === 'pieza') {
       if (estacionActual !== d.estacion) irA(d.estacion);
       animar(anims, parteAnimable(it), d.animacion);
@@ -900,19 +948,42 @@ export async function iniciar() {
       irA(b.dataset.estacion!);
     }),
   );
-  raiz.querySelectorAll<HTMLButtonElement>('[data-pieza]').forEach((b) =>
+  // FR-0014-03: el menú de secciones lleva al mueble y abre su panel.
+  const irASeccion = (id: string) => {
+    ui.alternarMapa(false);
+    ui.plegarPlaca();
+    ui.cerrarGuia();
+    irA(id);
+    ui.abrirSeccion(id);
+  };
+  document.querySelectorAll<HTMLButtonElement>('[data-seccion-ir]').forEach((b) => b.addEventListener('click', () => irASeccion(b.dataset.seccionIr!)));
+  document.querySelectorAll<HTMLButtonElement>('[data-cerrar-seccion]').forEach((b) => b.addEventListener('click', () => ui.cerrarSeccion()));
+  // FR-0014-04: desde el panel, "Mirar en el gabinete" lleva la cámara al objeto de la pieza.
+  document.querySelectorAll<HTMLButtonElement>('[data-mirar]').forEach((b) => {
+    const it = items.find((x) => x.dato.tipo === 'pieza' && x.dato.id === b.dataset.mirar);
+    if (!it) return;
+    b.hidden = false;
     b.addEventListener('click', () => {
-      const it = items.find((x) => x.dato.tipo === 'pieza' && x.dato.id === b.dataset.pieza);
-      if (it) elegir(it);
-    }),
-  );
+      ui.cerrarTodo();
+      acercarA(it);
+      animar(anims, parteAnimable(it), it.dato.tipo === 'pieza' ? it.dato.animacion : 'saltar');
+      ui.abrirCedula(it.dato.id);
+    });
+  });
+  // FR-0014-10: /#seccion abre esa sección.
+  const desdeAncla = () => {
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (hayPanel(id)) irASeccion(id);
+  };
+  window.addEventListener('hashchange', desdeAncla);
   const paso = (d: number) => {
     const i = Math.max(0, RECORRIDO.indexOf(estacionActual));
     const sig = RECORRIDO[(i + d + RECORRIDO.length) % RECORRIDO.length]!;
     ui.cerrarTodo();
     ui.plegarPlaca();
     ui.cerrarGuia();
-    irA(sig);
+    if (hayPanel(sig)) irASeccion(sig);
+    else irA(sig);
   };
   raiz.querySelector('[data-anterior]')!.addEventListener('click', () => paso(-1));
   raiz.querySelector('[data-siguiente]')!.addEventListener('click', () => paso(1));
@@ -1029,14 +1100,14 @@ export async function iniciar() {
     const t = e.target as HTMLElement;
     if (e.key === 'Escape') {
       if (!raiz.querySelector<HTMLElement>('[data-mapa]')!.hidden) ui.alternarMapa(false);
-      else if (t.closest('[data-cedula], [data-biblioteca], [data-nota]')) ui.cerrarTodo();
+      else if (ui.seccionAbierta() || t.closest('[data-cedula], [data-nota]')) ui.cerrarTodo();
       else {
         ui.cerrarTodo();
         irA('centro');
       }
       return;
     }
-    if (t.closest('input, textarea, [data-cedula], [data-biblioteca], [data-mapa]')) return;
+    if (t.closest('input, textarea, [data-cedula], [data-mapa], .sp')) return;
     const k = 0.09;
     // Las flechas giran la mirada en su dirección (izquierda mira a la izquierda).
     if (e.key === 'ArrowLeft') mirada.girar(k, 0);
@@ -1054,6 +1125,7 @@ export async function iniciar() {
   ui.listo();
   ui.estacion('centro');
   ui.abrirGuia();
+  desdeAncla();
   // Para pruebas automáticas
   (window as unknown as { __gabinete?: unknown }).__gabinete = { irA, elegir, items, escena, camara, mirada };
 }

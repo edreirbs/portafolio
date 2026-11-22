@@ -401,7 +401,9 @@ export function placa(titulo: string, subtitulo: string, montaje: boolean): Text
   }
   ctx.fillStyle = 'rgba(40, 24, 6, 0.92)';
   ctx.textAlign = 'center';
-  ctx.font = `600 78px ${SERIF}`;
+  let cuerpo = 78;
+  ctx.font = `600 ${cuerpo}px ${SERIF}`;
+  while (ctx.measureText(titulo).width > w - 90 && cuerpo > 40) ctx.font = `600 ${(cuerpo -= 4)}px ${SERIF}`;
   ctx.fillText(titulo, w / 2, 122);
   ctx.font = `30px ${MONO}`;
   ctx.fillText((montaje ? 'En montaje' : subtitulo).toUpperCase(), w / 2, 186);
@@ -437,4 +439,76 @@ export async function fuentesListas(): Promise<void> {
   } catch {
     /* si no cargan, el canvas usa las de respaldo */
   }
+}
+
+/** Spec 0014 · Sobre lacrado de la correspondencia: una red por sobre. */
+export function sobre(red: string, cuenta: string, semilla = 21): Texture {
+  const w = 512;
+  const h = 320;
+  const { c, ctx } = lienzo(w, h);
+  papel(ctx, w, h, '#efe3c4', semilla);
+  ctx.strokeStyle = 'rgba(92, 58, 20, 0.35)';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(w / 2, h * 0.52);
+  ctx.lineTo(w, 0);
+  ctx.stroke();
+  // Lacre
+  ctx.fillStyle = '#8e2b22';
+  ctx.beginPath();
+  ctx.arc(w / 2, h * 0.52, 34, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = 'rgba(255, 220, 200, 0.85)';
+  ctx.textAlign = 'center';
+  ctx.font = `600 30px ${SERIF}`;
+  ctx.fillText('ER', w / 2, h * 0.52 + 11);
+  ctx.fillStyle = '#2a1e12';
+  ctx.font = `600 44px ${SERIF}`;
+  ctx.fillText(red, w / 2, h - 70);
+  ctx.font = `22px ${MONO}`;
+  ctx.fillStyle = '#574b3f';
+  ctx.fillText(cuenta, w / 2, h - 32);
+  return textura(c);
+}
+
+/** Spec 0014 · Las dos páginas abiertas de la bitácora: la trayectoria en años. */
+export function paginasBitacora(titulo: string, entradas: { anios: string; texto: string }[]): Texture {
+  const w = 1024;
+  const h = 680;
+  const { c, ctx } = lienzo(w, h);
+  papel(ctx, w, h, '#eadcb8', 31);
+  // Canal del lomo
+  const lomo = ctx.createLinearGradient(w / 2 - 40, 0, w / 2 + 40, 0);
+  lomo.addColorStop(0, 'rgba(70, 44, 16, 0)');
+  lomo.addColorStop(0.5, 'rgba(70, 44, 16, 0.4)');
+  lomo.addColorStop(1, 'rgba(70, 44, 16, 0)');
+  ctx.fillStyle = lomo;
+  ctx.fillRect(w / 2 - 40, 0, 80, h);
+  ctx.fillStyle = '#2a1e12';
+  ctx.textAlign = 'left';
+  ctx.font = `italic 600 46px ${SERIF}`;
+  ctx.fillText(titulo, 56, 92);
+  ctx.strokeStyle = 'rgba(92, 58, 20, 0.45)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(56, 112);
+  ctx.lineTo(w / 2 - 56, 112);
+  ctx.stroke();
+  const mitad = Math.ceil(entradas.length / 2);
+  entradas.forEach((e, i) => {
+    const col = i < mitad ? 0 : 1;
+    const fila = col === 0 ? i : i - mitad;
+    const x = col === 0 ? 56 : w / 2 + 48;
+    const y = (col === 0 ? 168 : 92) + fila * 96;
+    ctx.fillStyle = '#8e2b22';
+    ctx.font = `24px ${MONO}`;
+    ctx.fillText(e.anios, x, y);
+    ctx.fillStyle = '#2a1e12';
+    ctx.font = `italic 30px ${SERIF}`;
+    partir(ctx, e.texto, w / 2 - 110)
+      .slice(0, 2)
+      .forEach((l, j) => ctx.fillText(l, x, y + 34 + j * 30));
+  });
+  return textura(c);
 }

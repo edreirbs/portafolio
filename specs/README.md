@@ -31,6 +31,8 @@ aprobación, salvo en la constitución (ver su sección de gobierno).
 | 0011 | Lanzamiento | Pendiente | F4 |
 | [0012](0012-gabinete-3d/spec.md) | El gabinete en 3D · [plan](0012-gabinete-3d/plan.md) | Hecha (prototipo) | F2 |
 | [0013](0013-experiencia-gabinete/spec.md) | Experiencia del gabinete 3D | Hecha | F2 |
+| [0014](0014-portafolio-profesional/spec.md) | Portafolio profesional dentro del gabinete · [plan](0014-portafolio-profesional/plan.md) | En construcción | F2 |
+| [0015](0015-asistente/spec.md) | Asistente del portafolio · [ADR-0003](../docs/adr/0003-asistente-netlify-claude.md) | Aprobada | F2 |
 
 ## Decisiones pendientes
 
@@ -46,12 +48,14 @@ Las responde Edrei. Cada una bloquea lo que dice la última columna.
 | D-7 | ¿La mosca de "Mátala si puedes" es el ejemplar vivo del Vestíbulo? | Sí, en versión ligera que carga al final. | 0004 |
 | D-9 | ¿Se citan las recomendaciones públicas de LinkedIn? | Sí, con nombre y cargo. | 0007 |
 | D-10 | ¿Se publican los proyectos del programa de Agentic AI? | Sí, en GitHub, marcados como "proyecto del programa". | 0005 |
-| D-11 | ¿El gabinete 3D es la portada del sitio? | Sí, con la versión clásica como respaldo y ficha rápida, una vez medido en un teléfono real. | 0012 |
 
 ## Decisiones tomadas
 
 | Fecha | Decisión | Dónde |
 |---|---|---|
+| 2026-11-21 | **D-11 · El gabinete 3D es la portada.** Las secciones profesionales viven dentro del 3D; la vista clásica es la misma página cuando el navegador no puede con el 3D o el visitante la elige. | Spec 0014 |
+| 2026-11-21 | **Redes publicadas:** LinkedIn, GitHub, YouTube, X y edreirobles.com. | Spec 0014 |
+| 2026-11-21 | **Asistente:** Claude Haiku 5.5, límite de USD 1 al mes, servidor en Netlify. | Spec 0015, ADR-0003 |
 | 2026-11-20 | Claude crea ramas, commits y PRs y los fusiona sin pedir permiso. | `CLAUDE.md` |
 | 2026-11-20 | Alcance: solo lo personal. Nada del trabajo institucional del empleo actual de Edrei: ni sus proyectos, plataformas, métricas ni presentaciones internas. | Constitución, art. VIII |
 | 2026-11-20 | **D-1 · Posicionamiento directivo.** Título: "Estratega de IA para el aprendizaje". Promesa: "Diseño y dirijo la adopción de IA en universidades y empresas: de la visión al impacto medible." Pruebas: doctorando en Ciencias (IPN), más de 10 años en educación, ponente en 4 países. | 0001, 0004 |

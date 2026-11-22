@@ -54,6 +54,8 @@ const tituloCompleto = actual === 'inicio' ? titulo : `${titulo} · Edrei Robles
       <slot />
     </main>
     <Pie />
+    <!-- Spec 0014: el gabinete 3D se monta encima de la página cuando el navegador puede. -->
+    <slot name="capa" />
     <script is:inline>
       (function () {
         var raiz = document.documentElement;

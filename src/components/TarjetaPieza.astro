@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import type { Pieza } from '../lib/piezas';
-import { INFO } from '../lib/salas';
+import { INFO_SECCION, seccionDe } from '../lib/secciones';
 import { anio, periodoAnios } from '../lib/fechas';
 import { url } from '../lib/url';
 
@@ -14,6 +14,7 @@ const { pieza, nivel = 'h3', prioridad = false } = Astro.props;
 const d = pieza.data;
 const Titulo = nivel;
 const cuando = d.sala === 'naturalia' && d.fecha_fin ? periodoAnios(d.fecha, d.fecha_fin) : anio(d.fecha);
+const ligas = d.evidencia.filter((e) => e.url).slice(0, 2);
 ---
 
 <article class="pieza">
@@ -36,8 +37,24 @@ const cuando = d.sala === 'naturalia' && d.fecha_fin ? periodoAnios(d.fecha, d.f
     <span class="catalogo">{d.catalogo}</span>
     <Titulo><a href={url(`piezas/${pieza.id}`)}>{d.titulo}</a></Titulo>
     <p class="pieza__sub">{d.subtitulo}</p>
+    {
+      ligas.length > 0 && (
+        <p class="pieza__ligas">
+          {ligas.map((e) => (
+            <a href={e.url} rel="noopener">
+              {e.etiqueta}
+            </a>
+          ))}
+          {d.objeto && (
+            <button type="button" class="ficha__mirar" data-mirar={pieza.id} hidden>
+              Mirar en el gabinete
+            </button>
+          )}
+        </p>
+      )
+    }
     <div class="pieza__pie">
-      <span>{INFO[d.sala].nombre}</span>
+      <span>{INFO_SECCION[seccionDe(pieza)].corto}</span>
       <span>{cuando}</span>
     </div>
   </div>

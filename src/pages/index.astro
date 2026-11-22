@@ -1,25 +1,83 @@
 ---
-import { getEntry } from 'astro:content';
+// Spec 0014 · La portada: el gabinete 3D cuando el navegador puede, la versión clásica siempre
+// debajo. Las dos vistas comparten el mismo HTML de las secciones (FR-0014-06).
 import Base from '../layouts/Base.astro';
 import TarjetaPieza from '../components/TarjetaPieza.astro';
-import Plano from '../components/Plano.astro';
+import FichaPieza from '../components/FichaPieza.astro';
+import SeccionPro from '../components/SeccionPro.astro';
 import EjemplarVivo from '../components/EjemplarVivo.astro';
-import { piezas, porSala } from '../lib/piezas';
+import Gabinete3D from '../components/Gabinete3D.astro';
+import { portafolio } from '../lib/portafolio';
+import { INFO_SECCION } from '../lib/secciones';
+import { periodo, periodoAnios } from '../lib/fechas';
 import { url } from '../lib/url';
-import { Image } from 'astro:assets';
-import portada from '../assets/gabinete-portada.webp';
 
-const perfil = (await getEntry('perfil', 'edrei'))!.data;
-const todas = await piezas();
-const destacadas = todas.filter((p) => p.data.destacada).slice(0, 6);
-const ejemplar = todas.find((p) => p.data.ejemplar);
-const conteo = await porSala();
-const linkedin = perfil.contacto.find((c) => c.etiqueta === 'LinkedIn') ?? perfil.contacto[0]!;
+const P = await portafolio();
+const { perfil, porSeccion, registro, articulos, visibles, linkedin } = P;
+const ejemplar = P.todas.find((p) => p.data.ejemplar);
+const numero = (s: (typeof visibles)[number]) => visibles.indexOf(s) + 1;
 
+const SELLO: Record<string, string> = { LinkedIn: 'in', GitHub: 'GH', YouTube: '▶', X: 'X', 'Sitio web': 'www' };
+const cuentaDe = (direccion: string) => {
+  const u = new URL(direccion);
+  const ruta = u.pathname.replace(/^\/(in\/)?|\/$/g, '');
+  if (u.hostname.endsWith('x.com')) return `@${ruta}`;
+  return ruta || u.hostname.replace(/^www\./, '');
+};
+const anios = (r: (typeof registro)[number]) => {
+  const desde = r.data.puestos.map((x) => x.desde).sort()[0]!;
+  const hastas = r.data.puestos.map((x) => x.hasta);
+  return periodoAnios(desde, hastas.includes('hoy') ? 'hoy' : hastas.sort().at(-1));
+};
 ---
 
 <Base titulo={`${perfil.nombre} · ${perfil.titulo}`} descripcion={perfil.promesa} actual="inicio">
-  <section class="vestibulo contenedor" aria-labelledby="nombre">
+  <Fragment slot="head">
+    <!-- FR-0014-01 y 06: se elige la vista antes de pintar, para que no parpadee. -->
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        var q = new URLSearchParams(location.search);
+        var pedida = q.get('vista');
+        var guardada = null;
+        try {
+          guardada = localStorage.getItem('vista');
+          if (pedida === '3d' || pedida === 'clasica') localStorage.setItem('vista', pedida);
+        } catch (e) {}
+        function webgl(estricto) {
+          try {
+            var c = document.createElement('canvas');
+            var o = estricto ? { failIfMajorPerformanceCaveat: true } : undefined;
+            var gl = c.getContext('webgl2', o) || c.getContext('webgl', o);
+            if (!gl) return false;
+            // Render por software (SwiftShader, llvmpipe): la escena iría a pocos cuadros por segundo.
+            var info = gl.getExtension('WEBGL_debug_renderer_info');
+            var nombre = String(gl.getParameter(info ? info.UNMASKED_RENDERER_WEBGL : gl.RENDERER) || '');
+            var lento = /swiftshader|llvmpipe|software|basic render/i.test(nombre);
+            var ext = gl.getExtension('WEBGL_lose_context');
+            if (ext) ext.loseContext();
+            return !(estricto && lento);
+          } catch (e) {
+            return false;
+          }
+        }
+        var pref = pedida || guardada;
+        var ahorro = (navigator.connection && navigator.connection.saveData) || (navigator.deviceMemory && navigator.deviceMemory < 2);
+        var tres = false;
+        if (pref === '3d') tres = webgl(false);
+        else if (pref !== 'clasica' && !ahorro) tres = webgl(true);
+        d.dataset.vista = tres ? '3d' : 'clasica';
+        if (!tres) d.dataset.puede3d = webgl(false) ? 'si' : 'no';
+        if (pedida) {
+          q.delete('vista');
+          var resto = q.toString();
+          history.replaceState(null, '', location.pathname + (resto ? '?' + resto : '') + location.hash);
+        }
+      })();
+    </script>
+  </Fragment>
+
+  <section class="vestibulo portada contenedor" aria-labelledby="nombre">
     <div class="vestibulo__rejilla">
       <div>
         <p class="etiqueta">{perfil.titulo}</p>
@@ -29,53 +87,173 @@ const linkedin = perfil.contacto.find((c) => c.etiqueta === 'LinkedIn') ?? perfi
           {perfil.pruebas.map((p) => <li title={p.fuente}>{p.texto}</li>)}
         </ul>
         <div class="acciones">
-          <a class="boton boton--principal" href={url('explorar')}>Entrar al gabinete</a>
-          <a class="boton" href={url('cv')} data-activa-ficha>Ficha rápida</a>
-          <a class="boton boton--texto" href={linkedin.url} rel="me">Contactar en {linkedin.etiqueta}</a>
+          <a class="boton boton--principal" href={`${url()}?vista=3d`} data-solo-3d>Entrar al gabinete 3D</a>
+          <a class="boton" href={url('cv')}>Currículum</a>
+          <a class="boton boton--texto" href={linkedin.url} rel="me">Escribirme en {linkedin.etiqueta}</a>
         </div>
       </div>
       {ejemplar && <EjemplarVivo pieza={ejemplar} />}
     </div>
   </section>
 
-  <section class="seccion contenedor deco" aria-labelledby="titulo-3d">
-    <a class="portal" href={url('explorar')}>
-      <Image
-        src={portada}
-        alt="El estudio del explorador en 3D: alacena con vitrina, gabinete gótico, reloj de pie, mesa con globo terráqueo y lámpara de aceite, y un sillón sobre alfombra persa."
-        widths={[640, 960, 1400]}
-        sizes="(min-width: 1200px) 1120px, 94vw"
-        loading="lazy"
-        fetchpriority="low"
-      />
-      <span class="portal__texto">
-        <span class="etiqueta">Nuevo · El gabinete en 3D</span>
-        <span class="portal__titulo" id="titulo-3d">Entra al estudio del explorador</span>
-        <span class="portal__sub">Recorre las salas, abre las vitrinas y elige qué pieza mirar.</span>
-      </span>
-    </a>
-  </section>
-
-  <section class="seccion contenedor" aria-labelledby="vitrina">
-    <div class="seccion__cabeza">
-      <p class="etiqueta">Vitrina principal</p>
-      <h2 id="vitrina">Piezas destacadas</h2>
-      <p>Lo mejor de la colección. Cada pieza tiene su cédula y su evidencia: código, demo o documento.</p>
-    </div>
-    <ul class="vitrina">
-      {destacadas.map((p) => <li><TarjetaPieza pieza={p} /></li>)}
+  <nav class="indice contenedor" aria-label="Secciones">
+    <ul>
+      {
+        visibles.map((s) => (
+          <li>
+            <a href={`#${s}`}>{INFO_SECCION[s].nombre}</a>
+          </li>
+        ))
+      }
     </ul>
-  </section>
+  </nav>
 
-  <section class="seccion contenedor" id="plano" aria-labelledby="titulo-plano">
-    <div class="seccion__cabeza">
-      <p class="etiqueta">Plano del gabinete</p>
-      <h2 id="titulo-plano">Seis salas</h2>
-      <p>
-        Las <i>Wunderkammern</i> de los siglos XVI y XVII ordenaban el mundo en familias de objetos.
-        Este gabinete usa esa misma taxonomía para ordenar una trayectoria.
-      </p>
-    </div>
-    <Plano conteo={conteo} />
-  </section>
+  {
+    visibles.includes('proyectos') && (
+      <SeccionPro id="proyectos" numero={numero('proyectos')}>
+        <ul class="vitrina">
+          {porSeccion.proyectos.map((p, i) => (
+            <li>
+              <TarjetaPieza pieza={p} prioridad={i < 2} />
+            </li>
+          ))}
+        </ul>
+      </SeccionPro>
+    )
+  }
+
+  {
+    visibles.includes('titulos') && (
+      <SeccionPro id="titulos" numero={numero('titulos')}>
+        <ul class="fichas">
+          {porSeccion.titulos.map((p) => (
+            <li>
+              <FichaPieza pieza={p} />
+            </li>
+          ))}
+        </ul>
+      </SeccionPro>
+    )
+  }
+
+  {
+    visibles.includes('certificaciones') && (
+      <SeccionPro id="certificaciones" numero={numero('certificaciones')}>
+        <ul class="fichas">
+          {porSeccion.certificaciones.map((p) => (
+            <li>
+              <FichaPieza pieza={p} />
+            </li>
+          ))}
+        </ul>
+      </SeccionPro>
+    )
+  }
+
+  {
+    visibles.includes('experiencia') && (
+      <SeccionPro id="experiencia" numero={numero('experiencia')}>
+        <ol class="linea">
+          {registro.map((r) => (
+            <li class="linea__item">
+              <p class="linea__anios">{anios(r)}</p>
+              <div>
+                <h3>{r.data.organizacion}</h3>
+                {r.data.lugar && <p class="linea__lugar">{r.data.lugar}</p>}
+                <ul class="linea__puestos">
+                  {r.data.puestos.map((x) => (
+                    <li>
+                      <strong>{x.puesto}</strong> <span>{periodo(x.desde, x.hasta)}</span>
+                    </li>
+                  ))}
+                </ul>
+                {r.data.alcance && <p class="linea__texto">{r.data.alcance}</p>}
+                {r.data.logros.length > 0 && (
+                  <ul class="linea__logros">
+                    {r.data.logros.map((l) => (
+                      <li>{l}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </li>
+          ))}
+        </ol>
+        {porSeccion.experiencia.length > 0 && (
+          <>
+            <h3 class="sp__sub">Conferencias y docencia</h3>
+            <ul class="fichas">
+              {porSeccion.experiencia.map((p) => (
+                <li>
+                  <FichaPieza pieza={p} />
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </SeccionPro>
+    )
+  }
+
+  {
+    visibles.includes('publicaciones') && (
+      <SeccionPro id="publicaciones" numero={numero('publicaciones')}>
+        {porSeccion.publicaciones.length > 0 && (
+          <ul class="fichas">
+            {porSeccion.publicaciones.map((p) => (
+              <li>
+                <FichaPieza pieza={p} />
+              </li>
+            ))}
+          </ul>
+        )}
+        {articulos.length > 0 && (
+          <>
+            <h3 class="sp__sub">Divulgación · {articulos.length} artículos en LinkedIn</h3>
+            <ol class="articulos">
+              {articulos.map((a) => (
+                <li>
+                  <a href={a.url} rel="noopener">
+                    {a.titulo}
+                  </a>{' '}
+                  <span>{a.fecha.slice(0, 4)}</span>
+                </li>
+              ))}
+            </ol>
+          </>
+        )}
+      </SeccionPro>
+    )
+  }
+
+  <SeccionPro id="contacto" numero={numero('contacto')}>
+    <ul class="redes">
+      {
+        perfil.contacto.map((c) => (
+          <li>
+            <a class="red" href={c.url} rel="me">
+              <span class="red__sello" aria-hidden="true">
+                {SELLO[c.etiqueta] ?? c.etiqueta.slice(0, 2)}
+              </span>
+              <span class="red__texto">
+                <strong>{c.etiqueta}</strong>
+                <small>{cuentaDe(c.url)}</small>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+      <li>
+        <a class="red" href={url('cv')}>
+          <span class="red__sello" aria-hidden="true">CV</span>
+          <span class="red__texto">
+            <strong>Currículum</strong>
+            <small>Lista para imprimir</small>
+          </span>
+        </a>
+      </li>
+    </ul>
+  </SeccionPro>
+
+  <Gabinete3D slot="capa" p={P} />
 </Base>
