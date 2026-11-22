@@ -50,7 +50,7 @@
   accion: levantar
 - id: busto
   nombre: Busto de mármol
-  nota: "Theatrum: aquí llegarán los cursos, talleres y conferencias."
+  nota: "Aquí llegarán las conferencias y los talleres, cada uno con su constancia."
   accion: mirar
 - id: concha
   nombre: Concha Lambis

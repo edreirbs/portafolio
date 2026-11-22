@@ -1,0 +1,23 @@
+---
+// Spec 0014 · Una sección del portafolio. En la vista clásica es un bloque de la página;
+// en el gabinete 3D, el mismo HTML se vuelve el panel de su mueble (FR-0014-04 y 06).
+import { INFO_SECCION, type Seccion } from '../lib/secciones';
+
+interface Props {
+  id: Seccion;
+  numero: number;
+  cuenta?: string;
+}
+const { id, numero, cuenta } = Astro.props;
+const info = INFO_SECCION[id];
+---
+
+<section class="sp seccion contenedor" id={id} data-seccion={id} aria-labelledby={`t-${id}`}>
+  <div class="sp__cabeza seccion__cabeza">
+    <p class="etiqueta">{String(numero).padStart(2, '0')} · {cuenta ?? info.corto}</p>
+    <h2 id={`t-${id}`} tabindex="-1">{info.nombre}</h2>
+    <p>{info.descripcion}</p>
+  </div>
+  <button type="button" class="sp__cerrar" data-cerrar-seccion aria-label={`Cerrar ${info.nombre}`}>×</button>
+  <slot />
+</section>

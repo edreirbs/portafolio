@@ -1,18 +1,26 @@
 ---
 import { url } from '../lib/url';
+import { INFO_SECCION } from '../lib/secciones';
 const { actual } = Astro.props as { actual?: string };
+// Spec 0014: las secciones de la portada, con nombres claros.
+const ligas = (['proyectos', 'titulos', 'experiencia', 'publicaciones', 'contacto'] as const).map((s) => ({
+  href: url(`#${s}`),
+  texto: INFO_SECCION[s].corto,
+}));
 ---
 
 <header class="cabecera">
   <div class="contenedor cabecera__fila">
-    <a class="marca" href={url()} aria-label="Gabinete de Edrei Robles, inicio">
+    <a class="marca" href={url()}>
+      <span class="visualmente-oculto">Inicio:</span>
       <span class="marca__sello" aria-hidden="true">ER</span>
-      <span class="marca__texto">Edrei Robles<small>Gabinete</small></span>
+      <span class="marca__texto">Edrei Robles<small>Portafolio</small></span>
     </a>
     <nav class="navegacion" aria-label="Principal">
-      <a href={url('explorar')}>Gabinete 3D</a>
-      <a href={url('#plano')}>Salas</a>
+      {ligas.map((l) => <a class="navegacion__seccion" href={l.href}>{l.texto}</a>)}
       <a href={url('cv')} aria-current={actual === 'cv' ? 'page' : undefined}>CV</a>
+      <!-- FR-0014-06: solo aparece si el navegador puede abrir el gabinete. -->
+      <a class="navegacion__3d" href={`${url()}?vista=3d`} data-solo-3d>Ver en 3D</a>
       <!-- FR-0003-01 y 05: con JavaScript es un interruptor; sin él, una liga al CV. -->
       <button type="button" class="boton interruptor" data-ficha-toggle aria-pressed="false" hidden>
         Ficha rápida

@@ -293,3 +293,55 @@ export function soporteReloj(): Group {
   g.add(caja, forro);
   return g;
 }
+
+/** Spec 0014 · Redes y contacto: sobres lacrados en abanico y un sello de lacre. */
+export function correspondencia(sobres: Texture[]): Group {
+  const g = new Group();
+  const n = sobres.length;
+  sobres.forEach((tex, i) => {
+    const t = n === 1 ? 0 : i / (n - 1) - 0.5;
+    const s = malla(new PlaneGeometry(0.2, 0.125), new MeshStandardMaterial({ map: tex, roughness: 0.9 }), false);
+    s.rotation.x = -Math.PI / 2;
+    s.rotation.z = -t * 0.9;
+    s.position.set(t * 0.34, 0.002 + i * 0.0012, -Math.abs(t) * 0.05);
+    g.add(s);
+  });
+  const sello = new Group();
+  const mango = malla(new CylinderGeometry(0.012, 0.016, 0.09, 16), MAT.nogalClaro());
+  mango.position.y = 0.07;
+  const cuello = malla(new CylinderGeometry(0.01, 0.012, 0.02, 16), MAT.laton());
+  cuello.position.y = 0.018;
+  const cabeza = malla(new CylinderGeometry(0.018, 0.018, 0.012, 24), MAT.laton());
+  cabeza.position.y = 0.006;
+  sello.add(mango, cuello, cabeza);
+  sello.position.set(0.24, 0, 0.09);
+  g.add(sello);
+  return g;
+}
+
+/** Spec 0014 · Experiencia: bitácora abierta sobre un atril de lectura. */
+export function bitacora(paginas: Texture): Group {
+  const g = new Group();
+  const poste = malla(new CylinderGeometry(0.03, 0.04, 0.95, 16), MAT.nogal());
+  poste.position.y = 0.475;
+  const pie = malla(new CylinderGeometry(0.2, 0.24, 0.04, 32), MAT.nogal());
+  pie.position.y = 0.02;
+  const atril = new Group();
+  atril.position.y = 1.0;
+  atril.rotation.x = 0.42;
+  const tabla = malla(new BoxGeometry(0.62, 0.03, 0.42), MAT.nogalClaro());
+  atril.add(tabla);
+  const tapas = malla(new BoxGeometry(0.6, 0.02, 0.4), new MeshStandardMaterial({ color: 0x4a1d14, roughness: 0.7 }));
+  tapas.position.y = 0.025;
+  atril.add(tapas);
+  const hojas = malla(new PlaneGeometry(0.56, 0.37), new MeshStandardMaterial({ map: paginas, roughness: 0.92 }), false);
+  hojas.rotation.x = -Math.PI / 2;
+  hojas.position.y = 0.037;
+  atril.add(hojas);
+  const cinta = malla(new BoxGeometry(0.014, 0.002, 0.16), MAT.terciopelo(), false);
+  cinta.position.set(0.02, 0.039, 0.26);
+  atril.add(cinta);
+  g.add(pie, poste, atril);
+  g.userData.anima = atril;
+  return g;
+}

@@ -1,0 +1,23 @@
+---
+// FR-0014-09: las direcciones viejas llevan a su sección en la portada.
+interface Props {
+  destino: string;
+}
+const { destino } = Astro.props;
+const absoluto = new URL(destino, Astro.site).href;
+---
+
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Esta sala se mudó · Edrei Robles</title>
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={absoluto} />
+    <meta http-equiv="refresh" content={`0; url=${destino}`} />
+  </head>
+  <body>
+    <p>Esta página se mudó a <a href={destino}>la portada del portafolio</a>.</p>
+  </body>
+</html>
