@@ -809,11 +809,13 @@ export async function iniciar() {
 
   // Spec 0006 · Certificaciones: credenciales enmarcadas en el muro derecho, frente a su atril.
   const certificados = piezaPor('certificado').sort((a, b) => b.fecha.localeCompare(a.fecha));
-  certificados.slice(0, 4).forEach((p, i) => {
-    const z = 0.45 + (i % 2 ? 0.34 : -0.34);
-    const y = i < 2 ? 1.72 : 1.2;
+  // Hasta ocho, en dos filas de cuatro centradas frente a la vista de la sección.
+  const COLUMNAS = [-0.84, -0.28, 0.28, 0.84];
+  certificados.slice(0, 8).forEach((p, i) => {
+    const z = 0.45 + COLUMNAS[i % 4]!;
+    const y = i < 4 ? 1.86 : 1.4;
     const tex = T.diploma(p.titulo, p.procedencia, p.fecha.slice(0, 4), 31 + i, 'la credencial');
-    pieza(poner(O.diplomaEnmarcado(tex, 0.52, 0.385), [4.96, y, z], -Math.PI / 2), p);
+    pieza(poner(O.diplomaEnmarcado(tex, 0.46, 0.34), [4.96, y, z], -Math.PI / 2), p);
   });
 
   // Experiencia: bitácora abierta
