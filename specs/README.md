@@ -37,19 +37,7 @@ aprobación, salvo en la constitución (ver su sección de gobierno).
 
 ## Decisiones pendientes
 
-Las responde Edrei. Cada una bloquea lo que dice la última columna.
-
-| ID | Pregunta | Propuesta de Claude | Bloquea |
-|---|---|---|---|
-| D-2 | ¿Idiomas? | Español primero; inglés en F3. | 0009 |
-| D-3 | ¿URL? | El dominio propio `edreirobles.com` (hoy en Google Sites) apunta al gabinete; sus recursos migran como piezas. | 0011 |
-| D-4 | ¿Qué repos privados se pueden mostrar? Hay siete; la lista está en el chat del 2026-11-27. | Como caso de estudio, sin código ni datos de clientes. | 0005, 0016 |
-| D-12 | ¿Son personales y se pueden mostrar `mapa-red-funciones-ia`, `entrevista` y `cerebro-CREA`? | Mostrar los personales; los de otro equipo, solo con su permiso. | 0016 |
-| D-5 | ¿Qué contacto es público? | LinkedIn y un correo dedicado; nada de teléfono. | 0003, 0004 |
-| D-6 | ¿Retrato o ilustración? | Retrato real tratado como grabado, para que encaje con el gabinete. | 0004 |
-| D-7 | ¿La mosca de "Mátala si puedes" es el ejemplar vivo del Vestíbulo? | Sí, en versión ligera que carga al final. | 0004 |
-| D-9 | ¿Se citan las recomendaciones públicas de LinkedIn? | Sí, con nombre y cargo. | 0007 |
-| D-10 | ¿Se publican los proyectos del programa de Agentic AI? | Sí, en GitHub, marcados como "proyecto del programa". | 0005 |
+Ninguna. Edrei delegó todas las decisiones el 2026-11-27; quedan registradas abajo.
 
 ## Decisiones tomadas
 
@@ -58,6 +46,17 @@ Las responde Edrei. Cada una bloquea lo que dice la última columna.
 | 2026-11-21 | **D-11 · El gabinete 3D es la portada.** Las secciones profesionales viven dentro del 3D; la vista clásica es la misma página cuando el navegador no puede con el 3D o el visitante la elige. | Spec 0014 |
 | 2026-11-21 | **Redes publicadas:** LinkedIn, GitHub, YouTube, X y edreirobles.com. | Spec 0014 |
 | 2026-11-21 | **Asistente:** Claude Haiku 5.5, límite de USD 1 al mes, servidor en Netlify. | Spec 0015, ADR-0003 |
+| 2026-11-27 | **D-2 · Idiomas:** español; el inglés llega con la spec 0009. El asistente ya responde en el idioma de quien pregunta. | 0009 |
+| 2026-11-27 | **D-3 · URL:** se queda `edreirbs.github.io/portafolio` hasta que el dominio `edreirobles.com` se apunte al sitio desde su registrador. | 0011 |
+| 2026-11-27 | **D-4 · Repos privados:** solo *Lexi*, con su app en línea como evidencia y sin código. Los demás no se muestran. | 0016 |
+| 2026-11-27 | **D-5 · Contacto público:** LinkedIn y las redes; sin correo ni teléfono. | 0003, 0014 |
+| 2026-11-27 | **D-6 · Retrato:** sin retrato por ahora. | 0004 |
+| 2026-11-27 | **D-7 · Ejemplar vivo:** sí, la mosca de *Mátala si puedes* en la vista clásica. | 0004 |
+| 2026-11-27 | **D-9 · Recomendaciones de LinkedIn:** no se citan, porque son datos de otras personas. | 0007 |
+| 2026-11-27 | **D-10 · Programa de Agentic AI:** sus proyectos entran cuando estén en GitHub, marcados como proyecto del programa. | 0005 |
+| 2026-11-27 | **D-12 · Repos dudosos:** `mapa-red-funciones-ia`, `entrevista` y `cerebro-CREA` quedan fuera. | 0016 |
+| 2026-11-27 | **Publicaciones:** se quedan el artículo académico y los artículos de divulgación. | 0014 |
+| 2026-11-27 | **Certificaciones:** siguen fuera mientras no tengan liga pública de verificación. | 0006 |
 | 2026-11-27 | **Proyectos al centro:** todos los proyectos que valen la pena y ningún objeto de adorno en el gabinete. | Spec 0016 |
 | 2026-11-27 | **Asistente conectado por Claude:** usa el AI Gateway de Netlify mientras no exista la llave propia, con topes diarios más bajos. | Spec 0015, ADR-0003 |
 | 2026-11-20 | Claude crea ramas, commits y PRs y los fusiona sin pedir permiso. | `CLAUDE.md` |

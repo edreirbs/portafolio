@@ -32,12 +32,16 @@ mostrarlos: "no quiero objetos nada más porque estén ahí".
 | `claude-for-business` | **Nuevo:** curso y cuadernillo. |
 | `plantilla-*-s7`, `junta-atn`, `registro-junta`, `comprobador-s7`, `ejemplo-s7-edrei`, `s7-demo-edrei` | **Nuevo:** una sola pieza, *Kit de práctica: Claude Code en la nube*. |
 | `DCL`, `teorema-limite-central`, `nobel-fisica-2023` | **Nuevo:** una sola pieza, *Simulaciones para enseñar física*. |
-| `mapa-red-funciones-ia`, `entrevista`, `cerebro-CREA` | **Se pregunta a Edrei:** si es personal y si se puede mostrar. |
+| `lexi` (privado) | **Nuevo:** *Lexi*, con la app en línea como evidencia y sin código. |
+| *Radar Laboral* (app publicada en su Netlify) | **Nuevo:** con la app en línea como evidencia. |
+| *De 0 a 100 con Claude gratis* (página publicada en su Netlify) | **Nuevo** en Experiencia, como taller propio. |
+| `mapa-red-funciones-ia` | Fuera: no se puede descartar que sea institucional. |
+| `entrevista`, `cerebro-CREA` | Fuera: son de otro equipo y otra organización. |
 | `mda`, `herramientas-vertical`, `herramientas_horizontal` | Fuera: institucionales. |
 | `gym-app` | Fuera: trae datos de otra persona. |
 | `qr`, `graph`, `chatbot-amira`, `cv-nao`, `editor-texto-linkedin`, `link-whisper-edreirobles`, `mas`, `simulacion-mas` | Fuera: utilidades menores, plantillas o repos sin contenido. |
 | Forks y `portafolio` | Fuera. |
-| Repos privados | No se nombran aquí; se preguntan a Edrei (D-4). |
+| Demás repos privados | Fuera: notas personales, facturación ligada al empleo, pruebas o material ya cubierto por el kit. |
 
 ## Cómo sabremos que funcionó
 
@@ -51,3 +55,4 @@ mostrarlos: "no quiero objetos nada más porque estén ahí".
 | Fecha | Cambio |
 |---|---|
 | 2026-11-27 | Creada y hecha a pedido de Edrei. Se quitan 16 modelos de adorno: los modelos del 3D bajan de 4.3 MB a 1.4 MB. |
+| 2026-11-27 | Edrei delegó todas las decisiones. Entran *Lexi*, *Radar Laboral* y el taller *De 0 a 100 con Claude gratis*; los dudosos quedan fuera. Los seis cuadros van en una sola fila para que los nueve proyectos se vean juntos. |

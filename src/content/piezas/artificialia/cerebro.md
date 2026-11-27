@@ -17,8 +17,7 @@ evidencia:
 imagen:
   src: ../../../assets/piezas/second-brain.webp
   alt: Pantalla de candado de Cerebro, que pide la frase para descifrar el tablero en el navegador.
-destacada: true
-orden: 4
+orden: 7
 objeto: cuadro
 revisada: 2026-11
 ---
