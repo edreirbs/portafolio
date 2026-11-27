@@ -92,7 +92,7 @@ const perfil = defineCollection({
     nombre: z.string(),
     titulo: z.string(),
     promesa: z.string(),
-    pruebas: z.array(z.object({ texto: z.string(), fuente: z.string() })).length(3),
+    pruebas: z.array(z.object({ texto: z.string(), fuente: z.string() })).min(1).max(3),
     resumen: z.string(),
     ubicacion: z.string(),
     contacto: z.array(z.object({ etiqueta: z.string(), url: z.url() })).min(1),
@@ -102,7 +102,7 @@ const perfil = defineCollection({
     en: z.object({
       titulo: z.string(),
       promesa: z.string(),
-      pruebas: z.array(z.string()).length(3),
+      pruebas: z.array(z.string()).min(1).max(3),
       resumen: z.string(),
       ubicacion: z.string(),
       idiomas: z.array(z.object({ idioma: z.string(), nivel: z.string() })),
