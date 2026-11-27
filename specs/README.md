@@ -24,7 +24,7 @@ aprobación, salvo en la constitución (ver su sección de gobierno).
 | [0004](0004-vestibulo/spec.md) | Vestíbulo · [plan](0004-vestibulo/plan.md) y [tareas](0004-vestibulo/tasks.md) de la F1 | Hecha | F1 |
 | [0005](0005-artificialia/spec.md) | Sala Artificialia (proyectos) | Hecha | F1 |
 | 0006 | Salas Scientifica y Naturalia (credenciales y estudios) | Pendiente | F2 |
-| 0007 | Theatrum, Mirabilia, Exotica y Registro | Pendiente | F2 |
+| [0007](0007-conferencias/spec.md) | Conferencias y docencia con evidencia | Hecha | F2 |
 | 0008 | Acervo: índice, filtros y búsqueda | Pendiente | F2 |
 | 0009 | Versión en inglés | Pendiente | F3 |
 | 0010 | SEO, imágenes OG, analítica y rendimiento | Pendiente | F3 |
