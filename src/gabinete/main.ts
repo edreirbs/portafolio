@@ -74,6 +74,8 @@ const OJOS = 1.62;
 // FR-0014-05: cada sección tiene su mueble y su punto de vista.
 const ESTACIONES: Record<string, Estacion> = {
   centro: { nombre: 'Centro del estudio', vista: { cam: [0, OJOS, 3.55], mira: [0, 1.05, -1.6] } },
+  // Spec 0018 · FR-0018-01: la mesa tiene su propia vista, de cerca, con el mayordomo al lado.
+  mesa: { nombre: 'Mesa del explorador', vista: { cam: [0.15, 1.58, 2.15], mira: [-0.3, 0.98, 0.35] } },
   proyectos: { nombre: 'Proyectos', vista: { cam: [0, 1.62, 0.2], mira: [0, 1.4, -3.9] }, atril: [-0.95, 0, -2.25], atrilRot: 0.35 },
   titulos: { nombre: 'Títulos y diplomas', vista: { cam: [-2.35, 1.6, -1.25], mira: [-4.9, 1.45, -1.25] }, atril: [-3.85, 0, -0.1], atrilRot: 2.2 },
   certificaciones: { nombre: 'Certificaciones y cursos', vista: { cam: [2.15, 1.72, 0.45], mira: [4.4, 1.35, 0.45] }, atril: [3.7, 0, 1.45], atrilRot: -2.1 },
@@ -622,6 +624,8 @@ export async function iniciar() {
     }
   };
 
+  /** Spec 0018: lo que se mueve solo (el mayordomo respira y mira). */
+  const vivos: ((t: number) => void)[] = [];
   let previo = performance.now();
   const tick = (ahora: number) => {
     const dt = Math.min(0.05, (ahora - previo) / 1000);
@@ -629,6 +633,7 @@ export async function iniciar() {
     mirada.actualizar(dt, fovBase);
     correr(dt);
     avanzar(anims, dt);
+    for (const vivo of vivos) vivo(ahora / 1000);
     colocarMarcas();
     renderer.render(escena, camara);
   };
@@ -725,19 +730,15 @@ export async function iniciar() {
   // Centro: mesa del explorador
   const mesaCentro = poner(M.wooden_table_02, [0, 0, 0.35], 0.1, 1.15);
   const altoMesa = superficie(mesaCentro, 0.25, 0.35) || 0.92;
-  registrar(mesaCentro, { tipo: 'estacion', id: 'centro', nombre: 'Mesa del explorador' }, false);
+  registrar(mesaCentro, { tipo: 'estacion', id: 'mesa', nombre: 'Mesa del explorador' }, false);
   lampara.position.set(0.3, altoMesa + 0.9, 0.3);
   // FR-0014-05 · Redes y contacto: la correspondencia sobre la mesa
   const cartas = poner(O.correspondencia(datos.redes.map((r, i) => T.sobre(r.etiqueta, r.cuenta, 21 + i))), [0.02, altoMesa + 0.006, 0.66], 0.05);
   registrar(cartas, { tipo: 'estacion', id: 'contacto', nombre: 'Redes y contacto' });
-  // Spec 0015 · FR-0015-01: el teléfono de latón abre el asistente, si el servidor está listo.
-  const ponerTelefono = () => {
-    if (telefono) return;
-    telefono = curiosidad(poner(O.telefono(), [-0.6, altoMesa, 0.66], 0.5, 1.4), 'telefono');
-  };
-  let telefono: Item | null = null;
-  if (document.documentElement.dataset.asistente === 'listo') ponerTelefono();
-  else window.addEventListener('asistente:listo', ponerTelefono, { once: true });
+  // Spec 0018 · FR-0018-06: el mayordomo autómata, siempre junto a la mesa. Al tocarlo abre el asistente.
+  const mayordomo = poner(O.mayordomo(), [-1.08, 0, 0.3], 0.32);
+  curiosidad(mayordomo, 'mayordomo');
+  if (!reducirMovimiento) vivos.push(mayordomo.userData.vivo as (t: number) => void);
 
   // Spec 0016 · Los demás proyectos cuelgan junto a la alacena: su captura enmarcada y su placa.
   const MUROS: [number, number][] = [[-1.4, 0], [1.4, 0], [-2.3, 0], [2.3, 0], [-3.2, 0], [3.2, 0], [-4.1, 0], [4.1, 0]];
@@ -873,11 +874,14 @@ export async function iniciar() {
         irA('publicaciones');
         ui.abrirSeccion('publicaciones');
         return;
-      case 'asistente':
-        animar(anims, obj, 'levantar');
+      case 'asistente': {
+        const reverencia = it.raiz.userData.reverencia as (() => void) | undefined;
+        if (reverencia) reverencia();
+        else animar(anims, obj, 'levantar');
         ui.cerrarTodo();
         window.dispatchEvent(new Event('asistente:abrir'));
         return;
+      }
       case 'mirar': {
         const v = camara.position.clone().sub(obj.getWorldPosition(new Vector3()));
         const objetivo = Math.atan2(v.x, v.z);

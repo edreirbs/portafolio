@@ -67,7 +67,7 @@ function cuentaDe(direccion: string): string {
       class="g-lienzo"
       data-lienzo
       role="img"
-      aria-label="El estudio de un explorador del siglo XIX: alacena con vitrina, pared de diplomas, baúl, cajonera de boticario, busto de mármol y mesa con globo terráqueo, iluminados por lámparas de aceite."
+      aria-label="El estudio de un explorador del siglo XIX: la alacena y la galería de proyectos, la pared de diplomas, los certificados, el baúl de publicaciones, la bitácora y la mesa del explorador con su mayordomo autómata de latón."
     ></canvas>
     <div class="g-vineta" aria-hidden="true"></div>
     <!-- FR-0013-04: marcas doradas sobre los objetos a la vista (botones, se enfocan con Tab) -->
@@ -133,6 +133,7 @@ function cuentaDe(direccion: string): string {
         <p class="g-mapa__titulo">Secciones</p>
         <ul>
           <li><button type="button" data-estacion="centro">Centro del estudio</button></li>
+          <li><button type="button" data-estacion="mesa">Mesa del explorador</button></li>
           {
             datos.secciones.map((s) => (
               <li>

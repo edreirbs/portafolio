@@ -1,6 +1,7 @@
 // Objetos modelados en código. Representan las piezas propias de Edrei, así que son únicos.
 import {
   BoxGeometry,
+  ConeGeometry,
   CylinderGeometry,
   DoubleSide,
   Group,
@@ -346,38 +347,185 @@ export function bitacora(paginas: Texture): Group {
   return g;
 }
 
-/** Spec 0015 · El asistente: un teléfono de candelero de latón, con su auricular colgado. */
-export function telefono(): Group {
+/**
+ * Spec 0018 · El mayordomo del gabinete: un autómata de latón con bombín, monóculo y pajarita,
+ * de pie junto a la mesa con una charola. Abre el asistente. Mide unos 1.25 m.
+ * userData.vivo(t) lo anima en reposo; userData.reverencia() lo hace inclinarse.
+ */
+export function mayordomo(): Group {
   const g = new Group();
-  const negro = new MeshStandardMaterial({ color: 0x141110, roughness: 0.35, metalness: 0.2 });
-  const base = malla(new CylinderGeometry(0.06, 0.075, 0.03, 32), MAT.laton());
-  base.position.y = 0.015;
-  const tallo = malla(new CylinderGeometry(0.014, 0.018, 0.25, 16), MAT.laton());
-  tallo.position.y = 0.155;
-  const cuello = malla(new CylinderGeometry(0.02, 0.014, 0.03, 16), MAT.latonOscuro());
-  cuello.position.y = 0.295;
-  const bocina = new Group();
-  bocina.position.set(0, 0.31, 0.012);
-  bocina.rotation.x = 0.55;
-  const cono = malla(new CylinderGeometry(0.032, 0.012, 0.05, 24, 1, true), negro);
-  cono.position.y = 0.025;
-  bocina.add(cono);
-  g.add(base, tallo, cuello, bocina);
-  // Gancho y auricular
-  const gancho = malla(new BoxGeometry(0.05, 0.006, 0.01), MAT.laton());
-  gancho.position.set(0.035, 0.25, 0);
-  const auricular = new Group();
-  auricular.position.set(0.062, 0.2, 0);
-  const mango = malla(new CylinderGeometry(0.011, 0.011, 0.1, 16), negro);
-  const copa = malla(new CylinderGeometry(0.024, 0.012, 0.035, 24), negro);
-  copa.position.y = -0.065;
-  auricular.add(mango, copa);
-  // Cordón: un arco del auricular a la base
-  const cordon = malla(new TorusGeometry(0.06, 0.004, 8, 24, Math.PI), negro, false);
-  cordon.position.set(0.062, 0.105, 0.02);
-  cordon.rotation.set(0, Math.PI / 2, Math.PI);
-  g.add(gancho, auricular, cordon);
-  g.userData.anima = auricular;
+  const frac = new MeshStandardMaterial({ color: 0x17130f, roughness: 0.6 });
+  const camisa = new MeshStandardMaterial({ color: 0xeee6d6, roughness: 0.75 });
+  const lacre = new MeshStandardMaterial({ color: 0x8e2b22, roughness: 0.45 });
+  const sombrero = new MeshStandardMaterial({ color: 0x0f0d0b, roughness: 0.4, metalness: 0.15 });
+  const ojos = new MeshStandardMaterial({ color: 0xffd98a, emissive: 0xffb347, emissiveIntensity: 1.5 });
+  const laton = MAT.laton();
+  const latonOscuro = MAT.latonOscuro();
+
+  // Pedestal de nogal con aro de latón, como un autómata de feria.
+  const base = malla(new CylinderGeometry(0.2, 0.22, 0.06, 40), MAT.nogal());
+  base.position.y = 0.03;
+  const aro = malla(new TorusGeometry(0.205, 0.012, 10, 48), laton);
+  aro.rotation.x = Math.PI / 2;
+  aro.position.y = 0.06;
+  g.add(base, aro);
+
+  const cuerpo = new Group();
+  cuerpo.position.y = 0.06;
+  g.add(cuerpo);
+  for (const x of [-0.065, 0.065]) {
+    const pierna = malla(new CylinderGeometry(0.034, 0.03, 0.4, 16), frac);
+    pierna.position.set(x, 0.22, 0);
+    const rodilla = malla(new SphereGeometry(0.037, 16, 12), latonOscuro);
+    rodilla.position.set(x, 0.2, 0.006);
+    const zapato = malla(new BoxGeometry(0.07, 0.035, 0.12), sombrero);
+    zapato.position.set(x, 0.0175, 0.025);
+    cuerpo.add(pierna, rodilla, zapato);
+  }
+
+  // Torso: frac oscuro, chaleco de latón con botones, pechera y pajarita de lacre.
+  const torso = new Group();
+  torso.position.y = 0.42;
+  cuerpo.add(torso);
+  const perfil = [
+    [0, 0],
+    [0.15, 0],
+    [0.165, 0.08],
+    [0.17, 0.2],
+    [0.172, 0.3],
+    [0.145, 0.39],
+    [0.07, 0.44],
+    [0, 0.44],
+  ].map(([x, y]) => new Vector2(x, y));
+  torso.add(malla(new LatheGeometry(perfil, 40), frac));
+  const chaleco = malla(new CylinderGeometry(0.176, 0.17, 0.24, 32, 1, true, -0.5, 1), laton);
+  chaleco.position.y = 0.2;
+  torso.add(chaleco);
+  for (let i = 0; i < 3; i++) {
+    const boton = malla(new SphereGeometry(0.011, 10, 8), latonOscuro, false);
+    boton.position.set(0, 0.12 + i * 0.06, 0.18);
+    torso.add(boton);
+  }
+  const pechera = malla(new CylinderGeometry(0.075, 0.13, 0.09, 24, 1, true, -0.55, 1.1), camisa);
+  pechera.position.y = 0.37;
+  torso.add(pechera);
+  const lazo = new Group();
+  lazo.position.set(0, 0.405, 0.085);
+  for (const lado of [-1, 1]) {
+    const ala = malla(new ConeGeometry(0.026, 0.055, 4), lacre, false);
+    ala.rotation.z = (lado * Math.PI) / 2;
+    ala.position.x = lado * 0.026;
+    lazo.add(ala);
+  }
+  lazo.add(malla(new SphereGeometry(0.013, 10, 8), lacre, false));
+  torso.add(lazo);
+
+  // Brazos: uno sostiene la charola al frente; el otro cae junto al cuerpo.
+  const hombro = (x: number) => {
+    const h = malla(new SphereGeometry(0.045, 16, 12), latonOscuro);
+    h.position.set(x, 0.38, 0);
+    torso.add(h);
+  };
+  hombro(0.165);
+  hombro(-0.165);
+  const brazoCharola = new Group();
+  brazoCharola.position.set(0.19, 0.37, 0);
+  const superior = malla(new CylinderGeometry(0.027, 0.025, 0.18, 14), frac);
+  superior.position.y = -0.09;
+  const codo = new Group();
+  codo.position.y = -0.18;
+  codo.rotation.x = Math.PI / 2;
+  const antebrazo = malla(new CylinderGeometry(0.024, 0.022, 0.17, 14), frac);
+  antebrazo.position.y = 0.085;
+  const mano = malla(new SphereGeometry(0.028, 14, 10), laton);
+  mano.position.y = 0.175;
+  codo.add(antebrazo, mano);
+  brazoCharola.add(superior, codo);
+  const charola = new Group();
+  charola.position.set(0.19, 0.24, 0.2);
+  charola.add(malla(new CylinderGeometry(0.11, 0.11, 0.01, 40), laton));
+  const borde = malla(new TorusGeometry(0.11, 0.006, 8, 40), latonOscuro, false);
+  borde.rotation.x = Math.PI / 2;
+  borde.position.y = 0.006;
+  const tarjeta = malla(new BoxGeometry(0.075, 0.003, 0.05), camisa, false);
+  tarjeta.position.set(-0.01, 0.008, 0.01);
+  tarjeta.rotation.y = 0.3;
+  charola.add(borde, tarjeta);
+  torso.add(brazoCharola, charola);
+  const brazoLibre = new Group();
+  brazoLibre.position.set(-0.19, 0.37, 0);
+  brazoLibre.rotation.z = -0.08;
+  const libre = malla(new CylinderGeometry(0.026, 0.023, 0.33, 14), frac);
+  libre.position.y = -0.165;
+  const manoLibre = malla(new SphereGeometry(0.028, 14, 10), laton);
+  manoLibre.position.y = -0.34;
+  brazoLibre.add(libre, manoLibre);
+  torso.add(brazoLibre);
+
+  // Cabeza de latón: ojos que brillan, monóculo, bigote, tornillos por orejas y bombín.
+  const cabeza = new Group();
+  cabeza.position.y = 0.46;
+  torso.add(cabeza);
+  cabeza.add(malla(new CylinderGeometry(0.034, 0.04, 0.05, 16), latonOscuro));
+  const craneo = malla(new SphereGeometry(0.105, 32, 24), laton);
+  craneo.scale.set(1, 1.08, 0.98);
+  craneo.position.y = 0.1;
+  cabeza.add(craneo);
+  for (const x of [-0.04, 0.04]) {
+    const ojo = malla(new SphereGeometry(0.017, 16, 12), ojos, false);
+    ojo.position.set(x, 0.115, 0.09);
+    cabeza.add(ojo);
+  }
+  const monoculo = malla(new TorusGeometry(0.027, 0.004, 8, 28), MAT.oro(), false);
+  monoculo.position.set(0.04, 0.115, 0.1);
+  const cadena = malla(new CylinderGeometry(0.0018, 0.0018, 0.11, 6), MAT.oro(), false);
+  cadena.position.set(0.062, 0.06, 0.1);
+  cadena.rotation.z = 0.35;
+  cabeza.add(monoculo, cadena);
+  for (const lado of [-1, 1]) {
+    const bigote = malla(new TorusGeometry(0.022, 0.0065, 8, 16, Math.PI * 0.9), latonOscuro, false);
+    bigote.position.set(lado * 0.02, 0.07, 0.095);
+    bigote.rotation.z = lado > 0 ? Math.PI * 1.05 : Math.PI * 1.05 - Math.PI * 0.1;
+    bigote.scale.x = lado;
+    cabeza.add(bigote);
+    const oreja = malla(new CylinderGeometry(0.022, 0.022, 0.024, 16), latonOscuro, false);
+    oreja.rotation.z = Math.PI / 2;
+    oreja.position.set(lado * 0.106, 0.1, 0);
+    cabeza.add(oreja);
+  }
+  const bombin = new Group();
+  bombin.position.y = 0.19;
+  bombin.rotation.z = 0.07;
+  bombin.add(malla(new CylinderGeometry(0.135, 0.135, 0.012, 40), sombrero));
+  const copa = malla(new SphereGeometry(0.094, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2), sombrero);
+  copa.scale.y = 1.2;
+  copa.position.y = 0.005;
+  const cinta = malla(new CylinderGeometry(0.095, 0.095, 0.022, 40, 1, true), lacre, false);
+  cinta.position.y = 0.017;
+  bombin.add(copa, cinta);
+  cabeza.add(bombin);
+
+  // Vida en reposo y reverencia (FR-0018-06). Sin "reducir movimiento" no se llama a vivo().
+  let inicioReverencia = -1;
+  let reloj = 0;
+  g.userData.anima = cuerpo;
+  g.userData.reverencia = () => {
+    inicioReverencia = reloj;
+  };
+  g.userData.vivo = (t: number) => {
+    reloj = t;
+    cuerpo.position.y = 0.06 + Math.sin(t * 1.6) * 0.005;
+    cabeza.rotation.y = Math.sin(t * 0.45) * 0.22;
+    cabeza.rotation.z = Math.sin(t * 0.8) * 0.04;
+    charola.rotation.z = Math.sin(t * 1.1) * 0.015;
+    ojos.emissiveIntensity = 1.25 + Math.sin(t * 2.3) * 0.35;
+    const k = inicioReverencia < 0 ? 1 : (t - inicioReverencia) / 1.5;
+    const arco = k < 1 ? Math.sin(k * Math.PI) : 0;
+    torso.rotation.x = arco * 0.38;
+    cabeza.rotation.x = arco * 0.18;
+    bombin.position.y = 0.19 + arco * 0.05;
+    if (k >= 1) inicioReverencia = -1;
+  };
   return g;
 }
 

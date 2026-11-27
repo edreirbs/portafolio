@@ -1,7 +1,9 @@
 ---
 // Spec 0015 · El botón y el panel del asistente. El HTML es fijo y ligero; la lógica se descarga
-// solo cuando alguien lo abre (FR-0015-08). El botón aparece solo si el servidor está listo.
+// solo cuando alguien lo abre (FR-0015-08).
+// Spec 0018 · Tiene cara de mayordomo: burbuja flotante, ventana anclada a ella y globos.
 import { API_ASISTENTE, TEXTOS } from '../lib/asistente';
+import IconoMayordomo from './IconoMayordomo.astro';
 import type { Idioma } from '../lib/fechas';
 import { portafolio } from '../lib/portafolio';
 import { url } from '../lib/url';
@@ -30,25 +32,26 @@ const config = {
 };
 ---
 
-<button type="button" class="asis-lanzador" data-asistente-abrir hidden aria-controls="asistente" aria-expanded="false" aria-label={t.lanzador}>
-  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-    <path
-      d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4h0A1.5 1.5 0 0 1 4 14.5z"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="1.8"
-      stroke-linejoin="round"></path>
-    <path d="M8.5 8.5h7M8.5 11.5h4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
-  </svg>
-  <span>{t.lanzador}</span>
-</button>
+<div class="asis-burbuja" data-asis-burbuja>
+  <!-- FR-0018-05: invitación breve, solo para el puntero; el teclado usa la burbuja. -->
+  <p class="asis-invitacion" data-asis-invitacion aria-hidden="true" hidden>
+    <button type="button" class="asis-invitacion__texto" tabindex="-1" data-asis-invitacion-abrir>{t.invitacion}</button>
+    <button type="button" class="asis-invitacion__cerrar" tabindex="-1" data-asis-invitacion-cerrar>×</button>
+  </p>
+  <button type="button" class="asis-lanzador" data-asistente-abrir hidden aria-controls="asistente" aria-expanded="false" aria-label={t.lanzador}>
+    <IconoMayordomo id="asis-lanzador" clase="asis-lanzador__cara" />
+    <svg class="asis-lanzador__cerrar" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+      <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path>
+    </svg>
+  </button>
+</div>
 
 <section class="asis" id="asistente" role="dialog" aria-modal="false" aria-labelledby="asis-titulo" hidden>
   <header class="asis__cabeza">
-    <span class="asis__sello" aria-hidden="true">ER</span>
+    <span class="asis__sello"><IconoMayordomo id="asis-cabeza" /></span>
     <div class="asis__nombre">
       <h2 id="asis-titulo" tabindex="-1">{t.titulo}</h2>
-      <p>{t.subtitulo}</p>
+      <p><span class="asis__estado" aria-hidden="true"></span>{t.subtitulo}</p>
     </div>
     <button type="button" class="asis__icono" data-asis-nueva aria-label={t.nueva} title={t.nuevaCorto}>
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
@@ -78,135 +81,253 @@ const config = {
 <script type="application/json" id="asistente-config" set:html={JSON.stringify(config)} />
 
 <script>
-  // FR-0015-10: el botón aparece solo si el servidor tiene llave. Se pregunta después de cargar.
+  // Spec 0018 · FR-0018-02 y 07: la burbuja del mayordomo siempre está. Si el servidor no responde,
+  // el chat se abre con el aviso que ofrece el CV y LinkedIn (FR-0015-10).
   import { API_ASISTENTE } from '../lib/asistente';
 
+  const raiz = document.documentElement;
   const boton = document.querySelector<HTMLButtonElement>('[data-asistente-abrir]')!;
+  const invitacion = document.querySelector<HTMLElement>('[data-asis-invitacion]')!;
   let modulo: Promise<typeof import('../asistente/chat')> | null = null;
   const abrir = (origen?: HTMLElement) => {
+    ocultarInvitacion();
     modulo ??= import('../asistente/chat');
     modulo.then((m) => m.abrir(origen ?? boton)).catch(() => (modulo = null));
   };
-
-  const listo = () => {
-    document.documentElement.dataset.asistente = 'listo';
-    boton.hidden = false;
-    window.dispatchEvent(new Event('asistente:listo'));
-    // FR-0015-06: si había una conversación abierta en esta visita, se reabre.
+  const abierto = () => 'asistenteAbierto' in raiz.dataset;
+  const guardar = (clave: string, valor: string) => {
     try {
-      if (sessionStorage.getItem('asistente-abierto') === '1') abrir();
+      sessionStorage.setItem(clave, valor);
     } catch {
       /* sin almacenamiento */
     }
+  };
+  const leer = (clave: string) => {
+    try {
+      return sessionStorage.getItem(clave);
+    } catch {
+      return null;
+    }
+  };
+
+  // FR-0018-05: la invitación sale una vez por visita, unos segundos después de cargar.
+  let relojInvitacion = 0;
+  function ocultarInvitacion() {
+    window.clearTimeout(relojInvitacion);
+    invitacion.hidden = true;
+  }
+  const invitar = () => {
+    if (leer('asistente-invitacion') || abierto()) return;
+    guardar('asistente-invitacion', '1');
+    invitacion.hidden = false;
+    relojInvitacion = window.setTimeout(ocultarInvitacion, 9000);
+  };
+  invitacion.querySelector('[data-asis-invitacion-abrir]')!.addEventListener('click', () => abrir(boton));
+  invitacion.querySelector('[data-asis-invitacion-cerrar]')!.addEventListener('click', ocultarInvitacion);
+
+  const listo = () => {
+    raiz.dataset.asistente = 'listo';
+    window.dispatchEvent(new Event('asistente:listo'));
+    // FR-0015-06: si había una conversación abierta en esta visita, se reabre.
+    if (leer('asistente-abierto') === '1') abrir();
+  };
+  const noListo = () => {
+    raiz.dataset.asistente = 'no';
   };
 
   const consultar = async () => {
-    try {
-      const guardado = sessionStorage.getItem('asistente-listo');
-      if (guardado === '1') return listo();
-      if (guardado === '0') return;
-    } catch {
-      /* sin almacenamiento */
-    }
+    const guardado = leer('asistente-listo');
+    if (guardado === '1') return listo();
+    if (guardado === '0') return noListo();
     try {
       const r = await fetch(`${API_ASISTENTE}/estado`, { signal: AbortSignal.timeout(6000) });
       const { listo: ok } = (await r.json()) as { listo?: boolean };
-      try {
-        sessionStorage.setItem('asistente-listo', ok ? '1' : '0');
-      } catch {
-        /* sin almacenamiento */
-      }
+      guardar('asistente-listo', ok ? '1' : '0');
       if (ok) listo();
+      else noListo();
     } catch {
-      /* sin servidor: el sitio sigue completo, sin botón */
+      noListo();
     }
   };
 
-  boton.addEventListener('click', () => abrir(boton));
+  boton.hidden = false;
+  // FR-0018-03: la burbuja abre y cierra.
+  boton.addEventListener('click', () => (abierto() ? window.dispatchEvent(new Event('asistente:cerrar')) : abrir(boton)));
   document.querySelectorAll<HTMLElement>('[data-asistente-otro]').forEach((b) => b.addEventListener('click', () => abrir(b)));
   window.addEventListener('asistente:abrir', () => abrir());
-  const despues = () => ('requestIdleCallback' in window ? requestIdleCallback(() => consultar(), { timeout: 3000 }) : setTimeout(consultar, 1200));
-  if (document.readyState === 'complete') despues();
-  else window.addEventListener('load', despues, { once: true });
+  const despues = () => {
+    consultar();
+    relojInvitacion = window.setTimeout(invitar, 3500);
+  };
+  const ocioso = () => ('requestIdleCallback' in window ? requestIdleCallback(despues, { timeout: 3000 }) : setTimeout(despues, 1200));
+  if (document.readyState === 'complete') ocioso();
+  else window.addEventListener('load', ocioso, { once: true });
 </script>
 
 <style is:global>
-  /* ── Spec 0015 · Botón ── */
-  .asis-lanzador {
+  /* ── Spec 0018 · La burbuja del mayordomo ── */
+  .asis-burbuja {
+    --b-tam: 64px;
     position: fixed;
-    z-index: 50;
-    right: max(16px, env(safe-area-inset-right));
-    bottom: max(16px, env(safe-area-inset-bottom));
-    display: inline-flex;
+    z-index: 61;
+    right: max(18px, env(safe-area-inset-right));
+    bottom: max(18px, env(safe-area-inset-bottom));
+    display: flex;
     align-items: center;
-    gap: 10px;
-    min-height: 50px;
-    padding: 0 20px 0 16px;
-    border: 1.5px solid #c9a36a;
-    border-radius: 999px;
-    background: #1a1612;
-    color: #f2ece1;
-    font: 600 0.95rem/1 var(--f-texto);
-    box-shadow: 0 14px 34px -14px rgb(0 0 0 / 0.65);
+    gap: 12px;
+    pointer-events: none;
+  }
+
+  .asis-burbuja > * {
+    pointer-events: auto;
+  }
+
+  .asis-lanzador {
+    position: relative;
+    display: grid;
+    place-items: end center;
+    width: var(--b-tam);
+    height: var(--b-tam);
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 35%, #2a5240, #1b3529 70%);
+    color: #f4eee3;
+    box-shadow:
+      0 0 0 2px #c9a36a,
+      0 16px 34px -12px rgb(0 0 0 / 0.7);
+    overflow: hidden;
     cursor: pointer;
     transition: transform 0.18s ease, box-shadow 0.18s ease;
   }
 
   .asis-lanzador:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 18px 40px -14px rgb(0 0 0 / 0.75);
+    transform: translateY(-2px) scale(1.04);
   }
 
   .asis-lanzador:focus-visible {
     outline: 3px solid #d6b06a;
-    outline-offset: 3px;
+    outline-offset: 4px;
   }
 
-  .asis-lanzador[hidden],
-  html[data-asistente-abierto] .asis-lanzador {
+  .asis-lanzador[hidden] {
     display: none;
   }
 
-  html[data-vista='3d'] .asis-lanzador {
+  .asis-lanzador__cara {
+    width: 100%;
+    height: 100%;
+  }
+
+  .asis-lanzador__cerrar {
+    display: none;
+    align-self: center;
+  }
+
+  /* FR-0018-03: abierta la ventana, la burbuja se vuelve el botón para cerrarla. */
+  html[data-asistente-abierto] .asis-lanzador {
+    place-items: center;
+    background: #1a1612;
+  }
+
+  html[data-asistente-abierto] .asis-lanzador__cara {
+    display: none;
+  }
+
+  html[data-asistente-abierto] .asis-lanzador__cerrar {
+    display: block;
+  }
+
+  .asis-lanzador .ojo {
+    animation: asis-parpadeo 5s infinite;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  @keyframes asis-parpadeo {
+    0%,
+    92%,
+    100% {
+      transform: scaleY(1);
+    }
+    95% {
+      transform: scaleY(0.15);
+    }
+  }
+
+  /* FR-0018-05: la invitación, un globo junto a la burbuja */
+  .asis-invitacion {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    border: 1px solid #c9a36a;
+    border-radius: 16px 16px 4px 16px;
+    background: #f4eee3;
+    color: #1a1612;
+    box-shadow: 0 14px 30px -14px rgb(0 0 0 / 0.6);
+    animation: asis-aparecer 0.28s ease-out;
+  }
+
+  .asis-invitacion[hidden] {
+    display: none;
+  }
+
+  .asis-invitacion__texto {
+    padding: 10px 4px 10px 14px;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: 600 0.9rem/1.3 var(--f-texto);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .asis-invitacion__cerrar {
+    width: 32px;
+    height: 32px;
+    margin-right: 4px;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    color: #5c4f42;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+
+  html[data-asistente-abierto] .asis-invitacion {
+    display: none;
+  }
+
+  @keyframes asis-aparecer {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.96);
+    }
+  }
+
+  html[data-vista='3d'] .asis-burbuja {
     bottom: 22px;
     right: 18px;
   }
 
-  /* En el 3D de ancho medio, el botón se vuelve círculo para no chocar con la barra. */
   @media (max-width: 1040px) {
-    html[data-vista='3d'] .asis-lanzador {
-      width: 52px;
-      height: 52px;
-      padding: 0;
-      justify-content: center;
-    }
-
-    html[data-vista='3d'] .asis-lanzador span {
-      display: none;
+    html[data-vista='3d'] .asis-burbuja {
+      --b-tam: 56px;
     }
   }
 
   @media (max-width: 760px) {
-    .asis-lanzador {
-      padding: 0 16px 0 14px;
+    .asis-burbuja {
+      --b-tam: 58px;
     }
 
-    html[data-vista='3d'] .asis-lanzador {
+    html[data-vista='3d'] .asis-burbuja {
       bottom: 84px;
       right: 12px;
     }
-  }
 
-  @media (max-width: 420px) {
-    .asis-lanzador span {
-      display: none;
-    }
-
-    .asis-lanzador {
-      width: 54px;
-      height: 54px;
-      padding: 0;
-      justify-content: center;
+    .asis-invitacion {
+      max-width: calc(100vw - 110px);
     }
   }
 
@@ -219,19 +340,28 @@ const config = {
     --a-acento: #7a5a2b;
     position: fixed;
     z-index: 60;
-    right: 16px;
-    bottom: 16px;
-    top: 16px;
-    width: min(440px, calc(100vw - 32px));
+    right: max(18px, env(safe-area-inset-right));
+    bottom: calc(max(18px, env(safe-area-inset-bottom)) + 64px + 14px);
+    width: min(400px, calc(100vw - 36px));
+    height: min(640px, calc(100dvh - 120px));
     display: flex;
     flex-direction: column;
     background: var(--a-papel);
     color: var(--a-tinta);
     border: 1px solid #c9a36a;
-    border-radius: 16px;
-    box-shadow: 0 24px 60px -24px rgb(0 0 0 / 0.75);
+    border-radius: 20px;
+    box-shadow: 0 28px 70px -24px rgb(0 0 0 / 0.8);
     overflow: hidden;
     font-family: var(--f-texto);
+    transform-origin: bottom right;
+    animation: asis-ventana 0.22s ease-out;
+  }
+
+  @keyframes asis-ventana {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.94);
+    }
   }
 
   .asis[hidden] {
@@ -239,29 +369,24 @@ const config = {
   }
 
   html[data-vista='3d'] .asis {
-    top: 74px;
-    bottom: 84px;
-    right: 14px;
-    width: min(460px, calc(100vw - 28px));
+    right: 18px;
+    bottom: calc(22px + 64px + 14px);
+    height: min(600px, calc(100dvh - 190px));
   }
 
-  @media (max-width: 1120px) {
-    html[data-vista='3d'] .asis {
-      top: max(14px, env(safe-area-inset-top));
-    }
-  }
-
-  @media (max-width: 760px) {
+  /* En el teléfono, hoja completa; la burbuja se esconde y la ventana trae su propio cierre. */
+  @media (max-width: 560px) {
     .asis,
     html[data-vista='3d'] .asis {
-      top: auto;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      inset: 0;
       width: auto;
-      height: min(88dvh, 720px);
-      border-radius: 18px 18px 0 0;
-      border-bottom: 0;
+      height: 100dvh;
+      border: 0;
+      border-radius: 0;
+    }
+
+    html[data-asistente-abierto] .asis-burbuja {
+      display: none;
     }
   }
 
@@ -273,17 +398,53 @@ const config = {
     border-bottom: 1px solid var(--a-linea);
   }
 
+  .asis__cabeza {
+    background: #1b3529;
+    color: #f4eee3;
+    border-bottom-color: #c9a36a;
+  }
+
+  .asis__cabeza .asis__icono {
+    color: #f4eee3;
+  }
+
+  .asis__cabeza .asis__icono:hover {
+    background: rgb(255 255 255 / 0.1);
+  }
+
+  .asis__cabeza :focus-visible {
+    outline-color: #d6b06a;
+  }
+
   .asis__sello {
     display: grid;
-    place-items: center;
+    place-items: end center;
     flex: none;
-    width: 38px;
-    height: 38px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
-    background: #8e2b22;
-    color: #f6e3d6;
-    font: 600 0.85rem/1 var(--f-display);
-    box-shadow: inset 0 0 0 3px rgb(0 0 0 / 0.14);
+    background: radial-gradient(circle at 50% 35%, #2a5240, #142a20 70%);
+    box-shadow: 0 0 0 1.5px #c9a36a;
+    overflow: hidden;
+  }
+
+  .asis__sello svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .asis__estado {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 6px;
+    border-radius: 50%;
+    background: #6fcf8e;
+    vertical-align: 1px;
+  }
+
+  html[data-asistente='no'] .asis__estado {
+    background: #d9a441;
   }
 
   .asis__nombre {
@@ -304,7 +465,7 @@ const config = {
 
   .asis__nombre p {
     font-size: 0.8rem;
-    color: var(--a-suave);
+    color: #d9cfbf;
   }
 
   .asis__icono {
@@ -330,6 +491,7 @@ const config = {
   }
 
   .asis__registro {
+    background: #efe8dc;
     flex: 1;
     overflow-y: auto;
     overscroll-behavior: contain;
@@ -375,8 +537,29 @@ const config = {
     color: #f4eee3;
   }
 
+  /* FR-0018-04: las respuestas en globo, con el avatar del mayordomo */
   .asis-msj--asistente {
+    position: relative;
     align-self: flex-start;
+    max-width: calc(100% - 44px);
+    margin-left: 40px;
+    padding: 10px 14px;
+    border: 1px solid var(--a-linea);
+    border-radius: 4px 16px 16px 16px;
+    background: #fffdf8;
+    box-shadow: 0 2px 6px -3px rgb(26 22 18 / 0.2);
+  }
+
+  .asis-msj--asistente::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -40px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #1b3529 url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%226 8 52 56%22%3E%3Cdefs%3E%3ClinearGradient id=%22l%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23f3d590%22/%3E%3Cstop offset=%221%22 stop-color=%22%23b07f3a%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d=%22M11 64c2-9 9-14 17-15l4 3 4-3c8 1 15 6 17 15z%22 fill=%22%2317130f%22 stroke=%22%23d6b06a%22 stroke-width=%221.2%22/%3E%3Cpath d=%22M26 47h12l-3 4h-6z%22 fill=%22%23eee6d6%22/%3E%3Cpath d=%22M25.5 48.5l6.5 3-6.5 3zM38.5 48.5l-6.5 3 6.5 3z%22 fill=%22%23c0392b%22/%3E%3Ccircle cx=%2232%22 cy=%2251.5%22 r=%221.7%22 fill=%22%238e2b22%22/%3E%3Crect x=%2220%22 y=%2223%22 width=%2224%22 height=%2223%22 rx=%2210%22 fill=%22url(%23l)%22/%3E%3Ccircle cx=%2220%22 cy=%2234%22 r=%222.2%22 fill=%22%238a6a33%22/%3E%3Ccircle cx=%2244%22 cy=%2234%22 r=%222.2%22 fill=%22%238a6a33%22/%3E%3Ccircle cx=%2227%22 cy=%2232.5%22 r=%222.6%22 fill=%22%23ffe7a6%22 stroke=%22%236b4a1c%22 stroke-width=%22.9%22/%3E%3Ccircle cx=%2237%22 cy=%2232.5%22 r=%222.6%22 fill=%22%23ffe7a6%22 stroke=%22%236b4a1c%22 stroke-width=%22.9%22/%3E%3Ccircle cx=%2237%22 cy=%2232.5%22 r=%224.6%22 fill=%22none%22 stroke=%22%23fff3cf%22 stroke-width=%221.5%22/%3E%3Cpath d=%22M41.3 34.5c1.5 3 1.8 6 1 9%22 fill=%22none%22 stroke=%22%23fff3cf%22 stroke-width=%221%22/%3E%3Cpath d=%22M24.5 40.5c2-2.6 5.5-2.4 7.5-.8 2-1.6 5.5-1.8 7.5.8-2.6-.5-4.8.6-7.5 1.4-2.7-.8-4.9-1.9-7.5-1.4z%22 fill=%22%235a3d17%22/%3E%3Cpath d=%22M19.5 22c0-15 25-15 25 0z%22 fill=%22%230f0d0b%22 stroke=%22%23d6b06a%22 stroke-width=%221.2%22/%3E%3Crect x=%2219.8%22 y=%2218%22 width=%2224.4%22 height=%223.4%22 fill=%22%23a8322a%22/%3E%3Cellipse cx=%2232%22 cy=%2222.4%22 rx=%2218%22 ry=%223.6%22 fill=%22%230f0d0b%22 stroke=%22%23d6b06a%22 stroke-width=%221.2%22/%3E%3C/svg%3E") center bottom / 100% no-repeat;
+    box-shadow: 0 0 0 1.5px #c9a36a;
   }
 
   .asis-msj--aviso {
@@ -548,11 +731,17 @@ const config = {
     .asis-lanzador {
       transition: none;
     }
+
+    .asis,
+    .asis-invitacion,
+    .asis-lanzador .ojo {
+      animation: none;
+    }
   }
 
   @media print {
     .asis,
-    .asis-lanzador {
+    .asis-burbuja {
       display: none !important;
     }
   }

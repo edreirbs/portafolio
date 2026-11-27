@@ -1,10 +1,10 @@
 # Specs 0013 y 0016: lo que dice y hace cada objeto del gabinete 3D. Solo los que sirven al
-# portafolio: la biblioteca de artículos y el teléfono del asistente.
+# portafolio: la biblioteca de artículos y el mayordomo, que abre el asistente (spec 0018).
 - id: libros
   nombre: Biblioteca de divulgación
   nota: 19 artículos sobre IA y aprendizaje, publicados entre 2023 y 2024.
   accion: biblioteca
-- id: telefono
-  nombre: Pregúntale a mi asistente
+- id: mayordomo
+  nombre: El mayordomo de Edrei
   nota: Un asistente con IA que responde sobre Edrei con lo publicado aquí.
   accion: asistente

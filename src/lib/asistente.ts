@@ -10,9 +10,11 @@ export const TEXTOS = {
     sugerencias: ['¿Qué ha construido con IA?', '¿Qué estudió y dónde?', '¿Dónde ha trabajado?', '¿Cómo lo contacto?'],
     /** FR-0015-09 */
     aviso: 'Asistente con IA. Responde solo con lo publicado en este portafolio y puede equivocarse.',
-    lanzador: 'Pregúntale a mi asistente',
-    titulo: 'Asistente de Edrei',
-    subtitulo: 'Pregunta por su trayectoria, proyectos o formación',
+    /** Spec 0018: el asistente tiene cara de mayordomo autómata. */
+    lanzador: 'Habla con el mayordomo de Edrei, su asistente con IA',
+    titulo: 'El mayordomo de Edrei',
+    subtitulo: 'Asistente con IA · en servicio',
+    invitacion: '¿Te ayudo? Pregúntame por Edrei.',
     nueva: 'Empezar una conversación nueva',
     nuevaCorto: 'Empezar de nuevo',
     cerrar: 'Cerrar el asistente',
@@ -23,7 +25,7 @@ export const TEXTOS = {
     enviar: 'Enviar la pregunta',
     detener: 'Detener la respuesta',
     chat: {
-      saludo: 'Hola. Soy el asistente del portafolio de **Edrei Robles**. Pregúntame por su trayectoria, sus proyectos, su formación o cómo contactarlo.',
+      saludo: 'Bienvenido al gabinete. Soy el mayordomo de **Edrei Robles**: pregúntame por su trayectoria, sus proyectos, su formación o cómo contactarlo.',
       mientras: ' Mientras, puedes ver su ',
       curriculum: 'currículum',
       escribirle: ' o escribirle por ',
@@ -43,9 +45,10 @@ export const TEXTOS = {
   en: {
     sugerencias: ['What has he built with AI?', 'What did he study, and where?', 'Where has he worked?', 'How can I contact him?'],
     aviso: 'AI assistant. It answers only from what is published in this portfolio and can make mistakes.',
-    lanzador: 'Ask my assistant',
-    titulo: "Edrei's assistant",
-    subtitulo: 'Ask about his career, projects or education',
+    lanzador: "Talk to Edrei's butler, his AI assistant",
+    titulo: "Edrei's butler",
+    subtitulo: 'AI assistant · at your service',
+    invitacion: 'Can I help? Ask me about Edrei.',
     nueva: 'Start a new conversation',
     nuevaCorto: 'Start over',
     cerrar: 'Close the assistant',
@@ -56,7 +59,7 @@ export const TEXTOS = {
     enviar: 'Send the question',
     detener: 'Stop the answer',
     chat: {
-      saludo: "Hi. I'm the assistant for **Edrei Robles**'s portfolio. Ask me about his career, his projects, his education or how to reach him.",
+      saludo: "Welcome to the cabinet. I'm **Edrei Robles**'s butler: ask me about his career, his projects, his education or how to reach him.",
       mientras: ' Meanwhile, you can see his ',
       curriculum: 'CV',
       escribirle: ' or message him on ',

@@ -38,8 +38,8 @@ dinero sin control. Esta spec fija los candados.
 
 | ID | Requisito | Prioridad |
 |---|---|---|
-| FR-0015-01 | Un botón *Pregúntale a mi asistente* DEBE estar en todas las páginas y en el 3D, donde lo representa un teléfono de latón sobre la mesa. | Debe |
-| FR-0015-02 | El asistente DEBE abrirse como panel lateral en pantallas anchas y como hoja inferior en el teléfono. | Debe |
+| FR-0015-01 | Un botón para abrir el asistente DEBE estar en todas las páginas y en el 3D. Desde la spec 0018 es la burbuja del mayordomo, y en el 3D lo representa el mayordomo autómata junto a la mesa. | Debe |
+| FR-0015-02 | El asistente DEBE abrirse como ventana anclada a la burbuja en pantallas anchas y como hoja completa en el teléfono (spec 0018). | Debe |
 | FR-0015-03 | Al abrir, DEBE saludar en una línea y ofrecer cuatro preguntas sugeridas que se envían con un toque. | Debe |
 | FR-0015-04 | La respuesta DEBE aparecer mientras se escribe (*streaming*) y se DEBE poder detener. | Debe |
 | FR-0015-05 | Cada respuesta DEBERÍA ligar a las piezas o secciones que menciona y ofrecer dos preguntas para seguir. | Debería |
@@ -97,3 +97,4 @@ dinero sin control. Esta spec fija los candados.
 | 2026-11-22 | Creada y aprobada con las decisiones de Edrei del 2026-11-21. |
 | 2026-11-22 | La llave va en `ASISTENTE_ANTHROPIC_API_KEY`: el equipo de Netlify ya inyecta una `ANTHROPIC_API_KEY` compartida, sin el límite de USD 1. El botón aparece solo cuando el servidor tiene llave. |
 | 2026-11-27 | Edrei pidió que lo conectara yo. Sin acceso a su consola de Anthropic, el asistente usa el AI Gateway de Netlify (mismo modelo y precio, créditos de Netlify) mientras no exista la llave propia, con topes diarios más bajos (FR-0015-18). La batería de trampas pasó 12 de 12 y el asistente se activó. |
+| 2026-11-27 | Spec 0018: el asistente tiene cara de mayordomo. Burbuja flotante siempre visible, ventana anclada, globos con avatar y el mayordomo autómata en el 3D en lugar del teléfono. Las reglas del servidor no cambian. |

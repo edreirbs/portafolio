@@ -1,0 +1,34 @@
+---
+// Spec 0018 · FR-0018-02: el mayordomo autómata del gabinete (bombín, monóculo y pajarita).
+// Decorativo: quien lo usa pone el nombre accesible en su botón.
+interface Props {
+  id: string;
+  clase?: string;
+}
+const { id, clase } = Astro.props;
+const g = `${id}-laton`;
+---
+
+<svg class={clase} viewBox="6 8 52 56" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id={g} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f3d590"></stop>
+      <stop offset="1" stop-color="#b07f3a"></stop>
+    </linearGradient>
+  </defs>
+  <path d="M11 64c2-9 9-14 17-15l4 3 4-3c8 1 15 6 17 15z" fill="#17130f" stroke="#d6b06a" stroke-width="1.2"></path>
+  <path d="M26 47h12l-3 4h-6z" fill="#eee6d6"></path>
+  <path d="M25.5 48.5l6.5 3-6.5 3zM38.5 48.5l-6.5 3 6.5 3z" fill="#c0392b"></path>
+  <circle cx="32" cy="51.5" r="1.7" fill="#8e2b22"></circle>
+  <rect x="20" y="23" width="24" height="23" rx="10" fill={`url(#${g})`}></rect>
+  <circle cx="20" cy="34" r="2.2" fill="#8a6a33"></circle>
+  <circle cx="44" cy="34" r="2.2" fill="#8a6a33"></circle>
+  <circle class="ojo" cx="27" cy="32.5" r="2.6" fill="#ffe7a6" stroke="#6b4a1c" stroke-width=".9"></circle>
+  <circle class="ojo" cx="37" cy="32.5" r="2.6" fill="#ffe7a6" stroke="#6b4a1c" stroke-width=".9"></circle>
+  <circle cx="37" cy="32.5" r="4.6" fill="none" stroke="#fff3cf" stroke-width="1.5"></circle>
+  <path d="M41.3 34.5c1.5 3 1.8 6 1 9" fill="none" stroke="#fff3cf" stroke-width="1"></path>
+  <path d="M24.5 40.5c2-2.6 5.5-2.4 7.5-.8 2-1.6 5.5-1.8 7.5.8-2.6-.5-4.8.6-7.5 1.4-2.7-.8-4.9-1.9-7.5-1.4z" fill="#5a3d17"></path>
+  <path d="M19.5 22c0-15 25-15 25 0z" fill="#0f0d0b" stroke="#d6b06a" stroke-width="1.2"></path>
+  <rect x="19.8" y="18" width="24.4" height="3.4" fill="#a8322a"></rect>
+  <ellipse cx="32" cy="22.4" rx="18" ry="3.6" fill="#0f0d0b" stroke="#d6b06a" stroke-width="1.2"></ellipse>
+</svg>

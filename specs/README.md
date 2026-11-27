@@ -35,6 +35,7 @@ aprobación, salvo en la constitución (ver su sección de gobierno).
 | [0015](0015-asistente/spec.md) | Asistente del portafolio · [plan](0015-asistente/plan.md) · [ADR-0003](../docs/adr/0003-asistente-netlify-claude.md) | Hecha | F2 |
 | [0016](0016-proyectos-al-centro/spec.md) | Proyectos al centro: todos los que valen la pena, sin adornos | Hecha | F2 |
 | [0017](0017-recursos-abiertos/spec.md) | Recursos abiertos de edreirobles.com | Hecha | F2 |
+| [0018](0018-mayordomo/spec.md) | El mayordomo del gabinete: chat de burbuja y autómata en el 3D | Hecha | F2 |
 
 ## Decisiones pendientes
 
