@@ -75,12 +75,12 @@ República Dominicana.
 
 | Pieza | Emisor | Fecha | Estado |
 |---|---|---|---|
-| Programa de Agentic AI | Johns Hopkins University | 2025 – 2026 | ? Falta nombre exacto y certificado |
+| Certificate Program in Agentic AI | Johns Hopkins University · Great Learning | 2026-04 | ✔ Liga de verificación |
 | AI Engineer Core: 3 de 5 competencias acreditadas | Digital NAO × Universidad Tecmilenio | 2024-08 | ? El CV dice "AI Engineer"; la constancia dice 3 de 5 |
-| Claude 101 · Introduction to agent skills · Introduction to subagents | Anthropic Academy | 2026-07 | ◐ Faltan ligas de certificado |
+| Claude 101 · Introduction to agent skills · Introduction to subagents | Anthropic Academy | 2026-07 | ✔ Skilljar (cambiar a Claude Academy en dic 2026) |
 | 5-Day Gen AI Intensive | Kaggle × Google | 2024-11 | ✔ Insignia pública en Kaggle |
-| Generative AI for Everyone | DeepLearning.AI · Coursera | 2024-01 | ◐ Falta liga de verificación |
-| Instructional Design Foundations and Applications | University of Illinois · Coursera | 2021-12 | ◐ Falta liga de verificación |
+| Generative AI for Everyone | DeepLearning.AI · Coursera | 2024-01 | ✔ coursera.org/verify |
+| Instructional Design Foundations and Applications | University of Illinois · Coursera | 2021-12 | ✔ coursera.org/verify |
 | Scrum Master y Product Owner | Scrum Inc. | 2022-09 | ◐ |
 | Learning Experience Designer | NovoEd | 2023-08 | ◐ |
 | Become an Instructional Designer | LinkedIn Learning | 2022-09 | ◐ |

@@ -19,26 +19,33 @@ pública de verificación.
 |---|---|---|
 | FR-0006-01 | Cada certificación DEBE ser una pieza de Scientifica con al menos una liga pública que la verifique sin iniciar sesión (credencial del emisor o perfil público con la insignia). | Debe |
 | FR-0006-02 | La sección *Certificaciones y cursos* DEBE aparecer solo si existe al menos una pieza que cumpla FR-0006-01. | Debe |
-| FR-0006-03 | En el gabinete 3D, cada certificación DEBE colgar enmarcada en el muro derecho, frente al atril de la sección, y abrir su ficha al tocarla. | Debe |
+| FR-0006-03 | En el gabinete 3D, cada certificación DEBE colgar enmarcada en el muro derecho, frente al atril de la sección, en dos filas de hasta cuatro, y abrir su ficha al tocarla. | Debe |
 | FR-0006-04 | Lo que solo tiene un perfil privado, un correo o una liga caducada NO se publica. | Debe |
 
 ## Publicadas
 
 | Pieza | Emisor | Verificación |
 |---|---|---|
+| Certificate Program in Agentic AI (2026) | Johns Hopkins University · Great Learning | Página de verificación de la universidad |
+| Claude 101 · Introduction to agent skills · Introduction to subagents (2026) | Anthropic Academy | Skilljar |
 | 5-Day Gen AI Intensive (2024) | Google · Kaggle | Insignia en el perfil público de Kaggle |
+| Generative AI for Everyone (2024) | DeepLearning.AI · Coursera | `coursera.org/verify` |
 | IFE Explora Summer 2022 | Tecnológico de Monterrey · IFE | Credencial de Accredible |
+| Instructional Design Foundations and Applications (2021) | University of Illinois Urbana-Champaign · Coursera | `coursera.org/verify` |
 
 ## Revisadas y no publicadas
 
 | Pieza | Motivo |
 |---|---|
-| Generative AI for Everyone · Instructional Design Foundations (Coursera) | Los correos solo ligan a la cuenta privada; falta la liga `coursera.org/verify`. |
-| Claude 101 y cursos de agentes (Anthropic Academy) | El certificado vive en el perfil privado de Skilljar. |
-| Cursos de LinkedIn Learning | No hay liga pública del certificado. |
+| Build Your Skills as an Instructional Designer · Measuring Learning Effectiveness (LinkedIn Learning, 2022) | No hay liga pública del certificado. |
 | Desarrollo con IA (BIG school) | La liga del certificado ya no existe. |
 | AI Engineer Core (Digital NAO × Tecmilenio) | La constancia acredita 3 de 5 competencias y es del empleo de entonces. |
-| Programa de Agentic AI (Johns Hopkins) | Falta el certificado; sus proyectos entran por la decisión D-10. |
+
+## Pendiente: Skilljar cierra en diciembre de 2026
+
+Anthropic cierra Skilljar a principios de diciembre de 2026 y las ligas `verify.skilljar.com`
+pueden dejar de abrir. Edrei importará sus cursos a Claude Academy; después se cambian las tres
+ligas por las de sus insignias, una por pieza (`src/content/piezas/scientifica/`).
 
 Cuando Edrei comparta la liga pública de alguna, entra como pieza nueva sin tocar código.
 
@@ -47,3 +54,4 @@ Cuando Edrei comparta la liga pública de alguna, entra como pieza nueva sin toc
 | Fecha | Cambio |
 |---|---|
 | 2026-11-27 | Creada, aprobada y hecha con permiso de Edrei para decidir y publicar. |
+| 2026-11-27 | Edrei consiguió las ligas públicas de Coursera, Anthropic Academy y Johns Hopkins: entran seis certificaciones (ocho en total). El muro del 3D pasa a dos filas de cuatro. |

@@ -57,7 +57,7 @@ Ninguna. Edrei delegó todas las decisiones el 2026-11-27; quedan registradas ab
 | 2026-11-27 | **D-10 · Programa de Agentic AI:** sus proyectos entran cuando estén en GitHub, marcados como proyecto del programa. | 0005 |
 | 2026-11-27 | **D-12 · Repos dudosos:** `mapa-red-funciones-ia`, `entrevista` y `cerebro-CREA` quedan fuera. | 0016 |
 | 2026-11-27 | **Publicaciones:** se quedan el artículo académico y los artículos de divulgación. | 0014 |
-| 2026-11-27 | **Certificaciones:** se publican solo las que tienen liga pública de verificación: hoy, Kaggle × Google e IFE Explora. | 0006 |
+| 2026-11-27 | **Certificaciones:** se publican solo las que tienen liga pública de verificación: ocho, de Johns Hopkins, Anthropic Academy, Google · Kaggle, Coursera y el IFE. | 0006 |
 | 2026-11-27 | **Proyectos al centro:** todos los proyectos que valen la pena y ningún objeto de adorno en el gabinete. | Spec 0016 |
 | 2026-11-27 | **Asistente conectado por Claude:** usa el AI Gateway de Netlify mientras no exista la llave propia, con topes diarios más bajos. | Spec 0015, ADR-0003 |
 | 2026-11-20 | Claude crea ramas, commits y PRs y los fusiona sin pedir permiso. | `CLAUDE.md` |

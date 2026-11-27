@@ -12,7 +12,7 @@ resumen: >-
 evidencia:
   - { tipo: credencial, url: "https://www.kaggle.com/edreirobles", etiqueta: Insignia en su perfil de Kaggle, etiqueta_en: Badge on his Kaggle profile }
 objeto: certificado
-orden: 1
+orden: 5
 revisada: 2026-11
 en:
   subtitulo: Google's intensive generative AI course on Kaggle
