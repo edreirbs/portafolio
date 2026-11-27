@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| Estado | En construcción |
+| Estado | Hecha |
 | Fase | F2 |
 | Depende de | 0002, 0014, [ADR-0003](../../docs/adr/0003-asistente-netlify-claude.md) |
 | Creada | 2026-11-22 |
@@ -60,7 +60,7 @@ dinero sin control. Esta spec fija los candados.
 | FR-0015-15 | **Privacidad.** NO DEBE dar datos de contacto no publicados, datos de terceros, salario, tarifas ni disponibilidad, ni hablar del trabajo institucional del empleo actual más allá del Registro (constitución, art. VIII). | Debe |
 | FR-0015-16 | **Límites de uso.** Mensajes de hasta 500 caracteres; respuestas de unas 120 palabras; 12 turnos por conversación; 15 preguntas por visitante al día; 6 por minuto; 40 en total al día. | Debe |
 | FR-0015-17 | **Origen.** El servidor DEBE atender solo peticiones desde el sitio publicado. | Debe |
-| FR-0015-18 | **Gasto.** La llave DEBE vivir en un espacio de trabajo propio de la consola de Anthropic con límite de USD 1 al mes. La llave nunca está en el repositorio ni en el navegador. | Debe |
+| FR-0015-18 | **Gasto.** La credencial DEBE vivir solo en el servidor, nunca en el repositorio ni en el navegador. Con la llave propia de Edrei, en un espacio de trabajo con límite de USD 1 al mes; sin ella, el AI Gateway de Netlify con topes de 20 preguntas al día en total y 10 por visitante. | Debe |
 | FR-0015-19 | **Memoria.** El servidor NO DEBE guardar conversaciones; solo contadores anónimos por día. | Debe |
 | FR-0015-20 | **Prueba de trampas.** Antes de activar el asistente y después de cada cambio en sus reglas, una batería de preguntas (fuera de tema, manipulación, privacidad y preguntas legítimas) DEBE pasar completa. | Debe |
 
@@ -96,3 +96,4 @@ dinero sin control. Esta spec fija los candados.
 |---|---|
 | 2026-11-22 | Creada y aprobada con las decisiones de Edrei del 2026-11-21. |
 | 2026-11-22 | La llave va en `ASISTENTE_ANTHROPIC_API_KEY`: el equipo de Netlify ya inyecta una `ANTHROPIC_API_KEY` compartida, sin el límite de USD 1. El botón aparece solo cuando el servidor tiene llave. |
+| 2026-11-27 | Edrei pidió que lo conectara yo. Sin acceso a su consola de Anthropic, el asistente usa el AI Gateway de Netlify (mismo modelo y precio, créditos de Netlify) mientras no exista la llave propia, con topes diarios más bajos (FR-0015-18). La batería de trampas pasó 12 de 12 y el asistente se activó. |

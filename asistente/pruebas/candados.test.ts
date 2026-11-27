@@ -56,3 +56,15 @@ test('FR-0015-19: la huella cambia cada día y no contiene la IP', () => {
   assert.equal(a.includes('203.0.113.7'), false);
   assert.equal(a.length, 32);
 });
+
+test('FR-0015-18: la llave propia manda; si no hay, el AI Gateway; si no, nada', async () => {
+  const { credencial, topes } = await import('../lib/llave.ts');
+  const env = (vars: Record<string, string>) => (n: string) => vars[n];
+  assert.equal(credencial(env({ ASISTENTE_ANTHROPIC_API_KEY: 'p', ANTHROPIC_API_KEY: 'g', ANTHROPIC_BASE_URL: 'https://gw' }))?.fuente, 'propia');
+  assert.equal(credencial(env({ ASISTENTE_ANTHROPIC_API_KEY: 'p' }))?.baseURL, 'https://api.anthropic.com');
+  const gw = credencial(env({ ANTHROPIC_API_KEY: 'g', ANTHROPIC_BASE_URL: 'https://gw' }));
+  assert.deepEqual(gw, { apiKey: 'g', baseURL: 'https://gw', fuente: 'netlify' });
+  assert.equal(credencial(env({ ANTHROPIC_API_KEY: 'g' })), null);
+  assert.equal(credencial(env({})), null);
+  assert.ok(topes('netlify').porDiaTotal < topes('propia').porDiaTotal);
+});

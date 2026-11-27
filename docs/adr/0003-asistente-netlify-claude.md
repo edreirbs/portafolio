@@ -28,19 +28,26 @@ servidor pequeño que guarde la llave, aplique los candados y hable con Claude.
   turnos, límite por minuto (configuración de Netlify), cuotas por día por visitante y totales
   (Netlify Blobs, con la IP convertida en huella SHA-256 que no se guarda en claro) y firma HMAC
   de cada respuesta del asistente para rechazar historiales alterados.
-- **Gasto**: la llave vive en un espacio de trabajo de la consola de Anthropic con límite de
-  USD 1 al mes. Es el candado final: si se alcanza, el asistente se apaga hasta el mes siguiente.
-- **La llave** la guarda Edrei en las variables de entorno del sitio de Netlify como
-  `ASISTENTE_ANTHROPIC_API_KEY`, marcada como secreta. Nunca pasa por el chat, el repositorio ni
-  el navegador. No se usa `ANTHROPIC_API_KEY`: el equipo de Netlify ya inyecta una con ese nombre
-  en todos sus sitios, sin el límite de USD 1. La función llama a `https://api.anthropic.com`
-  de forma explícita, para que ninguna dirección heredada desvíe las llamadas.
+- **Credencial** (actualizado el 2026-11-27): el servidor usa primero la llave propia de Edrei
+  si existe en `ASISTENTE_ANTHROPIC_API_KEY` (marcada secreta), contra `https://api.anthropic.com`.
+  Si no existe, usa el **AI Gateway de Netlify**, que inyecta `ANTHROPIC_API_KEY` y
+  `ANTHROPIC_BASE_URL` en las funciones, sirve Claude Haiku 5.5 al mismo precio y cobra en
+  créditos del equipo de Netlify. Ninguna llave pasa por el chat, el repositorio ni el navegador.
+- **Gasto**: con la llave propia, el límite de USD 1 del espacio de trabajo es el candado final.
+  Con el AI Gateway, los topes diarios bajan a 20 preguntas en total y 10 por visitante: unos
+  5 créditos de Netlify al día en el peor caso, porque esos créditos los comparten todos los
+  sitios del equipo.
+- **Secreto de firma**: lo genera el propio servidor la primera vez y vive solo en Netlify Blobs.
+  No depende de la llave, así que cambiar de credencial no rompe las conversaciones.
+- **Activación**: la constante `ACTIVO` en `asistente/lib/llave.ts` enciende el botón del sitio.
+  Se activó después de que pasara la batería de trampas.
 
 ## Alternativas descartadas
 
 | Opción | Por qué no |
 |---|---|
 | Llave en el navegador | Pública en segundos. |
+| Esperar la llave propia | Edrei pidió (2026-11-27) que el asistente quedara conectado sin pasos de su parte; el gateway lo permite sin manejar secretos. La llave propia sigue soportada. |
 | Supabase Edge Functions | El plan gratis de Edrei ya tiene dos proyectos activos; habría que pausar uno. |
 | Claude Opus 5.5 | Mejor redacción, unas 20 veces más caro; Edrei eligió Haiku con límite de USD 1. |
 | Búsqueda vectorial (RAG) | El contenido cabe completo en el prompt y se cachea; un índice agrega piezas sin beneficio. |

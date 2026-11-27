@@ -7,5 +7,6 @@
 - [x] Botón, panel, *streaming*, ligas seguras, sugerencias, memoria y teclado (FR-0015-01 a 10).
 - [x] Teléfono de latón en el 3D (FR-0015-01).
 - [x] Pruebas del panel contra un servidor simulado y axe sin errores.
-- [ ] Edrei guarda la llave en Netlify con su límite de USD 1.
-- [ ] La batería de trampas pasa contra el servidor publicado (FR-0015-20).
+- [x] Credencial: AI Gateway de Netlify mientras no exista la llave propia (2026-11-27).
+- [x] La batería de trampas pasa contra el servidor publicado: 12 de 12 (FR-0015-20).
+- [x] Asistente activado en el sitio.
