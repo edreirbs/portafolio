@@ -16,8 +16,8 @@ cifras:
   - { valor: "4,972", etiqueta: sinapsis, fuente: README del repositorio }
   - { valor: "2,000", etiqueta: pasos por segundo, fuente: README del repositorio }
 evidencia:
-  - { tipo: demo, url: "https://edreirbs.github.io/entrenamiento-redes-neuronales/", etiqueta: Jugar en vivo }
-  - { tipo: codigo, url: "https://github.com/edreirbs/entrenamiento-redes-neuronales", etiqueta: Ver código }
+  - { tipo: demo, url: "https://edreirbs.github.io/entrenamiento-redes-neuronales/", etiqueta: Jugar en vivo, etiqueta_en: Play live }
+  - { tipo: codigo, url: "https://github.com/edreirbs/entrenamiento-redes-neuronales", etiqueta: Ver código, etiqueta_en: Code }
 imagen:
   src: ../../../assets/piezas/mosca.webp
   alt: Escena del juego. Una mosca en 3D sobre una mesa, el matamoscas encima y un panel que grafica cómo va aprendiendo.
@@ -29,6 +29,11 @@ destacada: true
 orden: 1
 objeto: campana
 revisada: 2026-11
+en:
+  titulo: Mátala si puedes · Swat it if you can
+  subtitulo: A fly simulated neuron by neuron that learns from every swat
+  resumen: The escape circuit of a Drosophila, wired as in the animal, runs in your browser and learns
+    from every attempt to squash it. Real neuroscience turned into a game.
 ---
 
 ## El problema

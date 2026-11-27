@@ -14,7 +14,7 @@ resumen: >-
 cifras:
   - { valor: "5", etiqueta: specs implementadas, fuente: Repositorio }
 evidencia:
-  - { tipo: codigo, url: "https://github.com/edreirbs/tracky", etiqueta: Ver código }
+  - { tipo: codigo, url: "https://github.com/edreirbs/tracky", etiqueta: Ver código, etiqueta_en: Code }
 imagen:
   src: ../../../assets/piezas/tracky-arquitectura.svg
   alt: "Diagrama de arquitectura. El código vive en GitHub; Netlify publica la aplicación y sus funciones; Supabase guarda los datos con seguridad por renglón; la API de Claude se llama solo desde el servidor; y un puente local de Whisper transcribe el audio sin que salga de la computadora."
@@ -22,6 +22,10 @@ destacada: true
 orden: 2
 objeto: reloj
 revisada: 2026-11
+en:
+  subtitulo: Meeting recorder and task organizer for people with ADHD
+  resumen: Records any meeting, transcribes it on your own computer and summarizes it with Claude. Turns
+    every finished task into coins you can trade for free time.
 ---
 
 ## El problema

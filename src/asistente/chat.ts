@@ -1,9 +1,12 @@
 // Spec 0015 · La conversación con el asistente. Se descarga solo cuando alguien abre el panel
 // (FR-0015-08). Todo el texto del modelo se pinta con nodos del DOM, nunca con innerHTML.
 
+import type { TextosChat } from '../lib/asistente';
+
 interface Config {
   api: string;
   sugerencias: string[];
+  t: TextosChat;
   hosts: string[];
   cv: string;
   linkedin: string;
@@ -153,15 +156,15 @@ function aviso(texto: string, ligas = true) {
   d.className = 'asis-msj asis-msj--aviso';
   d.append(texto);
   if (ligas) {
-    d.append(' Mientras, puedes ver su ');
+    d.append(cfg.t.mientras);
     const cv = document.createElement('a');
     cv.href = cfg.cv;
-    cv.textContent = 'currículum';
+    cv.textContent = cfg.t.curriculum;
     const li = document.createElement('a');
     li.href = cfg.linkedin;
     li.rel = 'noopener';
     li.textContent = 'LinkedIn';
-    d.append(cv, ' o escribirle por ', li, '.');
+    d.append(cv, cfg.t.escribirle, li, '.');
   }
   registro.append(d);
   bajar();
@@ -171,7 +174,7 @@ function aviso(texto: string, ligas = true) {
 function saludo() {
   const d = document.createElement('div');
   d.className = 'asis-msj asis-msj--asistente';
-  pintar(d, 'Hola. Soy el asistente del portafolio de **Edrei Robles**. Pregúntame por su trayectoria, sus proyectos, su formación o cómo contactarlo.');
+  pintar(d, cfg.t.saludo);
   registro.append(d);
 }
 
@@ -216,7 +219,7 @@ function turnos() {
 
 function actualizarCuenta() {
   const quedan = MAX_CARACTERES - entrada.value.length;
-  cuenta.textContent = quedan <= 80 ? `${quedan} caracteres` : '';
+  cuenta.textContent = quedan <= 80 ? `${quedan} ${cfg.t.caracteres}` : '';
   enviar.disabled = !entrada.value.trim();
   entrada.style.height = 'auto';
   entrada.style.height = `${Math.min(entrada.scrollHeight, 120)}px`;
@@ -248,14 +251,15 @@ function historial(nueva: string) {
   ];
 }
 
+const E = cfg.t.errores;
 const ERRORES: Record<string, [string, boolean]> = {
-  'limite-visitante': ['Llegaste al límite de preguntas de hoy.', true],
-  'limite-dia': ['El asistente ya respondió todas las preguntas que tiene para hoy.', true],
-  rapido: ['Vas muy rápido. Espera un minuto y vuelve a preguntar.', false],
-  largo: [`Tu pregunta pasa de ${MAX_CARACTERES} caracteres. Hazla más corta.`, false],
-  turnos: ['Esta conversación llegó a su límite. Empieza una nueva con el botón de arriba.', false],
-  firma: ['La conversación se desincronizó. Empieza una nueva con el botón de arriba.', false],
-  servicio: ['El asistente está descansando en este momento.', true],
+  'limite-visitante': [E['limite-visitante'], true],
+  'limite-dia': [E['limite-dia'], true],
+  rapido: [E.rapido, false],
+  largo: [E.largo, false],
+  turnos: [E.turnos, false],
+  firma: [E.firma, false],
+  servicio: [E.servicio, true],
 };
 
 async function preguntar(texto: string) {
@@ -363,7 +367,7 @@ async function preguntar(texto: string) {
   ponerSugerencias(sugerenciasActuales());
   bajar();
   // FR-0015-07: el lector de pantalla oye la respuesta completa al terminar.
-  anunciar(`Respuesta del asistente: ${caja.textContent ?? ''}`);
+  anunciar(`${cfg.t.respuesta}${caja.textContent ?? ''}`);
   if (suyo.texto === FUERA_DE_TEMA) ponerSugerencias(cfg.sugerencias);
 }
 

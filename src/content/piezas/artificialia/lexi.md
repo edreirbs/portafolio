@@ -13,7 +13,7 @@ resumen: >-
   día y da las palabras exactas para acompañar; la IA analiza la lectura en voz alta hasta por
   fonema.
 evidencia:
-  - { tipo: demo, url: "https://lexi-mx.netlify.app/", etiqueta: Ver la app }
+  - { tipo: demo, url: "https://lexi-mx.netlify.app/", etiqueta: Ver la app, etiqueta_en: Open the app }
 imagen:
   src: ../../../assets/piezas/lexi.webp
   alt: Portada de Lexi, que invita a acompañar a los hijos en lectura, comprensión y razonamiento.
@@ -21,6 +21,10 @@ destacada: true
 orden: 4
 objeto: cuadro
 revisada: 2026-11
+en:
+  subtitulo: An app that guides parents and teachers to strengthen reading, fluency and math
+  resumen: A 10-minute diagnostic builds each child's path. Then Lexi suggests the activity of the day
+    and gives the exact words to support the child; AI analyzes reading aloud down to the phoneme.
 ---
 
 ## El problema

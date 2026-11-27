@@ -10,7 +10,11 @@ materiales: [Aula invertida, Aprendizaje híbrido, IA en educación]
 resumen: >-
   Masterclass de dos horas en modalidad virtual para docentes del IPN, el 27 de agosto de 2025.
 evidencia:
-  - { tipo: documento, url: "https://edreirbs.github.io/portafolio/constancias/ipn-futuros-educativos-2025.webp", etiqueta: Ver la constancia }
+  - { tipo: documento, url: "https://edreirbs.github.io/portafolio/constancias/ipn-futuros-educativos-2025.webp", etiqueta: Ver la constancia, etiqueta_en: See the certificate }
 orden: 2
 revisada: 2026-11
+en:
+  titulo: 'Educational Future: innovation and the challenges of AI'
+  subtitulo: 'Masterclass: flipped classroom and smart hybrid learning'
+  resumen: A two-hour virtual masterclass for IPN faculty, on August 27, 2025.
 ---

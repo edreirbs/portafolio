@@ -12,14 +12,18 @@ resumen: >-
   Une dos bóvedas de notas en un tablero con sus grafos y lo publica en GitHub Pages cifrado. El
   navegador lo descifra con una frase: en internet solo viaja texto ilegible.
 evidencia:
-  - { tipo: codigo, url: "https://github.com/edreirbs/second-brain", etiqueta: Ver código }
-  - { tipo: demo, url: "https://edreirbs.github.io/second-brain/", etiqueta: Ver el candado }
+  - { tipo: codigo, url: "https://github.com/edreirbs/second-brain", etiqueta: Ver código, etiqueta_en: Code }
+  - { tipo: demo, url: "https://edreirbs.github.io/second-brain/", etiqueta: Ver el candado, etiqueta_en: See the lock screen }
 imagen:
   src: ../../../assets/piezas/second-brain.webp
   alt: Pantalla de candado de Cerebro, que pide la frase para descifrar el tablero en el navegador.
 orden: 7
 objeto: cuadro
 revisada: 2026-11
+en:
+  subtitulo: An encrypted second brain that opens from anywhere, only with its passphrase
+  resumen: 'Joins two note vaults into one dashboard with their graphs and publishes it encrypted on GitHub
+    Pages. The browser decrypts it with a passphrase: only unreadable text travels over the internet.'
 ---
 
 ## El problema

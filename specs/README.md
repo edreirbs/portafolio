@@ -26,7 +26,7 @@ aprobación, salvo en la constitución (ver su sección de gobierno).
 | [0006](0006-certificaciones/spec.md) | Certificaciones verificables | Hecha | F2 |
 | [0007](0007-conferencias/spec.md) | Conferencias y docencia con evidencia | Hecha | F2 |
 | 0008 | Acervo: índice, filtros y búsqueda | Pendiente | F2 |
-| 0009 | Versión en inglés | Pendiente | F3 |
+| [0009](0009-ingles/spec.md) | Versión en inglés | Hecha | F3 |
 | [0010](0010-seo/spec.md) | Imagen al compartir, buscadores y analítica | Hecha | F3 |
 | 0011 | Lanzamiento | Pendiente | F4 |
 | [0012](0012-gabinete-3d/spec.md) | El gabinete en 3D · [plan](0012-gabinete-3d/plan.md) | Hecha (prototipo) | F2 |
@@ -47,7 +47,7 @@ Ninguna. Edrei delegó todas las decisiones el 2026-11-27; quedan registradas ab
 | 2026-11-21 | **D-11 · El gabinete 3D es la portada.** Las secciones profesionales viven dentro del 3D; la vista clásica es la misma página cuando el navegador no puede con el 3D o el visitante la elige. | Spec 0014 |
 | 2026-11-21 | **Redes publicadas:** LinkedIn, GitHub, YouTube, X y edreirobles.com. | Spec 0014 |
 | 2026-11-21 | **Asistente:** Claude Haiku 5.5, límite de USD 1 al mes, servidor en Netlify. | Spec 0015, ADR-0003 |
-| 2026-11-27 | **D-2 · Idiomas:** español; el inglés llega con la spec 0009. El asistente ya responde en el idioma de quien pregunta. | 0009 |
+| 2026-11-27 | **D-2 · Idiomas:** español e inglés. La portada en inglés vive en `/en/`; el gabinete 3D y el CV imprimible se quedan en español. El asistente responde en el idioma de quien pregunta. | 0009 |
 | 2026-11-27 | **D-3 · URL:** se queda `edreirbs.github.io/portafolio` hasta que el dominio `edreirobles.com` se apunte al sitio desde su registrador. | 0011 |
 | 2026-11-27 | **D-4 · Repos privados:** solo *Lexi*, con su app en línea como evidencia y sin código. Los demás no se muestran. | 0016 |
 | 2026-11-27 | **D-5 · Contacto público:** LinkedIn y las redes; sin correo ni teléfono. | 0003, 0014 |

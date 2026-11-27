@@ -1,10 +1,13 @@
 ---
 // Spec 0015 · El botón y el panel del asistente. El HTML es fijo y ligero; la lógica se descarga
 // solo cuando alguien lo abre (FR-0015-08). El botón aparece solo si el servidor está listo.
-import { API_ASISTENTE, AVISO, SUGERENCIAS } from '../lib/asistente';
+import { API_ASISTENTE, TEXTOS } from '../lib/asistente';
+import type { Idioma } from '../lib/fechas';
 import { portafolio } from '../lib/portafolio';
 import { url } from '../lib/url';
 
+const { idioma = 'es' } = Astro.props as { idioma?: Idioma };
+const t = TEXTOS[idioma];
 const { perfil, todas, articulos, recursos } = await portafolio();
 const linkedin = perfil.contacto.find((c) => c.etiqueta === 'LinkedIn') ?? perfil.contacto[0]!;
 // Las ligas que el asistente puede mostrar: las del portafolio y su evidencia.
@@ -19,14 +22,15 @@ for (const u of [
 }
 const config = {
   api: API_ASISTENTE,
-  sugerencias: SUGERENCIAS,
+  sugerencias: t.sugerencias,
+  t: t.chat,
   hosts: [...hosts],
   cv: url('cv'),
   linkedin: linkedin.url,
 };
 ---
 
-<button type="button" class="asis-lanzador" data-asistente-abrir hidden aria-controls="asistente" aria-expanded="false" aria-label="Pregúntale a mi asistente">
+<button type="button" class="asis-lanzador" data-asistente-abrir hidden aria-controls="asistente" aria-expanded="false" aria-label={t.lanzador}>
   <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
     <path
       d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4h0A1.5 1.5 0 0 1 4 14.5z"
@@ -36,37 +40,37 @@ const config = {
       stroke-linejoin="round"></path>
     <path d="M8.5 8.5h7M8.5 11.5h4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
   </svg>
-  <span>Pregúntale a mi asistente</span>
+  <span>{t.lanzador}</span>
 </button>
 
 <section class="asis" id="asistente" role="dialog" aria-modal="false" aria-labelledby="asis-titulo" hidden>
   <header class="asis__cabeza">
     <span class="asis__sello" aria-hidden="true">ER</span>
     <div class="asis__nombre">
-      <h2 id="asis-titulo" tabindex="-1">Asistente de Edrei</h2>
-      <p>Pregunta por su trayectoria, proyectos o formación</p>
+      <h2 id="asis-titulo" tabindex="-1">{t.titulo}</h2>
+      <p>{t.subtitulo}</p>
     </div>
-    <button type="button" class="asis__icono" data-asis-nueva aria-label="Empezar una conversación nueva" title="Empezar de nuevo">
+    <button type="button" class="asis__icono" data-asis-nueva aria-label={t.nueva} title={t.nuevaCorto}>
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
     </button>
-    <button type="button" class="asis__icono" data-asis-cerrar aria-label="Cerrar el asistente" title="Cerrar">
+    <button type="button" class="asis__icono" data-asis-cerrar aria-label={t.cerrar} title={t.cerrarCorto}>
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>
     </button>
   </header>
   <div class="asis__registro" data-asis-registro></div>
   <div class="asis__pie">
-    <div class="asis__sugerencias" data-asis-sugerencias aria-label="Preguntas sugeridas" role="group"></div>
+    <div class="asis__sugerencias" data-asis-sugerencias aria-label={t.sugeridas} role="group"></div>
     <form class="asis__forma" data-asis-forma>
-      <label class="visualmente-oculto" for="asis-entrada">Tu pregunta sobre Edrei</label>
-      <textarea id="asis-entrada" rows="1" maxlength="500" placeholder="Escribe tu pregunta…" autocomplete="off"></textarea>
-      <button type="submit" class="asis__enviar" data-asis-enviar aria-label="Enviar la pregunta">
+      <label class="visualmente-oculto" for="asis-entrada">{t.etiqueta}</label>
+      <textarea id="asis-entrada" rows="1" maxlength="500" placeholder={t.placeholder} autocomplete="off"></textarea>
+      <button type="submit" class="asis__enviar" data-asis-enviar aria-label={t.enviar}>
         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
       </button>
-      <button type="button" class="asis__enviar asis__detener" data-asis-detener aria-label="Detener la respuesta" hidden>
+      <button type="button" class="asis__enviar asis__detener" data-asis-detener aria-label={t.detener} hidden>
         <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"></rect></svg>
       </button>
     </form>
-    <p class="asis__aviso"><span data-asis-cuenta></span>{AVISO}</p>
+    <p class="asis__aviso"><span data-asis-cuenta></span>{t.aviso}</p>
   </div>
   <p class="visualmente-oculto" data-asis-anuncio aria-live="polite"></p>
 </section>

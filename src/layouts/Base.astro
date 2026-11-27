@@ -9,6 +9,7 @@ import Cabecera from '../components/Cabecera.astro';
 import Pie from '../components/Pie.astro';
 import Asistente from '../components/Asistente.astro';
 import { url } from '../lib/url';
+import { UI, type Idioma } from '../lib/idioma';
 
 interface Props {
   titulo: string;
@@ -19,24 +20,40 @@ interface Props {
   imagen?: string;
   imagenAlt?: string;
   tipo?: 'website' | 'article' | 'profile';
+  /** Spec 0009 */
+  idioma?: Idioma;
+  /** Spec 0009: la portada existe en los dos idiomas; se anuncian entre sí. */
+  bilingue?: boolean;
 }
 
-const { titulo, descripcion, actual, tipo = 'website' } = Astro.props;
+const { titulo, descripcion, actual, tipo = 'website', idioma = 'es', bilingue = false } = Astro.props;
+const t = UI[idioma];
+const alternas = bilingue
+  ? [
+      { hreflang: 'es-MX', href: new URL(url(), Astro.site).href },
+      { hreflang: 'en', href: new URL(url('en/'), Astro.site).href },
+      { hreflang: 'x-default', href: new URL(url(), Astro.site).href },
+    ]
+  : [];
 const imagen = Astro.props.imagen ?? new URL(url('og-portafolio.jpg'), Astro.site).href;
 const imagenAlt =
-  Astro.props.imagenAlt ?? 'Edrei Robles, estratega de IA para el aprendizaje, frente a la galería de proyectos de su gabinete en 3D.';
+  Astro.props.imagenAlt ??
+  (idioma === 'en'
+    ? 'Edrei Robles, AI strategist for learning, in front of the project gallery of his 3D cabinet.'
+    : 'Edrei Robles, estratega de IA para el aprendizaje, frente a la galería de proyectos de su gabinete en 3D.');
 const canonica = new URL(Astro.url.pathname, Astro.site);
 const tituloCompleto = actual === 'inicio' ? titulo : `${titulo} · Edrei Robles`;
 ---
 
 <!doctype html>
-<html lang="es-MX">
+<html lang={idioma === 'en' ? 'en' : 'es-MX'}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{tituloCompleto}</title>
     <meta name="description" content={descripcion} />
     <link rel="canonical" href={canonica} />
+    {alternas.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
     <slot name="head" />
     <link rel="preload" href={frauncesLatin} as="font" type="font/woff2" crossorigin />
     <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
@@ -44,8 +61,9 @@ const tituloCompleto = actual === 'inicio' ? titulo : `${titulo} · Edrei Robles
     <meta name="theme-color" content="#15120f" media="(prefers-color-scheme: dark)" />
     <!-- Spec 0010: lo que se ve al compartir la liga en LinkedIn, WhatsApp o X. -->
     <meta property="og:type" content={tipo} />
-    <meta property="og:site_name" content="Edrei Robles · Portafolio" />
-    <meta property="og:locale" content="es_MX" />
+    <meta property="og:site_name" content={idioma === 'en' ? 'Edrei Robles · Portfolio' : 'Edrei Robles · Portafolio'} />
+    <meta property="og:locale" content={idioma === 'en' ? 'en_US' : 'es_MX'} />
+    {bilingue && <meta property="og:locale:alternate" content={idioma === 'en' ? 'es_MX' : 'en_US'} />}
     <meta property="og:title" content={tituloCompleto} />
     <meta property="og:description" content={descripcion} />
     <meta property="og:url" content={canonica} />
@@ -64,16 +82,16 @@ const tituloCompleto = actual === 'inicio' ? titulo : `${titulo} · Edrei Robles
     </script>
   </head>
   <body>
-    <a class="salto" href="#contenido">Saltar al contenido</a>
-    <Cabecera actual={actual} />
+    <a class="salto" href="#contenido">{t.saltar}</a>
+    <Cabecera actual={actual} idioma={idioma} />
     <main id="contenido" tabindex="-1">
       <slot />
     </main>
-    <Pie />
+    <Pie idioma={idioma} />
     <!-- Spec 0014: el gabinete 3D se monta encima de la página cuando el navegador puede. -->
     <slot name="capa" />
     <!-- Spec 0015: el asistente, en todas las páginas. -->
-    <Asistente />
+    <Asistente idioma={idioma} />
     <script is:inline>
       (function () {
         var raiz = document.documentElement;

@@ -14,10 +14,10 @@ resumen: >-
   reglas fiscales, un subagente revisor que solo lee, el esquema de la base, un respaldo
   terminado y una página que comprueba la base de cada alumno.
 evidencia:
-  - { tipo: demo, url: "https://lanzamiento-edrei.netlify.app/", etiqueta: Ver un ejemplo en vivo }
-  - { tipo: codigo, url: "https://github.com/edreirbs/plantilla-junta-atn-s7", etiqueta: Ver una plantilla }
-  - { tipo: demo, url: "https://edreirbs.github.io/comprobador-s7/", etiqueta: Ver el comprobador }
-  - { tipo: codigo, url: "https://github.com/edreirbs/plantilla-ocso-s7", etiqueta: Ver el portal de facturación }
+  - { tipo: demo, url: "https://lanzamiento-edrei.netlify.app/", etiqueta: Ver un ejemplo en vivo, etiqueta_en: Live example }
+  - { tipo: codigo, url: "https://github.com/edreirbs/plantilla-junta-atn-s7", etiqueta: Ver una plantilla, etiqueta_en: A template }
+  - { tipo: demo, url: "https://edreirbs.github.io/comprobador-s7/", etiqueta: Ver el comprobador, etiqueta_en: The checker }
+  - { tipo: codigo, url: "https://github.com/edreirbs/plantilla-ocso-s7", etiqueta: Ver el portal de facturación, etiqueta_en: Billing portal template }
 imagen:
   src: ../../../assets/piezas/kit-claude-code.webp
   alt: Página de registro a una junta de ficción, construida con Claude Code a partir de una plantilla del kit.
@@ -25,6 +25,12 @@ destacada: true
 orden: 6
 objeto: cuadro
 revisada: 2026-11
+en:
+  titulo: 'Practice kit: Claude Code in the cloud'
+  subtitulo: Ready-made projects so people with no experience can build and publish with Claude
+  resumen: Templates for Session 7 of the course. Each includes rules for Claude, a brand or tax-rules
+    skill, a read-only reviewer subagent, the database schema, a finished fallback and a page that checks
+    each student's database.
 ---
 
 ## El problema

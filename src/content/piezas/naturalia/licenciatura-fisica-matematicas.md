@@ -14,8 +14,12 @@ materiales: [Física, Modelado matemático, Análisis de datos, Óptica]
 resumen: >-
   Formación en física y matemáticas, con énfasis en modelado matemático y análisis de datos.
 evidencia:
-  - { tipo: credencial, url: "https://www.cedulaprofesional.sep.gob.mx/", etiqueta: Verificar la cédula en la SEP }
+  - { tipo: credencial, url: "https://www.cedulaprofesional.sep.gob.mx/", etiqueta: Verificar la cédula en la SEP, etiqueta_en: Verify the professional license (SEP) }
 orden: 4
 objeto: diploma
 revisada: 2026-11
+en:
+  titulo: Bachelor's degree in Physics and Mathematics
+  subtitulo: Thesis on indirect measurement of Achilles tendon tension with infrared light
+  resumen: Training in physics and mathematics, with emphasis on mathematical modeling and data analysis.
 ---

@@ -45,7 +45,7 @@ const anios = (r: (typeof registro)[number]) => {
 };
 ---
 
-<Base titulo={`${perfil.nombre} · ${perfil.titulo}`} descripcion={perfil.promesa} actual="inicio">
+<Base titulo={`${perfil.nombre} · ${perfil.titulo}`} descripcion={perfil.promesa} actual="inicio" bilingue>
   <Fragment slot="head">
     <!-- Spec 0010: datos estructurados de la persona para buscadores. -->
     <script type="application/ld+json" set:html={JSON.stringify(personaLd)} />

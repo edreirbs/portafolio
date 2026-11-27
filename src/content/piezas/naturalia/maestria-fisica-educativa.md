@@ -15,10 +15,15 @@ resumen: >-
   Diseño y evaluación de un laboratorio virtual de física integrado en un ciclo de aprendizaje
   4MAT, medido con los niveles del modelo Kirkpatrick. La tesis se publicó como artículo.
 evidencia:
-  - { tipo: video, url: "https://youtu.be/aQwt6MJ8OCo", etiqueta: Ver el examen de grado }
-  - { tipo: documento, url: "https://doi.org/10.55777/rea.v15i30.4524", etiqueta: Leer el artículo }
-  - { tipo: credencial, url: "https://www.cedulaprofesional.sep.gob.mx/", etiqueta: Verificar la cédula en la SEP }
+  - { tipo: video, url: "https://youtu.be/aQwt6MJ8OCo", etiqueta: Ver el examen de grado, etiqueta_en: Thesis defense video }
+  - { tipo: documento, url: "https://doi.org/10.55777/rea.v15i30.4524", etiqueta: Leer el artículo, etiqueta_en: Read the article }
+  - { tipo: credencial, url: "https://www.cedulaprofesional.sep.gob.mx/", etiqueta: Verificar la cédula en la SEP, etiqueta_en: Verify the professional license (SEP) }
 orden: 2
 objeto: diploma
 revisada: 2026-11
+en:
+  titulo: Master of Science in Physics Education
+  subtitulo: A virtual lab in the 4MAT cycle, evaluated with the Kirkpatrick model
+  resumen: Design and evaluation of a virtual physics lab integrated into a 4MAT learning cycle, measured
+    with the levels of the Kirkpatrick model. The thesis was published as an article.
 ---

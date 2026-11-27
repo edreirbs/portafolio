@@ -13,8 +13,11 @@ resumen: >-
   Bachillerato del sistema francés en la serie científica. De ahí viene el francés de nivel
   nativo.
 evidencia:
-  - { tipo: documento, etiqueta: Diploma del Baccalauréat }
+  - { tipo: documento, etiqueta: Diploma del Baccalauréat, etiqueta_en: Baccalauréat diploma }
 orden: 5
 objeto: diploma
 revisada: 2026-11
+en:
+  subtitulo: French baccalaureate, science track
+  resumen: French-system high school diploma, science track. The source of his native-level French.
 ---

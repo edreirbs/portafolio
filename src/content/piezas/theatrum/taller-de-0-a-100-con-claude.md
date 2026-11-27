@@ -12,12 +12,18 @@ resumen: >-
   instrucciones que funcionan a la primera a entregables de Excel, Word y PowerPoint armados en
   automático.
 evidencia:
-  - { tipo: demo, url: "https://de0a100ia.netlify.app/", etiqueta: Ver el taller }
+  - { tipo: demo, url: "https://de0a100ia.netlify.app/", etiqueta: Ver el taller, etiqueta_en: See the workshop }
 imagen:
   src: ../../../assets/piezas/taller-de-0-a-100.webp
   alt: Página del taller De 0 a 100 con Claude gratis, con la fecha, el horario y lo que se llevan los participantes.
 orden: 1
 revisada: 2026-11
+en:
+  titulo: 'Live workshop: From 0 to 100 with free Claude'
+  subtitulo: Four hours to build four productivity tools, no coding required
+  resumen: 'A live workshop with the free version of Claude: one finished tool per hour, from instructions
+    that work on the first try to Excel, Word and PowerPoint deliverables built automatically.'
+  procedencia: Own workshop · online
 ---
 
 ## Para quién

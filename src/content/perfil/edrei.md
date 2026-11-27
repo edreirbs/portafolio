@@ -40,4 +40,33 @@ competencias:
   - Liderazgo de equipos multidisciplinarios
   - Metodologías ágiles (Scrum)
   - Investigación educativa
+en:
+  titulo: AI Strategist for Learning
+  promesa: 'I design and lead AI adoption in universities and companies: from vision to measurable impact.'
+  pruebas:
+  - PhD candidate in Science (IPN)
+  - 10+ years in education
+  - Speaker in 4 countries
+  resumen: 'I design artificial intelligence strategies for education and put them into practice. I have
+    led instructional design and content teams at Tecmilenio, Chegg and Aprende con Tabella, I teach AI
+    to faculty, leaders and professionals at universities in Mexico and Latin America, and I build AI
+    products: agents, simulations and learning tools. I trained as a physicist at the Instituto Politécnico
+    Nacional, where I earned my master''s degree and am a PhD candidate in Science, specializing in Physics
+    Education.'
+  ubicacion: Monterrey, Mexico
+  idiomas:
+  - idioma: Spanish
+    nivel: Native
+  - idioma: French
+    nivel: Native (French baccalaureate)
+  - idioma: English
+    nivel: Professional
+  competencias:
+  - AI strategy and adoption
+  - AI agents and RAG
+  - Instructional design (ADDIE, SAM, 4MAT, UDL)
+  - Impact evaluation (Kirkpatrick, Phillips ROI)
+  - Leading multidisciplinary teams
+  - Agile methods (Scrum)
+  - Education research
 ---

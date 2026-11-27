@@ -14,15 +14,20 @@ resumen: >-
   cuerpo libre, el teorema del límite central aplicado a la investigación educativa y el
   experimento del Nobel de Física 2023.
 evidencia:
-  - { tipo: demo, url: "https://edreirbs.github.io/DCL/diagrama_tension_interactivo.html", etiqueta: Diagrama de cuerpo libre }
-  - { tipo: demo, url: "https://edreirbs.github.io/teorema-limite-central/", etiqueta: Teorema del límite central }
-  - { tipo: demo, url: "https://edreirbs.github.io/nobel-fisica-2023/", etiqueta: Experimento del Nobel 2023 }
+  - { tipo: demo, url: "https://edreirbs.github.io/DCL/diagrama_tension_interactivo.html", etiqueta: Diagrama de cuerpo libre, etiqueta_en: Free-body diagram }
+  - { tipo: demo, url: "https://edreirbs.github.io/teorema-limite-central/", etiqueta: Teorema del límite central, etiqueta_en: Central limit theorem }
+  - { tipo: demo, url: "https://edreirbs.github.io/nobel-fisica-2023/", etiqueta: Experimento del Nobel 2023, etiqueta_en: 2023 Nobel experiment }
 imagen:
   src: ../../../assets/piezas/simulaciones-fisica.webp
   alt: Tres simulaciones lado a lado, el diagrama de cuerpo libre, el teorema del límite central y el experimento del Nobel de Física 2023.
 orden: 8
 objeto: cuadro
 revisada: 2026-11
+en:
+  titulo: Simulations for teaching physics
+  subtitulo: Interactive browser labs, from free-body diagrams to the 2023 Nobel Prize in Physics
+  resumen: 'Small labs that run in the browser: rope tensions with their free-body diagram, the central
+    limit theorem applied to education research, and the experiment behind the 2023 Nobel Prize in Physics.'
 ---
 
 ## El problema

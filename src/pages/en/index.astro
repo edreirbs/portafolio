@@ -1,0 +1,253 @@
+---
+// Spec 0009 · El portafolio en inglés. Mismas secciones y evidencia que la portada en español,
+// en la vista clásica; el gabinete 3D se queda en español. Los textos salen del campo `en` de
+// cada archivo de contenido.
+import Base from '../../layouts/Base.astro';
+import TarjetaPieza from '../../components/TarjetaPieza.astro';
+import FichaPieza from '../../components/FichaPieza.astro';
+import SeccionPro from '../../components/SeccionPro.astro';
+import { portafolio } from '../../lib/portafolio';
+import { infoSeccion, etiquetaRed } from '../../lib/idioma';
+import { periodo, periodoAnios } from '../../lib/fechas';
+import { url } from '../../lib/url';
+
+const P = await portafolio();
+const { perfil, porSeccion, registro, articulos, recursos, visibles, linkedin } = P;
+const en = perfil.en;
+const numero = (s: (typeof visibles)[number]) => visibles.indexOf(s) + 1;
+
+const SELLO: Record<string, string> = { LinkedIn: 'in', GitHub: 'GH', YouTube: '▶', X: 'X', 'Sitio web': 'www' };
+const cuentaDe = (direccion: string) => {
+  const u = new URL(direccion);
+  const ruta = u.pathname.replace(/^\/(in\/)?|\/$/g, '');
+  if (u.hostname.endsWith('x.com')) return `@${ruta}`;
+  return ruta || u.hostname.replace(/^www\./, '');
+};
+const personaLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: perfil.nombre,
+  jobTitle: en.titulo,
+  description: en.promesa,
+  url: new URL(url('en/'), Astro.site).href,
+  image: new URL(url('og-portafolio.jpg'), Astro.site).href,
+  address: { '@type': 'PostalAddress', addressLocality: 'Monterrey', addressCountry: 'MX' },
+  alumniOf: { '@type': 'CollegeOrUniversity', name: 'Instituto Politécnico Nacional' },
+  knowsAbout: en.competencias,
+  knowsLanguage: en.idiomas.map((i) => i.idioma),
+  sameAs: perfil.contacto.map((c) => c.url),
+};
+const anios = (r: (typeof registro)[number]) => {
+  const desde = r.data.puestos.map((x) => x.desde).sort()[0]!;
+  const hastas = r.data.puestos.map((x) => x.hasta);
+  return periodoAnios(desde, hastas.includes('hoy') ? 'hoy' : hastas.sort().at(-1), 'en');
+};
+---
+
+<Base titulo={`${perfil.nombre} · ${en.titulo}`} descripcion={en.promesa} actual="inicio" idioma="en" bilingue>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(personaLd)} />
+  </Fragment>
+
+  <section class="vestibulo portada contenedor" aria-labelledby="nombre">
+    <div class="vestibulo__rejilla">
+      <div>
+        <p class="etiqueta">{en.titulo}</p>
+        <h1 id="nombre">{perfil.nombre}</h1>
+        <p class="promesa">{en.promesa}</p>
+        <ul class="pruebas" aria-label="Credentials">
+          {en.pruebas.map((p) => <li>{p}</li>)}
+        </ul>
+        <div class="acciones">
+          <button type="button" class="boton boton--principal" data-asistente-otro data-solo-asistente>Ask my assistant</button>
+          <a class="boton" href={`${url()}?vista=3d`} hreflang="es">Explore the 3D cabinet (in Spanish)</a>
+          <a class="boton boton--texto" href={linkedin.url} rel="me">Message me on {linkedin.etiqueta}</a>
+        </div>
+      </div>
+      <aside class="acerca" aria-labelledby="t-acerca">
+        <h2 id="t-acerca" class="etiqueta">About</h2>
+        <p>{en.resumen}</p>
+        <p class="acerca__datos">
+          {en.ubicacion} · {en.idiomas.map((i) => `${i.idioma} (${i.nivel})`).join(' · ')}
+        </p>
+        <ul class="acerca__competencias" aria-label="Skills">
+          {en.competencias.map((c) => <li>{c}</li>)}
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <nav class="indice contenedor" aria-label="Sections">
+    <ul>
+      {
+        visibles.map((s) => (
+          <li>
+            <a href={`#${s}`}>{infoSeccion(s, 'en').nombre}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+
+  {
+    visibles.includes('proyectos') && (
+      <SeccionPro id="proyectos" numero={numero('proyectos')} idioma="en">
+        <ul class="vitrina">
+          {porSeccion.proyectos.map((p, i) => (
+            <li>
+              <TarjetaPieza pieza={p} prioridad={i < 2} idioma="en" />
+            </li>
+          ))}
+        </ul>
+      </SeccionPro>
+    )
+  }
+
+  {
+    visibles.includes('titulos') && (
+      <SeccionPro id="titulos" numero={numero('titulos')} idioma="en">
+        <ul class="fichas">
+          {porSeccion.titulos.map((p) => (
+            <li>
+              <FichaPieza pieza={p} idioma="en" />
+            </li>
+          ))}
+        </ul>
+      </SeccionPro>
+    )
+  }
+
+  {
+    visibles.includes('certificaciones') && (
+      <SeccionPro id="certificaciones" numero={numero('certificaciones')} idioma="en">
+        <ul class="fichas">
+          {porSeccion.certificaciones.map((p) => (
+            <li>
+              <FichaPieza pieza={p} idioma="en" />
+            </li>
+          ))}
+        </ul>
+      </SeccionPro>
+    )
+  }
+
+  {
+    visibles.includes('experiencia') && (
+      <SeccionPro id="experiencia" numero={numero('experiencia')} idioma="en">
+        <ol class="linea">
+          {registro.map((r) => (
+            <li class="linea__item">
+              <p class="linea__anios">{anios(r)}</p>
+              <div>
+                <h3>{r.data.organizacion}</h3>
+                {(r.data.en.lugar ?? r.data.lugar) && <p class="linea__lugar">{r.data.en.lugar ?? r.data.lugar}</p>}
+                <ul class="linea__puestos">
+                  {r.data.puestos.map((x, i) => (
+                    <li>
+                      <strong>{r.data.en.puestos[i] ?? x.puesto}</strong> <span>{periodo(x.desde, x.hasta, 'en')}</span>
+                    </li>
+                  ))}
+                </ul>
+                {r.data.en.alcance && <p class="linea__texto">{r.data.en.alcance}</p>}
+                {r.data.en.logros.length > 0 && (
+                  <ul class="linea__logros">
+                    {r.data.en.logros.map((l) => (
+                      <li>{l}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </li>
+          ))}
+        </ol>
+        {porSeccion.experiencia.length > 0 && (
+          <>
+            <h3 class="sp__sub">Talks and teaching</h3>
+            <ul class="fichas">
+              {porSeccion.experiencia.map((p) => (
+                <li>
+                  <FichaPieza pieza={p} idioma="en" />
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </SeccionPro>
+    )
+  }
+
+  {
+    visibles.includes('publicaciones') && (
+      <SeccionPro id="publicaciones" numero={numero('publicaciones')} idioma="en">
+        {porSeccion.publicaciones.length > 0 && (
+          <ul class="fichas">
+            {porSeccion.publicaciones.map((p) => (
+              <li>
+                <FichaPieza pieza={p} idioma="en" />
+              </li>
+            ))}
+          </ul>
+        )}
+        {articulos.length > 0 && (
+          <>
+            <h3 class="sp__sub">Popular science · {articulos.length} LinkedIn articles, in Spanish</h3>
+            <ol class="articulos" lang="es">
+              {articulos.map((a) => (
+                <li>
+                  <a href={a.url} rel="noopener">
+                    {a.titulo}
+                  </a>{' '}
+                  <span>{a.fecha.slice(0, 4)}</span>
+                </li>
+              ))}
+            </ol>
+          </>
+        )}
+        {recursos.length > 0 && (
+          <>
+            <h3 class="sp__sub">Open resources for teachers, in Spanish · edreirobles.com</h3>
+            <ul class="recursos">
+              {recursos.map((r) => (
+                <li>
+                  <a href={r.url} rel="noopener">
+                    {r.titulo_en}
+                  </a>
+                  <span>{r.descripcion_en}</span>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </SeccionPro>
+    )
+  }
+
+  <SeccionPro id="contacto" numero={numero('contacto')} idioma="en">
+    <ul class="redes">
+      {
+        perfil.contacto.map((c) => (
+          <li>
+            <a class="red" href={c.url} rel="me">
+              <span class="red__sello" aria-hidden="true">
+                {SELLO[c.etiqueta] ?? c.etiqueta.slice(0, 2)}
+              </span>
+              <span class="red__texto">
+                <strong>{etiquetaRed(c.etiqueta, 'en')}</strong>
+                <small>{cuentaDe(c.url)}</small>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+      <li>
+        <a class="red" href={url('cv')} hreflang="es">
+          <span class="red__sello" aria-hidden="true">CV</span>
+          <span class="red__texto">
+            <strong>CV</strong>
+            <small>Printable, in Spanish</small>
+          </span>
+        </a>
+      </li>
+    </ul>
+  </SeccionPro>
+</Base>
