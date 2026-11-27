@@ -7,8 +7,6 @@ pruebas:
     fuente: "Naturalia · examen predoctoral aprobado en 2025"
   - texto: Más de 10 años en educación
     fuente: "Registro · desde 2013"
-  - texto: Ponente en 4 países
-    fuente: "Theatrum · México, Perú, Colombia y República Dominicana"
 resumen: >-
   Diseño estrategias de inteligencia artificial para la educación y las llevo a la práctica.
   He dirigido equipos de diseño instruccional y contenidos en Tecmilenio, Chegg y Aprende con
@@ -46,7 +44,6 @@ en:
   pruebas:
   - PhD candidate in Science (IPN)
   - 10+ years in education
-  - Speaker in 4 countries
   resumen: 'I design artificial intelligence strategies for education and put them into practice. I have
     led instructional design and content teams at Tecmilenio, Chegg and Aprende con Tabella, I teach AI
     to faculty, leaders and professionals at universities in Mexico and Latin America, and I build AI

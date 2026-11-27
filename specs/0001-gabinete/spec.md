@@ -28,7 +28,7 @@ adopción de IA, en universidades y empresas (decisión D-1).
 |---|---|
 | Título | Estratega de IA para el aprendizaje |
 | Promesa | Diseño y dirijo la adopción de IA en universidades y empresas: de la visión al impacto medible. |
-| Pruebas | Doctorando en Ciencias (IPN) · Más de 10 años en educación · Ponente en 4 países |
+| Pruebas | Doctorando en Ciencias (IPN) · Más de 10 años en educación (la tercera, "Ponente en 4 países", se quitó el 2026-11-27: Colombia no tiene constancia) |
 
 El gabinete refuerza esa lectura: un curador decide qué se exhibe y por qué. Curar es
 juicio estratégico, la misma habilidad que se le pide a un director.
@@ -184,3 +184,4 @@ La identidad final se cierra en su propia spec, con un prototipo de alta fidelid
 | 2026-11-20 | El perfil describe solo lo personal (constitución, art. VIII). |
 | 2026-11-20 | Posicionamiento directivo (D-1) y persona "Comité de dirección". |
 | 2026-11-20 | El recorrido 3D deja de ser no-objetivo: ver spec 0012. |
+| 2026-11-27 | Se quita la prueba "Ponente en 4 países" a petición de Edrei: Colombia no tiene constancia. |

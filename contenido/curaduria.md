@@ -135,7 +135,7 @@ y empresas: de la visión al impacto medible.
 | Cifra | Fuente |
 |---|---|
 | Más de 10 años en educación | Trayectoria desde 2013 |
-| Ponente en 4 países | Theatrum |
+| ~~Ponente en 4 países~~ (retirada el 2026-11-27: Colombia sin constancia) | Theatrum |
 | 19 artículos de divulgación | LinkedIn |
 | 1,408 neuronas simuladas en el navegador | Repo de la mosca |
 | Premio al Mejor Desempeño Académico de Posgrado | IPN, 2022 |
