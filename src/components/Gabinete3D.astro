@@ -2,6 +2,7 @@
 // Specs 0012, 0013 y 0014 · El gabinete 3D, montado encima de la portada. Las secciones del
 // portafolio viven en la página (SeccionPro) y aquí se vuelven los paneles de cada mueble.
 import { getCollection } from 'astro:content';
+import { getImage } from 'astro:assets';
 import { INFO_SECCION, seccionDe, type Seccion } from '../lib/secciones';
 import type { Portafolio } from '../lib/portafolio';
 import { url } from '../lib/url';
@@ -30,9 +31,10 @@ const datos = {
     const hasta = hastas.includes('hoy') ? 'hoy' : hastas.sort().at(-1)!.slice(0, 4);
     return { anios: desde === hasta ? desde : `${desde} – ${hasta}`, texto: r.data.organizacion };
   }),
-  piezas: todas
+  piezas: await Promise.all(
+    todas
     .filter((x) => x.data.objeto)
-    .map((x) => ({
+    .map(async (x) => ({
       id: x.id,
       catalogo: x.data.catalogo,
       titulo: x.data.titulo,
@@ -44,7 +46,12 @@ const datos = {
       objeto: x.data.objeto,
       url: url(`piezas/${x.id}`),
       evidencia: x.data.evidencia.filter((e) => e.url).map((e) => ({ etiqueta: e.etiqueta, url: e.url! })),
-    })),
+      // Spec 0016: la captura del proyecto para su cuadro en el muro.
+      imagen3d:
+        x.data.objeto === 'cuadro' && x.data.imagen
+          ? (await getImage({ src: x.data.imagen.src, width: 1024, format: 'webp' })).src
+          : undefined,
+    }))),
 };
 
 function cuentaDe(direccion: string): string {

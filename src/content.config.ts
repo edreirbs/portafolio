@@ -36,7 +36,7 @@ const piezas = defineCollection({
         imagen: z.object({ src: image(), alt: z.string().min(1) }).optional(),
         ejemplar: z.object({ poster: image(), nombre: z.string(), alt: z.string() }).optional(),
         // Spec 0012: qué objeto la representa en el gabinete 3D.
-        objeto: z.enum(['campana', 'reloj', 'periodicos', 'diploma', 'revista', 'medalla']).optional(),
+        objeto: z.enum(['campana', 'reloj', 'periodicos', 'diploma', 'revista', 'medalla', 'cuadro']).optional(),
         destacada: z.boolean().default(false),
         orden: z.number().default(99),
         visible: z.boolean().default(true),
