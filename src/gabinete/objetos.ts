@@ -384,7 +384,7 @@ export function telefono(): Group {
 /** Spec 0016 · Un proyecto colgado en el muro: su captura enmarcada y una placa con su nombre. */
 export function cuadroProyecto(captura: Texture, placa: Texture, ancho = 0.95, alto = 0.6): Group {
   const g = diplomaEnmarcado(captura, ancho, alto);
-  const lamina = malla(new BoxGeometry(0.4, 0.13, 0.012), [
+  const lamina = malla(new BoxGeometry(0.38, 0.12, 0.012), [
     MAT.latonOscuro(),
     MAT.latonOscuro(),
     MAT.latonOscuro(),
@@ -392,7 +392,7 @@ export function cuadroProyecto(captura: Texture, placa: Texture, ancho = 0.95, a
     new MeshStandardMaterial({ map: placa, metalness: 0.75, roughness: 0.38 }),
     MAT.latonOscuro(),
   ]);
-  lamina.position.set(0, -alto / 2 - 0.13, 0.01);
+  lamina.position.set(0, -alto / 2 - 0.12, 0.01);
   g.add(lamina);
   return g;
 }

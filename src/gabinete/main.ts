@@ -74,7 +74,7 @@ const OJOS = 1.62;
 // FR-0014-05: cada sección tiene su mueble y su punto de vista.
 const ESTACIONES: Record<string, Estacion> = {
   centro: { nombre: 'Centro del estudio', vista: { cam: [0, OJOS, 3.55], mira: [0, 1.05, -1.6] } },
-  proyectos: { nombre: 'Proyectos', vista: { cam: [0, 1.62, -0.55], mira: [0, 1.36, -3.9] }, atril: [-0.95, 0, -2.25], atrilRot: 0.35 },
+  proyectos: { nombre: 'Proyectos', vista: { cam: [0, 1.62, 0.2], mira: [0, 1.4, -3.9] }, atril: [-0.95, 0, -2.25], atrilRot: 0.35 },
   titulos: { nombre: 'Títulos y diplomas', vista: { cam: [-2.35, 1.6, -1.25], mira: [-4.9, 1.45, -1.25] }, atril: [-3.85, 0, -0.1], atrilRot: 2.2 },
   certificaciones: { nombre: 'Certificaciones y cursos', vista: { cam: [2.15, 1.72, 0.45], mira: [4.4, 1.35, 0.45] }, atril: [3.7, 0, 1.45], atrilRot: -2.1 },
   experiencia: { nombre: 'Experiencia', vista: { cam: [-2.45, 1.62, 1.75], mira: [-4.2, 1.0, 1.45] }, atril: [-3.5, 0, 2.75], atrilRot: 2.1 },
@@ -739,7 +739,7 @@ export async function iniciar() {
   else window.addEventListener('asistente:listo', ponerTelefono, { once: true });
 
   // Spec 0016 · Los demás proyectos cuelgan junto a la alacena: su captura enmarcada y su placa.
-  const MUROS: [number, number][] = [[-1.5, 0], [1.5, 0], [-2.55, 0], [2.55, 0], [-3.6, 0], [3.6, 0], [-1.5, 1], [1.5, 1]];
+  const MUROS: [number, number][] = [[-1.4, 0], [1.4, 0], [-2.3, 0], [2.3, 0], [-3.2, 0], [3.2, 0], [-4.1, 0], [4.1, 0]];
   const cuadros = piezaPor('cuadro').filter((p) => p.imagen3d);
   const capturas = await Promise.all(
     cuadros.map(async (p) => {
@@ -758,7 +758,7 @@ export async function iniciar() {
     const captura = capturas[i];
     if (!lugar || !captura) return;
     const [x, fila] = lugar;
-    const cuadro = poner(O.cuadroProyecto(captura, T.placa(p.titulo, 'Proyecto', false), 0.8, 0.5), [x, fila ? 2.45 : 1.62, -3.965]);
+    const cuadro = poner(O.cuadroProyecto(captura, T.placa(p.titulo, 'Proyecto', false), 0.74, 0.46), [x, fila ? 2.45 : 1.62, -3.965]);
     cuadro.userData.cuadro = true;
     cuadro.userData.normal = new Vector3(0, 0, 1);
     cuadro.userData.centro = new Box3().setFromObject(cuadro).getCenter(new Vector3());
@@ -845,7 +845,7 @@ export async function iniciar() {
     const objetivo = (it.raiz.userData.centro as Vector3 | undefined) ?? it.ancla;
     const dir =
       (it.raiz.userData.normal as Vector3 | undefined)?.clone() ?? new Vector3(0, objetivo.y, 0.3).sub(objetivo).setY(0).normalize();
-    const pos = objetivo.clone().addScaledVector(dir, cuadro ? 1.45 : 1.05);
+    const pos = objetivo.clone().addScaledVector(dir, cuadro ? 1.15 : 1.05);
     pos.y = MathUtils.clamp(objetivo.y + (cuadro ? 0.02 : 0.25), 0.9, 2.4);
     mirada.viajar(pos, objetivo.clone().setY(objetivo.y - (cuadro ? 0 : 0.08)));
     ui.estacion('');

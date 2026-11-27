@@ -20,7 +20,7 @@ evidencia:
 imagen:
   src: ../../../assets/piezas/simulaciones-fisica.webp
   alt: Tres simulaciones lado a lado, el diagrama de cuerpo libre, el teorema del límite central y el experimento del Nobel de Física 2023.
-orden: 7
+orden: 8
 objeto: cuadro
 revisada: 2026-11
 ---
