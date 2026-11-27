@@ -28,10 +28,12 @@ Ver la decisión de arquitectura en [ADR-0003](../../docs/adr/0003-asistente-net
 ## Publicar cambios del servidor
 
 El sitio `edrei-asistente` de Netlify se publica desde `asistente/` con la herramienta de Netlify.
-La llave (`ASISTENTE_ANTHROPIC_API_KEY`) se guarda en las variables del sitio, marcada como secreta.
+Sin llave propia, el servidor usa el AI Gateway de Netlify. Para usar la llave propia, basta con
+guardarla en las variables del sitio como `ASISTENTE_ANTHROPIC_API_KEY`, marcada como secreta, y
+volver a publicar: el servidor la prefiere en automático.
 
 ## Pruebas
 
 - `cd asistente && npm run tipos && npm run prueba`: candados sin llamar a Claude.
 - `node asistente/pruebas/trampas.mjs`: batería de trampas contra el servidor publicado (FR-0015-20).
-  Gasta 14 preguntas reales.
+  Gasta 10 preguntas reales: el tope diario por visitante con el AI Gateway.

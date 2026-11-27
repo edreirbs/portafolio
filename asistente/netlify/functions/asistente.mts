@@ -7,7 +7,8 @@ import { randomUUID } from 'node:crypto';
 import { LIMITES, firmar, huella, origenPermitido, validar } from '../../lib/candados.ts';
 import { conocimiento } from '../../lib/conocimiento.ts';
 import { FUERA_DE_TEMA, MODELO, REGLAS } from '../../lib/reglas.ts';
-import { API_ANTHROPIC, VARIABLE_LLAVE } from '../../lib/llave.ts';
+import { credencial, topes } from '../../lib/llave.ts';
+import { secreto } from '../../lib/secreto.ts';
 
 const json = (datos: unknown, estado: number, cabeceras: Record<string, string>) =>
   new Response(JSON.stringify(datos), { status: estado, headers: { ...cabeceras, 'content-type': 'application/json; charset=utf-8' } });
@@ -29,10 +30,17 @@ export default async (req: Request, context: Context) => {
   if (!permitido) return json({ error: 'origen' }, 403, cabeceras);
   if (req.method !== 'POST') return json({ error: 'metodo' }, 405, cabeceras);
 
-  // FR-0015-18: una variable propia, no la ANTHROPIC_API_KEY que Netlify comparte entre sitios,
-  // para que el gasto caiga en el espacio de trabajo con límite de USD 1.
-  const clave = Netlify.env.get(VARIABLE_LLAVE);
-  if (!clave) return json({ error: 'sin-llave' }, 503, cabeceras);
+  // FR-0015-18: la llave propia si existe; si no, el AI Gateway de Netlify.
+  const cred = credencial((n) => Netlify.env.get(n));
+  if (!cred) return json({ error: 'sin-llave' }, 503, cabeceras);
+  let clave: string;
+  try {
+    clave = await secreto();
+  } catch (e) {
+    console.error('secreto', (e as Error).name);
+    return json({ error: 'servicio' }, 503, cabeceras);
+  }
+  const tope = topes(cred.fuente);
 
   // El navegador manda text/plain para evitar la petición previa de CORS; el cuerpo es JSON.
   let cuerpo: unknown;
@@ -53,8 +61,8 @@ export default async (req: Request, context: Context) => {
   const cuotas = getStore({ name: 'asistente-cuotas', consistency: 'strong' });
   try {
     const { blobs } = await cuotas.list({ prefix: `${dia}/` });
-    if (blobs.length >= LIMITES.porDiaTotal) return json({ error: 'limite-dia' }, 429, cabeceras);
-    if (blobs.filter((b) => b.key.startsWith(`${dia}/${yo}/`)).length >= LIMITES.porDiaVisitante) {
+    if (blobs.length >= tope.porDiaTotal) return json({ error: 'limite-dia' }, 429, cabeceras);
+    if (blobs.filter((b) => b.key.startsWith(`${dia}/${yo}/`)).length >= tope.porDiaVisitante) {
       return json({ error: 'limite-visitante' }, 429, cabeceras);
     }
     await cuotas.set(`${dia}/${yo}/${randomUUID()}`, '1');
@@ -71,8 +79,8 @@ export default async (req: Request, context: Context) => {
     return json({ error: 'servicio' }, 503, cabeceras);
   }
 
-  // La dirección va explícita: así una ANTHROPIC_BASE_URL heredada no desvía las llamadas.
-  const cliente = new Anthropic({ apiKey: clave, baseURL: API_ANTHROPIC, maxRetries: 1 });
+  // La dirección va explícita según la credencial: la API directa o el AI Gateway.
+  const cliente = new Anthropic({ apiKey: cred.apiKey, baseURL: cred.baseURL, maxRetries: 1 });
   const codificador = new TextEncoder();
   const evento = (nombre: string, datos: unknown) => codificador.encode(`event: ${nombre}\ndata: ${JSON.stringify(datos)}\n\n`);
 
