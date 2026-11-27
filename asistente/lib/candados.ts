@@ -12,7 +12,7 @@ export const LIMITES = {
 } as const;
 
 /** FR-0015-17: el sitio publicado. El dominio propio queda listo para la spec 0011. */
-export const ORIGENES = ['https://edreirbs.github.io', 'https://edreirobles.com', 'https://www.edreirobles.com'];
+export const ORIGENES = ['https://portafolio.edreirobles.com', 'https://edreirbs.github.io', 'https://edreirobles.com', 'https://www.edreirobles.com'];
 
 export type Rol = 'usuario' | 'asistente';
 export interface Mensaje {

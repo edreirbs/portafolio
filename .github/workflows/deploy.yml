@@ -31,7 +31,7 @@ jobs:
       - run: npm ci
       - run: npx astro check
       - run: npx astro build
-      - run: node scripts/revisar-ligas.mjs dist /portafolio
+      - run: node scripts/revisar-ligas.mjs dist /
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:

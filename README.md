@@ -5,7 +5,7 @@ cada proyecto, certificación, curso o estudio es una **pieza catalogada** con s
 museográfica, en una sala que le corresponde. Un sitio que se recorre con curiosidad y que,
 aun así, un reclutador entiende en diez segundos.
 
-**Estado:** publicado en **https://edreirbs.github.io/portafolio/**. La portada es el gabinete
+**Estado:** publicado en **https://portafolio.edreirobles.com/**. La portada es el gabinete
 3D con las secciones del portafolio (proyectos, títulos, experiencia, publicaciones y redes); si
 el navegador no puede con el 3D, la misma página se ve en su versión clásica.
 

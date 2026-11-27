@@ -11,7 +11,7 @@ resumen: >-
   Conferencia en el primer Seminario Internacional Educación, IA y Tecnologías Emergentes de la
   Dirección Académica de Posgrado de la UAPA, el 2 de diciembre de 2023.
 evidencia:
-  - { tipo: documento, url: "https://edreirbs.github.io/portafolio/constancias/uapa-seminario-2023.webp", etiqueta: Ver el certificado, etiqueta_en: See the certificate }
+  - { tipo: documento, url: "https://portafolio.edreirobles.com/constancias/uapa-seminario-2023.webp", etiqueta: Ver el certificado, etiqueta_en: See the certificate }
 orden: 5
 revisada: 2026-11
 en:

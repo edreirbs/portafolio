@@ -11,7 +11,7 @@ resumen: >-
   Microtaller "Optimizando la interacción con Inteligencia Artificial: estrategias prácticas para
   la integración efectiva de plugins", impartido el 22 y 23 de noviembre de 2023.
 evidencia:
-  - { tipo: documento, url: "https://edreirbs.github.io/portafolio/constancias/cientifica-del-sur-2023.webp", etiqueta: Ver el certificado, etiqueta_en: See the certificate }
+  - { tipo: documento, url: "https://portafolio.edreirobles.com/constancias/cientifica-del-sur-2023.webp", etiqueta: Ver el certificado, etiqueta_en: See the certificate }
 orden: 6
 revisada: 2026-11
 en:
