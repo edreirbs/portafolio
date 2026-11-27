@@ -717,6 +717,7 @@ export async function iniciar() {
     diploma: 'balancear',
     revista: 'levantar',
     medalla: 'levantar',
+    certificado: 'balancear',
   };
   const pieza = (raizObj: Object3D, p: PiezaDato) =>
     registrar(raizObj, { tipo: 'pieza', id: p.id, estacion: p.seccion, nombre: p.titulo, animacion: ANIMACION_PIEZA[p.objeto ?? ''] ?? 'saltar' });
@@ -804,6 +805,15 @@ export async function iniciar() {
   grados.forEach((p, i) => {
     const [z, y, w] = posDiplomas[i] ?? [-0.5 - i * 0.6, 1.8, 0.45];
     pieza(poner(O.diplomaEnmarcado(T.diploma(p.titulo, p.procedencia, p.fecha.slice(0, 4), 9 + i), w, w * 0.74), [-4.96, y, z], Math.PI / 2), p);
+  });
+
+  // Spec 0006 · Certificaciones: credenciales enmarcadas en el muro derecho, frente a su atril.
+  const certificados = piezaPor('certificado').sort((a, b) => b.fecha.localeCompare(a.fecha));
+  certificados.slice(0, 4).forEach((p, i) => {
+    const z = 0.45 + (i % 2 ? 0.34 : -0.34);
+    const y = i < 2 ? 1.72 : 1.2;
+    const tex = T.diploma(p.titulo, p.procedencia, p.fecha.slice(0, 4), 31 + i, 'la credencial');
+    pieza(poner(O.diplomaEnmarcado(tex, 0.52, 0.385), [4.96, y, z], -Math.PI / 2), p);
   });
 
   // Experiencia: bitácora abierta
