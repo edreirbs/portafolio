@@ -45,7 +45,7 @@ function pieza(p: Pieza): string {
 }
 
 export const GET: APIRoute = async () => {
-  const { perfil, porSeccion, registro, articulos, visibles } = await portafolio();
+  const { perfil, porSeccion, registro, articulos, recursos, visibles } = await portafolio();
   const titulo = (s: Seccion) => `## ${INFO_SECCION[s].nombre}\nSección en el portafolio: ${sitio(`#${s}`)}`;
   const partes: string[] = [];
 
@@ -91,7 +91,10 @@ Edrei no publica correo, teléfono ni domicilio. Para contactarlo, la vía es Li
     const divulgacion = `### Artículos de divulgación en LinkedIn (${articulos.length})\n${articulos
       .map((a) => `- ${a.titulo} (${a.fecha.slice(0, 4)}): ${a.url}`)
       .join('\n')}`;
-    partes.push(`${titulo('publicaciones')}\n\n${[...academicas, divulgacion].join('\n\n')}`);
+    const abiertos = `### Recursos abiertos para docentes en edreirobles.com (${recursos.length})\n${recursos
+      .map((r) => `- ${r.titulo}: ${r.descripcion} ${r.url}`)
+      .join('\n')}`;
+    partes.push(`${titulo('publicaciones')}\n\n${[...academicas, divulgacion, abiertos].join('\n\n')}`);
   }
 
   return new Response(`${partes.join('\n\n')}\n`, { headers: { 'content-type': 'text/plain; charset=utf-8' } });

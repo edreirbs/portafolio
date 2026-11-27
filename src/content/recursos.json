@@ -1,0 +1,37 @@
+[
+  {
+    "id": "30-estrategias-chatgpt-aula",
+    "titulo": "30 estrategias para usar ChatGPT en el aula",
+    "descripcion": "Cada estrategia con su propósito, el prompt y un ejemplo resuelto.",
+    "url": "https://www.edreirobles.com/recursos/30-estrategias-para-usar-chatgpt-en-el-aula",
+    "orden": 1
+  },
+  {
+    "id": "20-formas-integrar-ia-educacion",
+    "titulo": "20 formas de integrar la IA en la educación",
+    "descripcion": "Infografía con veinte usos y la herramienta o el GPT para cada uno.",
+    "url": "https://www.edreirobles.com/20-formas-de-integrar-la-ia-por-profesionales-de-la-educaci%C3%B3n",
+    "orden": 2
+  },
+  {
+    "id": "6-metodologias-diseno-instruccional-ia",
+    "titulo": "6 metodologías de diseño instruccional con IA",
+    "descripcion": "Gagné, Dick y Carey, Smith y Ragan, ÓVALO, prototipado rápido y ADDIE, con herramientas y prompts por fase.",
+    "url": "https://www.edreirobles.com/recursos/6-metodolog%C3%ADas-de-dise%C3%B1o-instruccional-con-inteligencia-artificial",
+    "orden": 3
+  },
+  {
+    "id": "20-elementos-prompts",
+    "titulo": "20 elementos para el diseño eficaz de prompts",
+    "descripcion": "Tono, rol, contexto, restricciones y dieciséis elementos más, cada uno con un ejemplo.",
+    "url": "https://www.edreirobles.com/recursos/20-elementos-para-el-dise%C3%B1o-eficaz-de-prompts-%C3%BAtiles",
+    "orden": 4
+  },
+  {
+    "id": "meta-prompter",
+    "titulo": "Meta Prompter",
+    "descripcion": "La técnica PROMPTER para escribir prompts, con un ejemplo por elemento.",
+    "url": "https://www.edreirobles.com/recursos/meta-prompter",
+    "orden": 5
+  }
+]

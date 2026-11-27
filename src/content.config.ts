@@ -119,4 +119,10 @@ const articulos = defineCollection({
   schema: z.object({ titulo: z.string(), fecha: mes, url: z.url() }),
 });
 
-export const collections = { piezas, perfil, registro, curiosidades, articulos };
+// Recursos abiertos para docentes publicados en edreirobles.com (spec 0017).
+const recursos = defineCollection({
+  loader: file('src/content/recursos.json'),
+  schema: z.object({ titulo: z.string(), descripcion: z.string().max(140), url: z.url(), orden: z.number() }),
+});
+
+export const collections = { piezas, perfil, registro, curiosidades, articulos, recursos };
