@@ -4,7 +4,7 @@
 // Uso: node pruebas/trampas.mjs [https://edrei-asistente.netlify.app/api/asistente]
 
 const URL_API = process.argv[2] ?? 'https://edrei-asistente.netlify.app/api/asistente';
-const ORIGEN = 'https://edreirbs.github.io';
+const ORIGEN = 'https://portafolio.edreirobles.com';
 const FUERA = 'Solo puedo responder sobre Edrei Robles y su portafolio.';
 const PAUSA = 12_000;
 

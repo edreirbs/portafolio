@@ -12,7 +12,7 @@ export default async (req: Request) => {
   return new Response(JSON.stringify({ listo }), {
     headers: {
       'content-type': 'application/json; charset=utf-8',
-      'access-control-allow-origin': permitido ? origen! : 'https://edreirbs.github.io',
+      'access-control-allow-origin': permitido ? origen! : 'https://portafolio.edreirobles.com',
       vary: 'Origin',
       'cache-control': 'public, max-age=60',
     },

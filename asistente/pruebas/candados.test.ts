@@ -43,6 +43,7 @@ test('rechaza formas raras', () => {
 });
 
 test('FR-0015-17: solo el sitio publicado, y localhost solo en desarrollo', () => {
+  assert.equal(origenPermitido('https://portafolio.edreirobles.com', false), true);
   assert.equal(origenPermitido('https://edreirbs.github.io', false), true);
   assert.equal(origenPermitido('https://evil.example', false), false);
   assert.equal(origenPermitido(null, false), false);

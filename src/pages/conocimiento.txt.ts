@@ -7,7 +7,7 @@ import { periodo, periodoAnios } from '../lib/fechas';
 import { fechaActualizacion } from '../lib/build';
 import type { Pieza } from '../lib/piezas';
 
-const sitio = (ruta = '') => new URL(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${ruta}`, 'https://edreirbs.github.io').href;
+const sitio = (ruta = '') => new URL(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${ruta}`, import.meta.env.SITE).href;
 
 /** El cuerpo de la pieza en texto: sin imágenes, HTML ni marcas que no aportan. */
 function textoPlano(md: string): string {

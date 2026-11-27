@@ -11,7 +11,7 @@ resumen: >-
   Sesión de 30 minutos en el Edpuzzle Summit, la cumbre de la comunidad de Edpuzzle, sobre cómo
   integrar la IA en la docencia.
 evidencia:
-  - { tipo: documento, url: "https://edreirbs.github.io/portafolio/constancias/edpuzzle-summit-2024.webp", etiqueta: Ver el certificado, etiqueta_en: See the certificate }
+  - { tipo: documento, url: "https://portafolio.edreirobles.com/constancias/edpuzzle-summit-2024.webp", etiqueta: Ver el certificado, etiqueta_en: See the certificate }
 orden: 4
 revisada: 2026-11
 en:

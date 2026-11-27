@@ -1,10 +1,10 @@
 // Revisa que toda liga interna del sitio compilado apunte a un archivo que existe.
-// Uso: node scripts/revisar-ligas.mjs [dist] [/portafolio]
+// Uso: node scripts/revisar-ligas.mjs [dist] [base]   (base: "/" en la raíz del dominio)
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { join, extname } from 'node:path';
 
 const dist = process.argv[2] ?? 'dist';
-const base = (process.argv[3] ?? '/portafolio').replace(/\/$/, '');
+const base = (process.argv[3] ?? '/').replace(/\/$/, '');
 
 async function* html(dir) {
   for (const e of await readdir(dir, { withFileTypes: true })) {
@@ -29,7 +29,7 @@ for await (const archivo of html(dist)) {
   const contenido = await readFile(archivo, 'utf8');
   for (const m of contenido.matchAll(/\s(?:href|src)="([^"]+)"/g)) {
     const liga = m[1];
-    if (!liga.startsWith(`${base}/`) && liga !== base) continue;
+    if (liga.startsWith('//') || (!liga.startsWith(`${base}/`) && liga !== base)) continue;
     const limpia = decodeURIComponent(liga.slice(base.length).split('#')[0].split('?')[0]);
     revisadas++;
     if (!(await existe(join(dist, limpia)))) rotas.push(`${archivo.slice(dist.length)} → ${liga}`);

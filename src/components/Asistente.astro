@@ -11,7 +11,7 @@ const t = TEXTOS[idioma];
 const { perfil, todas, articulos, recursos } = await portafolio();
 const linkedin = perfil.contacto.find((c) => c.etiqueta === 'LinkedIn') ?? perfil.contacto[0]!;
 // Las ligas que el asistente puede mostrar: las del portafolio y su evidencia.
-const hosts = new Set<string>(['edreirbs.github.io']);
+const hosts = new Set<string>([new URL(import.meta.env.SITE!).hostname, 'edreirbs.github.io']);
 for (const u of [
   ...perfil.contacto.map((c) => c.url),
   ...todas.flatMap((p) => p.data.evidencia.map((e) => e.url).filter((x): x is string => Boolean(x))),

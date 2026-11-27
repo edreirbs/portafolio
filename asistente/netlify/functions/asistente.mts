@@ -18,7 +18,7 @@ export default async (req: Request, context: Context) => {
   const desarrollo = Netlify.env.get('ASISTENTE_DESARROLLO') === '1';
   const permitido = origenPermitido(origen, desarrollo);
   const cabeceras: Record<string, string> = {
-    'access-control-allow-origin': permitido ? origen! : 'https://edreirbs.github.io',
+    'access-control-allow-origin': permitido ? origen! : 'https://portafolio.edreirobles.com',
     'access-control-allow-methods': 'POST, OPTIONS',
     'access-control-allow-headers': 'content-type',
     'access-control-max-age': '7200',
