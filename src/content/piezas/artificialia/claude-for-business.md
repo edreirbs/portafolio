@@ -13,8 +13,8 @@ resumen: >-
   una matriz de lo que hace cada pieza de Claude en cada componente, buscador y prompts listos
   para copiar.
 evidencia:
-  - { tipo: demo, url: "https://edreirbs.github.io/claude-for-business/", etiqueta: Abrir el cuadernillo }
-  - { tipo: codigo, url: "https://github.com/edreirbs/claude-for-business", etiqueta: Ver el material }
+  - { tipo: demo, url: "https://edreirbs.github.io/claude-for-business/", etiqueta: Abrir el cuadernillo, etiqueta_en: Open the workbook }
+  - { tipo: codigo, url: "https://github.com/edreirbs/claude-for-business", etiqueta: Ver el material, etiqueta_en: Course material }
 imagen:
   src: ../../../assets/piezas/claude-for-business.webp
   alt: Cuadernillo de Claude for Business abierto en la matriz de componentes y elementos de Claude.
@@ -22,6 +22,10 @@ destacada: true
 orden: 5
 objeto: cuadro
 revisada: 2026-11
+en:
+  subtitulo: Course and web workbook for using Claude in professional work, no coding required
+  resumen: 'Eight 150-minute sessions for non-technical participants and a web workbook: nine cards, a
+    matrix of what each part of Claude does in each component, a search box and ready-to-copy prompts.'
 ---
 
 ## El problema

@@ -11,6 +11,3 @@ export function fechaActualizacion(): Date {
   return new Date();
 }
 
-export function fechaLarga(d: Date): string {
-  return new Intl.DateTimeFormat('es-MX', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'America/Monterrey' }).format(d);
-}

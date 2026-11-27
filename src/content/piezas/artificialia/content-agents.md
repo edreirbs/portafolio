@@ -12,8 +12,8 @@ resumen: >-
   Lee fuentes de noticias e investigación, elige el tema con más relevancia comercial, redacta
   un artículo y su versión para LinkedIn, y publica sin intervención humana.
 evidencia:
-  - { tipo: demo, url: "https://edreirbs.github.io/conten-agents/", etiqueta: Ver el blog en vivo }
-  - { tipo: codigo, url: "https://github.com/edreirbs/conten-agents", etiqueta: Ver código }
+  - { tipo: demo, url: "https://edreirbs.github.io/conten-agents/", etiqueta: Ver el blog en vivo, etiqueta_en: Live blog }
+  - { tipo: codigo, url: "https://github.com/edreirbs/conten-agents", etiqueta: Ver código, etiqueta_en: Code }
 imagen:
   src: ../../../assets/piezas/content-agents.webp
   alt: Portada del blog de Axon Labs generado por el motor, con la línea editorial y los últimos análisis.
@@ -21,6 +21,10 @@ destacada: true
 orden: 3
 objeto: periodicos
 revisada: 2026-11
+en:
+  subtitulo: An AI content engine that researches, writes and publishes every week
+  resumen: Reads news and research feeds, picks the topic with the most commercial relevance, drafts an
+    article and its LinkedIn version, and publishes with no human intervention.
 ---
 
 ## El problema

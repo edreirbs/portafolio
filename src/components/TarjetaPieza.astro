@@ -1,20 +1,25 @@
 ---
 import { Image } from 'astro:assets';
 import type { Pieza } from '../lib/piezas';
-import { INFO_SECCION, seccionDe } from '../lib/secciones';
+import { seccionDe } from '../lib/secciones';
 import { anio, periodoAnios } from '../lib/fechas';
+import { infoSeccion, ligasPieza, textoPieza, type Idioma } from '../lib/idioma';
 import { url } from '../lib/url';
 
 interface Props {
   pieza: Pieza;
   nivel?: 'h2' | 'h3';
   prioridad?: boolean;
+  idioma?: Idioma;
 }
-const { pieza, nivel = 'h3', prioridad = false } = Astro.props;
+const { pieza, nivel = 'h3', prioridad = false, idioma = 'es' } = Astro.props;
 const d = pieza.data;
 const Titulo = nivel;
-const cuando = d.sala === 'naturalia' && d.fecha_fin ? periodoAnios(d.fecha, d.fecha_fin) : anio(d.fecha);
-const ligas = d.evidencia.filter((e) => e.url).slice(0, 2);
+const t = textoPieza(pieza, idioma);
+const cuando = d.sala === 'naturalia' && d.fecha_fin ? periodoAnios(d.fecha, d.fecha_fin, idioma) : anio(d.fecha);
+const ligas = ligasPieza(pieza, idioma);
+// Spec 0009: en inglés no hay página de detalle; el título lleva a la evidencia principal.
+const destino = idioma === 'es' ? url(`piezas/${pieza.id}`) : ligas[0]?.url;
 ---
 
 <article class="pieza">
@@ -35,8 +40,9 @@ const ligas = d.evidencia.filter((e) => e.url).slice(0, 2);
   </div>
   <div class="pieza__cuerpo">
     <span class="catalogo">{d.catalogo}</span>
-    <Titulo><a href={url(`piezas/${pieza.id}`)}>{d.titulo}</a></Titulo>
-    <p class="pieza__sub">{d.subtitulo}</p>
+    <Titulo>{destino ? <a href={destino} rel={idioma === 'es' ? undefined : 'noopener'}>{t.titulo}</a> : t.titulo}</Titulo>
+    <p class="pieza__sub">{t.subtitulo}</p>
+    {idioma === 'en' && <p class="pieza__resumen">{t.resumen}</p>}
     {
       ligas.length > 0 && (
         <p class="pieza__ligas">
@@ -45,7 +51,7 @@ const ligas = d.evidencia.filter((e) => e.url).slice(0, 2);
               {e.etiqueta}
             </a>
           ))}
-          {d.objeto && (
+          {d.objeto && idioma === 'es' && (
             <button type="button" class="ficha__mirar" data-mirar={pieza.id} hidden>
               Mirar en el gabinete
             </button>
@@ -54,7 +60,7 @@ const ligas = d.evidencia.filter((e) => e.url).slice(0, 2);
       )
     }
     <div class="pieza__pie">
-      <span>{INFO_SECCION[seccionDe(pieza)].corto}</span>
+      <span>{infoSeccion(seccionDe(pieza), idioma).corto}</span>
       <span>{cuando}</span>
     </div>
   </div>

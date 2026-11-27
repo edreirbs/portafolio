@@ -2,24 +2,29 @@
 // Spec 0014 · Ficha compacta de una pieza: título, procedencia, fechas y evidencia.
 import type { Pieza } from '../lib/piezas';
 import { anio, periodoAnios } from '../lib/fechas';
+import { ligasPieza, textoPieza, type Idioma } from '../lib/idioma';
 import { url } from '../lib/url';
 
 interface Props {
   pieza: Pieza;
+  idioma?: Idioma;
 }
-const { pieza } = Astro.props;
+const { pieza, idioma = 'es' } = Astro.props;
 const d = pieza.data;
-const cuando = d.fecha_fin ? periodoAnios(d.fecha, d.fecha_fin) : anio(d.fecha);
-const ligas = d.evidencia.filter((e) => e.url).slice(0, 2);
+const t = textoPieza(pieza, idioma);
+const cuando = d.fecha_fin ? periodoAnios(d.fecha, d.fecha_fin, idioma) : anio(d.fecha);
+const ligas = ligasPieza(pieza, idioma);
+// Spec 0009: en inglés no hay página de detalle; el título lleva a la evidencia principal.
+const destino = idioma === 'es' ? url(`piezas/${pieza.id}`) : ligas[0]?.url;
 ---
 
 <article class="ficha">
-  <p class="ficha__meta">{cuando} · {d.otorgante ?? d.institucion ?? d.procedencia}</p>
-  <h3><a href={url(`piezas/${pieza.id}`)}>{d.titulo}</a></h3>
-  <p class="ficha__sub">{d.subtitulo}</p>
+  <p class="ficha__meta">{cuando} · {t.procedencia}</p>
+  <h3>{destino ? <a href={destino} rel={idioma === 'es' ? undefined : 'noopener'}>{t.titulo}</a> : t.titulo}</h3>
+  <p class="ficha__sub">{t.subtitulo}</p>
   <p class="ficha__acciones">
     {ligas.map((e) => <a href={e.url} rel="noopener">{e.etiqueta}</a>)}
-    {d.objeto && (
+    {d.objeto && idioma === 'es' && (
       <button type="button" class="ficha__mirar" data-mirar={pieza.id} hidden>
         Mirar en el gabinete
       </button>

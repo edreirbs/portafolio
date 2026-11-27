@@ -30,6 +30,8 @@ const piezas = defineCollection({
               tipo: z.enum(['demo', 'codigo', 'credencial', 'documento', 'video', 'prensa', 'testimonio']),
               url: z.url().optional(),
               etiqueta: z.string(),
+              // Spec 0009: la etiqueta en inglés.
+              etiqueta_en: z.string().optional(),
             }),
           )
           .min(1, 'Toda pieza necesita al menos una evidencia (constitución, art. II)'),
@@ -53,6 +55,15 @@ const piezas = defineCollection({
         // Mirabilia
         otorgante: z.string().optional(),
         alcance: z.enum(['internacional', 'nacional', 'institucional']).optional(),
+        // Spec 0009: la versión en inglés. Sin título, se usa el original.
+        en: z
+          .object({
+            titulo: z.string().optional(),
+            subtitulo: z.string().min(1).max(130),
+            resumen: z.string().min(1).max(300),
+            procedencia: z.string().optional(),
+          })
+          .optional(),
       })
       .superRefine((p, ctx) => {
         const sigla = p.catalogo.slice(0, 2);
@@ -87,6 +98,16 @@ const perfil = defineCollection({
     contacto: z.array(z.object({ etiqueta: z.string(), url: z.url() })).min(1),
     idiomas: z.array(z.object({ idioma: z.string(), nivel: z.string() })),
     competencias: z.array(z.string()),
+    // Spec 0009
+    en: z.object({
+      titulo: z.string(),
+      promesa: z.string(),
+      pruebas: z.array(z.string()).length(3),
+      resumen: z.string(),
+      ubicacion: z.string(),
+      idiomas: z.array(z.object({ idioma: z.string(), nivel: z.string() })),
+      competencias: z.array(z.string()),
+    }),
   }),
 });
 
@@ -100,6 +121,13 @@ const registro = defineCollection({
       .min(1),
     alcance: z.string().optional(),
     logros: z.array(z.string()).default([]),
+    // Spec 0009: los puestos van en el mismo orden que arriba.
+    en: z.object({
+      lugar: z.string().optional(),
+      puestos: z.array(z.string()).min(1),
+      alcance: z.string().optional(),
+      logros: z.array(z.string()).default([]),
+    }),
   }),
 });
 
@@ -122,7 +150,15 @@ const articulos = defineCollection({
 // Recursos abiertos para docentes publicados en edreirobles.com (spec 0017).
 const recursos = defineCollection({
   loader: file('src/content/recursos.json'),
-  schema: z.object({ titulo: z.string(), descripcion: z.string().max(140), url: z.url(), orden: z.number() }),
+  schema: z.object({
+    titulo: z.string(),
+    descripcion: z.string().max(140),
+    url: z.url(),
+    orden: z.number(),
+    // Spec 0009
+    titulo_en: z.string(),
+    descripcion_en: z.string().max(140),
+  }),
 });
 
 export const collections = { piezas, perfil, registro, curiosidades, articulos, recursos };

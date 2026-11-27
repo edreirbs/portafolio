@@ -12,8 +12,13 @@ resumen: >-
   Artículo arbitrado que deriva de la tesis de maestría: cómo integrar un laboratorio virtual en
   un ciclo 4MAT y evaluar su efecto con el modelo Kirkpatrick.
 evidencia:
-  - { tipo: documento, url: "https://doi.org/10.55777/rea.v15i30.4524", etiqueta: "DOI 10.55777/rea.v15i30.4524" }
+  - { tipo: documento, url: "https://doi.org/10.55777/rea.v15i30.4524", etiqueta: "DOI 10.55777/rea.v15i30.4524", etiqueta_en: "DOI 10.55777/rea.v15i30.4524" }
 orden: 3
 objeto: revista
 revisada: 2026-11
+en:
+  titulo: Integrating a virtual lab into a 4MAT learning cycle evaluated with the Kirkpatrick model
+  subtitulo: Peer-reviewed article, in Spanish · Revista Estilos de Aprendizaje, vol. 15, no. 30
+  resumen: 'Peer-reviewed article derived from the master''s thesis: how to integrate a virtual lab into
+    a 4MAT cycle and evaluate its effect with the Kirkpatrick model.'
 ---

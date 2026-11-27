@@ -45,7 +45,7 @@ development*. Antes de tocar nada, lee `specs/README.md` y `specs/0000-constituc
 
 ## Idioma y estilo
 
-- Documentación y sitio en español de México. El inglés llega con su propia spec.
+- Documentación y sitio en español de México. La portada en inglés vive en `/en/` (spec 0009); sus textos van en el campo `en` de cada archivo de contenido.
 - Frases cortas, sin relleno. Tablas cuando ayudan.
 
 ## Calidad (cuando exista el código)

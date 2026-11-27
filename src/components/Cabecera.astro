@@ -1,31 +1,35 @@
 ---
 import { url } from '../lib/url';
-import { INFO_SECCION } from '../lib/secciones';
-const { actual } = Astro.props as { actual?: string };
+import { UI, infoSeccion, type Idioma } from '../lib/idioma';
+const { actual, idioma = 'es' } = Astro.props as { actual?: string; idioma?: Idioma };
+const t = UI[idioma];
+const inicio = idioma === 'en' ? url('en/') : url();
 // Spec 0014: las secciones de la portada, con nombres claros.
 const ligas = (['proyectos', 'titulos', 'experiencia', 'publicaciones', 'contacto'] as const).map((s) => ({
-  href: url(`#${s}`),
-  texto: INFO_SECCION[s].corto,
+  href: `${inicio}#${s}`,
+  texto: infoSeccion(s, idioma).corto,
 }));
 ---
 
 <header class="cabecera">
   <div class="contenedor cabecera__fila">
-    <a class="marca" href={url()}>
-      <span class="visualmente-oculto">Inicio:</span>
+    <a class="marca" href={inicio}>
+      <span class="visualmente-oculto">{t.inicio}</span>
       <span class="marca__sello" aria-hidden="true">ER</span>
-      <span class="marca__texto">Edrei Robles<small>Portafolio</small></span>
+      <span class="marca__texto">Edrei Robles<small>{idioma === 'en' ? 'Portfolio' : 'Portafolio'}</small></span>
     </a>
-    <nav class="navegacion" aria-label="Principal">
+    <nav class="navegacion" aria-label={t.principal}>
       {ligas.map((l) => <a class="navegacion__seccion" href={l.href}>{l.texto}</a>)}
-      <a href={url('cv')} aria-current={actual === 'cv' ? 'page' : undefined}>CV</a>
-      <!-- FR-0014-06: solo aparece si el navegador puede abrir el gabinete. -->
-      <a class="navegacion__3d" href={`${url()}?vista=3d`} data-solo-3d>Ver en 3D</a>
+      <a href={url('cv')} aria-current={actual === 'cv' ? 'page' : undefined} hreflang={idioma === 'en' ? 'es' : undefined}>{t.cv}</a>
+      <!-- FR-0014-06: solo aparece si el navegador puede abrir el gabinete. El 3D está en español. -->
+      {idioma === 'es' && <a class="navegacion__3d" href={`${url()}?vista=3d`} data-solo-3d>{t.ver3d}</a>}
+      <!-- Spec 0009: el mismo portafolio en el otro idioma. -->
+      <a class="navegacion__idioma" href={url(t.otroIdioma.ruta)} hreflang={t.otroIdioma.hreflang} lang={t.otroIdioma.hreflang}>{t.otroIdioma.texto}</a>
       <!-- FR-0003-01 y 05: con JavaScript es un interruptor; sin él, una liga al CV. -->
       <button type="button" class="boton interruptor" data-ficha-toggle aria-pressed="false" hidden>
-        Ficha rápida
+        {t.ficha}
       </button>
-      <a class="boton interruptor" href={url('cv')} data-ficha-sin-js>Ficha rápida</a>
+      <a class="boton interruptor" href={url('cv')} data-ficha-sin-js>{t.ficha}</a>
     </nav>
   </div>
 </header>

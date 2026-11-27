@@ -4,34 +4,44 @@
     "titulo": "30 estrategias para usar ChatGPT en el aula",
     "descripcion": "Cada estrategia con su propósito, el prompt y un ejemplo resuelto.",
     "url": "https://www.edreirobles.com/recursos/30-estrategias-para-usar-chatgpt-en-el-aula",
-    "orden": 1
+    "orden": 1,
+    "titulo_en": "30 strategies for using ChatGPT in the classroom",
+    "descripcion_en": "Each strategy with its purpose, the prompt and a worked example."
   },
   {
     "id": "20-formas-integrar-ia-educacion",
     "titulo": "20 formas de integrar la IA en la educación",
     "descripcion": "Infografía con veinte usos y la herramienta o el GPT para cada uno.",
     "url": "https://www.edreirobles.com/20-formas-de-integrar-la-ia-por-profesionales-de-la-educaci%C3%B3n",
-    "orden": 2
+    "orden": 2,
+    "titulo_en": "20 ways to integrate AI into education",
+    "descripcion_en": "An infographic with twenty uses and the tool or GPT for each one."
   },
   {
     "id": "6-metodologias-diseno-instruccional-ia",
     "titulo": "6 metodologías de diseño instruccional con IA",
     "descripcion": "Gagné, Dick y Carey, Smith y Ragan, ÓVALO, prototipado rápido y ADDIE, con herramientas y prompts por fase.",
     "url": "https://www.edreirobles.com/recursos/6-metodolog%C3%ADas-de-dise%C3%B1o-instruccional-con-inteligencia-artificial",
-    "orden": 3
+    "orden": 3,
+    "titulo_en": "6 instructional design methodologies with AI",
+    "descripcion_en": "Gagné, Dick and Carey, Smith and Ragan, ÓVALO, rapid prototyping and ADDIE, with tools and prompts for each phase."
   },
   {
     "id": "20-elementos-prompts",
     "titulo": "20 elementos para el diseño eficaz de prompts",
     "descripcion": "Tono, rol, contexto, restricciones y dieciséis elementos más, cada uno con un ejemplo.",
     "url": "https://www.edreirobles.com/recursos/20-elementos-para-el-dise%C3%B1o-eficaz-de-prompts-%C3%BAtiles",
-    "orden": 4
+    "orden": 4,
+    "titulo_en": "20 elements for designing effective prompts",
+    "descripcion_en": "Tone, role, context, constraints and sixteen more elements, each with an example."
   },
   {
     "id": "meta-prompter",
     "titulo": "Meta Prompter",
     "descripcion": "La técnica PROMPTER para escribir prompts, con un ejemplo por elemento.",
     "url": "https://www.edreirobles.com/recursos/meta-prompter",
-    "orden": 5
+    "orden": 5,
+    "titulo_en": "Meta Prompter",
+    "descripcion_en": "The PROMPTER technique for writing prompts, with an example for each element."
   }
 ]

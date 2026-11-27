@@ -273,6 +273,7 @@ p {
 .navegacion a {
   text-decoration: none;
   padding: 8px 4px;
+  white-space: nowrap;
 }
 
 .navegacion a[aria-current='page'] {
@@ -567,6 +568,13 @@ p {
   color: var(--en-papel-suave);
   font-size: 0.97rem;
   line-height: 1.45;
+}
+
+/* Spec 0009: en inglés la tarjeta trae su resumen, porque no hay página de detalle. */
+.pieza__resumen {
+  color: var(--en-papel-suave);
+  font-size: 0.88rem;
+  line-height: 1.5;
 }
 
 .pieza__pie {
@@ -1123,6 +1131,41 @@ html[data-vista='3d'] .linea__item {
   color: var(--tinta-suave);
 }
 
+/* Spec 0009 · Acerca de, en la portada en inglés */
+.acerca {
+  display: grid;
+  gap: 12px;
+  padding: clamp(20px, 3vw, 28px);
+  border: 1px solid var(--linea);
+  border-radius: 14px;
+}
+
+.acerca p {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.acerca__datos {
+  font-size: 0.86rem;
+  color: var(--tinta-suave);
+}
+
+.acerca__competencias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.acerca__competencias li {
+  padding: 3px 10px;
+  border: 1px solid var(--linea);
+  border-radius: 999px;
+  font-size: 0.8rem;
+}
+
 /* Recursos abiertos para docentes (spec 0017) */
 .recursos {
   display: grid;
@@ -1209,7 +1252,8 @@ html[data-vista='3d'] .linea__item {
   flex-basis: 100%;
 }
 
-@media (max-width: 900px) {
+/* Spec 0009: con la liga de idioma, las secciones caben a partir de 1160 px. */
+@media (max-width: 1160px) {
   .navegacion__seccion {
     display: none;
   }
