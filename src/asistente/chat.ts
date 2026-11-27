@@ -376,6 +376,8 @@ function enfocables(): HTMLElement[] {
   return [...panel.querySelectorAll<HTMLElement>('button, a[href], textarea')].filter((e) => !e.hidden && e.offsetParent !== null);
 }
 
+let avisoServicio = false;
+
 export function abrir(origen?: HTMLElement) {
   regreso = origen ?? lanzador;
   if (panel.hidden) {
@@ -385,6 +387,11 @@ export function abrir(origen?: HTMLElement) {
     document.documentElement.dataset.asistenteAbierto = '';
     lanzador.setAttribute('aria-expanded', 'true');
     recordarAbierto(true);
+    // Spec 0018 · FR-0018-07: sin servidor, el mayordomo lo dice y ofrece el CV y LinkedIn.
+    if (document.documentElement.dataset.asistente === 'no' && !avisoServicio) {
+      avisoServicio = true;
+      aviso(ERRORES.servicio![0], true);
+    }
   }
   entrada.focus({ preventScroll: true });
 }
