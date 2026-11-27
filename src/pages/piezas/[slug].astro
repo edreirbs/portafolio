@@ -1,7 +1,7 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import { render } from 'astro:content';
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import TarjetaPieza from '../../components/TarjetaPieza.astro';
 import { piezas, relacionadas, type Pieza } from '../../lib/piezas';
@@ -23,10 +23,14 @@ const cuando = d.fecha_fin
   ? `${mes(d.fecha)} – ${d.fecha_fin === 'en curso' ? 'en curso' : d.fecha_fin === 'vigente' ? 'hoy' : mes(d.fecha_fin)}`
   : mes(d.fecha);
 const conLiga = d.evidencia.filter((e) => e.url);
+// Spec 0010: al compartir una pieza se ve su imagen, si tiene.
+const imagenOg = d.imagen && d.imagen.src.format !== 'svg'
+  ? new URL((await getImage({ src: d.imagen.src, width: 1200, format: 'jpg' })).src, Astro.site).href
+  : undefined;
 const sinLiga = d.evidencia.filter((e) => !e.url);
 ---
 
-<Base titulo={d.titulo} descripcion={d.resumen} actual={d.sala}>
+<Base titulo={d.titulo} descripcion={d.resumen} actual={d.sala} imagen={imagenOg} imagenAlt={d.imagen?.alt} tipo="article">
   <div class="contenedor">
     <header class="encabezado">
       <nav class="migas" aria-label="Ruta">

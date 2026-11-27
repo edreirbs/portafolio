@@ -15,9 +15,16 @@ interface Props {
   descripcion: string;
   actual?: 'inicio' | 'cv' | string;
   sinPie?: boolean;
+  /** Spec 0010: imagen al compartir (URL absoluta). Sin ella, la del portafolio. */
+  imagen?: string;
+  imagenAlt?: string;
+  tipo?: 'website' | 'article' | 'profile';
 }
 
-const { titulo, descripcion, actual } = Astro.props;
+const { titulo, descripcion, actual, tipo = 'website' } = Astro.props;
+const imagen = Astro.props.imagen ?? new URL(url('og-portafolio.jpg'), Astro.site).href;
+const imagenAlt =
+  Astro.props.imagenAlt ?? 'Edrei Robles, estratega de IA para el aprendizaje, frente a la galería de proyectos de su gabinete en 3D.';
 const canonica = new URL(Astro.url.pathname, Astro.site);
 const tituloCompleto = actual === 'inicio' ? titulo : `${titulo} · Edrei Robles`;
 ---
@@ -35,12 +42,20 @@ const tituloCompleto = actual === 'inicio' ? titulo : `${titulo} · Edrei Robles
     <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
     <meta name="theme-color" content="#eee9e0" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#15120f" media="(prefers-color-scheme: dark)" />
-    <meta property="og:type" content="website" />
+    <!-- Spec 0010: lo que se ve al compartir la liga en LinkedIn, WhatsApp o X. -->
+    <meta property="og:type" content={tipo} />
+    <meta property="og:site_name" content="Edrei Robles · Portafolio" />
     <meta property="og:locale" content="es_MX" />
     <meta property="og:title" content={tituloCompleto} />
     <meta property="og:description" content={descripcion} />
     <meta property="og:url" content={canonica} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={imagen} />
+    <meta property="og:image:alt" content={imagenAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={tituloCompleto} />
+    <meta name="twitter:description" content={descripcion} />
+    <meta name="twitter:image" content={imagen} />
+    <link rel="sitemap" href={url('sitemap.xml')} />
     <!-- Ficha rápida (FR-0003-02): se aplica antes de pintar para que no parpadee. -->
     <script is:inline>
       try {
