@@ -27,7 +27,7 @@ aprobación, salvo en la constitución (ver su sección de gobierno).
 | [0007](0007-conferencias/spec.md) | Conferencias y docencia con evidencia | Hecha | F2 |
 | 0008 | Acervo: índice, filtros y búsqueda | Pendiente | F2 |
 | 0009 | Versión en inglés | Pendiente | F3 |
-| 0010 | SEO, imágenes OG, analítica y rendimiento | Pendiente | F3 |
+| [0010](0010-seo/spec.md) | Imagen al compartir, buscadores y analítica | Hecha | F3 |
 | 0011 | Lanzamiento | Pendiente | F4 |
 | [0012](0012-gabinete-3d/spec.md) | El gabinete en 3D · [plan](0012-gabinete-3d/plan.md) | Hecha (prototipo) | F2 |
 | [0013](0013-experiencia-gabinete/spec.md) | Experiencia del gabinete 3D | Hecha | F2 |

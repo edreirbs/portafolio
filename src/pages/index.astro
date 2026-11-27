@@ -24,6 +24,20 @@ const cuentaDe = (direccion: string) => {
   if (u.hostname.endsWith('x.com')) return `@${ruta}`;
   return ruta || u.hostname.replace(/^www\./, '');
 };
+const personaLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: perfil.nombre,
+  jobTitle: perfil.titulo,
+  description: perfil.promesa,
+  url: new URL(url(), Astro.site).href,
+  image: new URL(url('og-portafolio.jpg'), Astro.site).href,
+  address: { '@type': 'PostalAddress', addressLocality: 'Monterrey', addressCountry: 'MX' },
+  alumniOf: { '@type': 'CollegeOrUniversity', name: 'Instituto Politécnico Nacional' },
+  knowsAbout: perfil.competencias,
+  knowsLanguage: perfil.idiomas.map((i) => i.idioma),
+  sameAs: perfil.contacto.map((c) => c.url),
+};
 const anios = (r: (typeof registro)[number]) => {
   const desde = r.data.puestos.map((x) => x.desde).sort()[0]!;
   const hastas = r.data.puestos.map((x) => x.hasta);
@@ -33,6 +47,8 @@ const anios = (r: (typeof registro)[number]) => {
 
 <Base titulo={`${perfil.nombre} · ${perfil.titulo}`} descripcion={perfil.promesa} actual="inicio">
   <Fragment slot="head">
+    <!-- Spec 0010: datos estructurados de la persona para buscadores. -->
+    <script type="application/ld+json" set:html={JSON.stringify(personaLd)} />
     <!-- FR-0014-01 y 06: se elige la vista antes de pintar, para que no parpadee. -->
     <script is:inline>
       (function () {
