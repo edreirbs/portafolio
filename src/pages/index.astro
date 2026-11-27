@@ -13,7 +13,7 @@ import { periodo, periodoAnios } from '../lib/fechas';
 import { url } from '../lib/url';
 
 const P = await portafolio();
-const { perfil, porSeccion, registro, articulos, visibles, linkedin } = P;
+const { perfil, porSeccion, registro, articulos, recursos, visibles, linkedin } = P;
 const ejemplar = P.todas.find((p) => p.data.ejemplar);
 const numero = (s: (typeof visibles)[number]) => visibles.indexOf(s) + 1;
 
@@ -238,6 +238,21 @@ const anios = (r: (typeof registro)[number]) => {
                 </li>
               ))}
             </ol>
+          </>
+        )}
+        {recursos.length > 0 && (
+          <>
+            <h3 class="sp__sub">Recursos abiertos para docentes · edreirobles.com</h3>
+            <ul class="recursos">
+              {recursos.map((r) => (
+                <li>
+                  <a href={r.url} rel="noopener">
+                    {r.titulo}
+                  </a>
+                  <span>{r.descripcion}</span>
+                </li>
+              ))}
+            </ul>
           </>
         )}
       </SeccionPro>

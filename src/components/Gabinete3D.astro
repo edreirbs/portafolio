@@ -11,13 +11,13 @@ interface Props {
   p: Portafolio;
 }
 const { p } = Astro.props;
-const { perfil, todas, porSeccion, registro, articulos, visibles } = p;
+const { perfil, todas, porSeccion, registro, articulos, recursos, visibles } = p;
 const cuenta: Record<Seccion, string> = {
   proyectos: `${porSeccion.proyectos.length} proyectos`,
   titulos: `${porSeccion.titulos.length} piezas`,
   certificaciones: `${porSeccion.certificaciones.length} piezas`,
   experiencia: `${registro.length} lugares`,
-  publicaciones: `${porSeccion.publicaciones.length + articulos.length} textos`,
+  publicaciones: `${porSeccion.publicaciones.length + articulos.length + recursos.length} textos`,
   contacto: `${perfil.contacto.length} redes`,
 };
 const datos = {

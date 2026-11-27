@@ -1123,6 +1123,28 @@ html[data-vista='3d'] .linea__item {
   color: var(--tinta-suave);
 }
 
+/* Recursos abiertos para docentes (spec 0017) */
+.recursos {
+  display: grid;
+  gap: 10px 32px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.recursos li {
+  display: grid;
+  gap: 2px;
+  padding-left: 12px;
+  border-left: 2px solid var(--lacre);
+}
+
+.recursos span {
+  font-size: 0.86rem;
+  color: var(--tinta-suave);
+}
+
 /* Redes y contacto */
 .redes {
   display: grid;

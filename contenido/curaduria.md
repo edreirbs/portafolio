@@ -69,7 +69,7 @@ República Dominicana.
 | 19 artículos de divulgación sobre IA y aprendizaje en LinkedIn (≈36,000 palabras) | 2023 – 2024 | LinkedIn | ✔ Una sola pieza con índice |
 | Podcast *Educación con Ciencia* (#ECC) · YouTube y LinkedIn | 2024 | Anuncios | ◐ Falta liga al canal |
 | *Bootcamp de IA Generativa para profesionales de la educación* · programa propio, 4 ediciones | 2024 | Correos a participantes | ◐ |
-| Recursos de edreirobles.com: 30 estrategias para usar ChatGPT en el aula, Meta Prompter, Matriz Morganov-Heredia | 2023 – 2024 | [edreirobles.com](https://www.edreirobles.com) | ✔ Migrar al gabinete |
+| Recursos de edreirobles.com: 30 estrategias para usar ChatGPT en el aula, Meta Prompter y tres guías más | 2023 – 2024 | [edreirobles.com](https://www.edreirobles.com) | ✔ Publicaciones · Recursos abiertos (spec 0017) |
 
 ## Scientifica · Certificaciones y cursos
 

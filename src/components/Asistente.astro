@@ -5,7 +5,7 @@ import { API_ASISTENTE, AVISO, SUGERENCIAS } from '../lib/asistente';
 import { portafolio } from '../lib/portafolio';
 import { url } from '../lib/url';
 
-const { perfil, todas, articulos } = await portafolio();
+const { perfil, todas, articulos, recursos } = await portafolio();
 const linkedin = perfil.contacto.find((c) => c.etiqueta === 'LinkedIn') ?? perfil.contacto[0]!;
 // Las ligas que el asistente puede mostrar: las del portafolio y su evidencia.
 const hosts = new Set<string>(['edreirbs.github.io']);
@@ -13,6 +13,7 @@ for (const u of [
   ...perfil.contacto.map((c) => c.url),
   ...todas.flatMap((p) => p.data.evidencia.map((e) => e.url).filter((x): x is string => Boolean(x))),
   ...articulos.map((a) => a.url),
+  ...recursos.map((r) => r.url),
 ]) {
   hosts.add(new URL(u).hostname);
 }

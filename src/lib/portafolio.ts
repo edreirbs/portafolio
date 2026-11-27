@@ -28,6 +28,7 @@ export async function portafolio() {
   );
   const registro = await registroOrdenado();
   const articulos = (await getCollection('articulos')).map((a) => a.data).sort((a, b) => b.fecha.localeCompare(a.fecha));
+  const recursos = (await getCollection('recursos')).map((r) => r.data).sort((a, b) => a.orden - b.orden);
 
   // FR-0014-02: una sección sin contenido no aparece.
   const tiene: Record<Seccion, boolean> = {
@@ -35,12 +36,12 @@ export async function portafolio() {
     titulos: porSeccion.titulos.length > 0,
     certificaciones: porSeccion.certificaciones.some((p) => p.data.evidencia.some((e) => e.url)),
     experiencia: registro.length + porSeccion.experiencia.length > 0,
-    publicaciones: porSeccion.publicaciones.length + articulos.length > 0,
+    publicaciones: porSeccion.publicaciones.length + articulos.length + recursos.length > 0,
     contacto: perfil.contacto.length > 0,
   };
   const visibles = SECCIONES.filter((s) => tiene[s]);
   const linkedin = perfil.contacto.find((c) => c.etiqueta === 'LinkedIn') ?? perfil.contacto[0]!;
-  return { perfil, todas, porSeccion, registro, articulos, visibles, linkedin };
+  return { perfil, todas, porSeccion, registro, articulos, recursos, visibles, linkedin };
 }
 
 export type Portafolio = Awaited<ReturnType<typeof portafolio>>;
