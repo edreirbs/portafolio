@@ -316,8 +316,8 @@ export function periodico(nombre: string, titular: string, semilla = 5): Texture
   return textura(c);
 }
 
-/** Diploma en pergamino, con sello de lacre. */
-export function diploma(titulo: string, institucion: string, fecha: string, semilla = 9): Texture {
+/** Diploma en pergamino, con sello de lacre. La frase cambia para los certificados. */
+export function diploma(titulo: string, institucion: string, fecha: string, semilla = 9, frase = 'el grado de'): Texture {
   const w = 700;
   const h = 520;
   const { c, ctx } = lienzo(w, h);
@@ -336,7 +336,7 @@ export function diploma(titulo: string, institucion: string, fecha: string, semi
   ctx.font = `700 44px ${SERIF}`;
   ctx.fillText('Edrei Robles', w / 2, 194);
   ctx.font = `italic 22px ${SERIF}`;
-  ctx.fillText('el grado de', w / 2, 236);
+  ctx.fillText(frase, w / 2, 236);
   ctx.font = `600 34px ${SERIF}`;
   partir(ctx, titulo, w - 120)
     .slice(0, 3)

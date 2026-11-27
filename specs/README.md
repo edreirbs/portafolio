@@ -23,7 +23,7 @@ aprobación, salvo en la constitución (ver su sección de gobierno).
 | [0003](0003-ficha-rapida/spec.md) | Ficha rápida (modo reclutador) y CV | Hecha | F1 |
 | [0004](0004-vestibulo/spec.md) | Vestíbulo · [plan](0004-vestibulo/plan.md) y [tareas](0004-vestibulo/tasks.md) de la F1 | Hecha | F1 |
 | [0005](0005-artificialia/spec.md) | Sala Artificialia (proyectos) | Hecha | F1 |
-| 0006 | Salas Scientifica y Naturalia (credenciales y estudios) | Pendiente | F2 |
+| [0006](0006-certificaciones/spec.md) | Certificaciones verificables | Hecha | F2 |
 | [0007](0007-conferencias/spec.md) | Conferencias y docencia con evidencia | Hecha | F2 |
 | 0008 | Acervo: índice, filtros y búsqueda | Pendiente | F2 |
 | 0009 | Versión en inglés | Pendiente | F3 |
@@ -56,7 +56,7 @@ Ninguna. Edrei delegó todas las decisiones el 2026-11-27; quedan registradas ab
 | 2026-11-27 | **D-10 · Programa de Agentic AI:** sus proyectos entran cuando estén en GitHub, marcados como proyecto del programa. | 0005 |
 | 2026-11-27 | **D-12 · Repos dudosos:** `mapa-red-funciones-ia`, `entrevista` y `cerebro-CREA` quedan fuera. | 0016 |
 | 2026-11-27 | **Publicaciones:** se quedan el artículo académico y los artículos de divulgación. | 0014 |
-| 2026-11-27 | **Certificaciones:** siguen fuera mientras no tengan liga pública de verificación. | 0006 |
+| 2026-11-27 | **Certificaciones:** se publican solo las que tienen liga pública de verificación: hoy, Kaggle × Google e IFE Explora. | 0006 |
 | 2026-11-27 | **Proyectos al centro:** todos los proyectos que valen la pena y ningún objeto de adorno en el gabinete. | Spec 0016 |
 | 2026-11-27 | **Asistente conectado por Claude:** usa el AI Gateway de Netlify mientras no exista la llave propia, con topes diarios más bajos. | Spec 0015, ADR-0003 |
 | 2026-11-20 | Claude crea ramas, commits y PRs y los fusiona sin pedir permiso. | `CLAUDE.md` |

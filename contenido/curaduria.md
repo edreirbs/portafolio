@@ -78,7 +78,7 @@ República Dominicana.
 | Programa de Agentic AI | Johns Hopkins University | 2025 – 2026 | ? Falta nombre exacto y certificado |
 | AI Engineer Core: 3 de 5 competencias acreditadas | Digital NAO × Universidad Tecmilenio | 2024-08 | ? El CV dice "AI Engineer"; la constancia dice 3 de 5 |
 | Claude 101 · Introduction to agent skills · Introduction to subagents | Anthropic Academy | 2026-07 | ◐ Faltan ligas de certificado |
-| 5-Day Gen AI Intensive | Kaggle × Google | 2024-11 | ◐ |
+| 5-Day Gen AI Intensive | Kaggle × Google | 2024-11 | ✔ Insignia pública en Kaggle |
 | Generative AI for Everyone | DeepLearning.AI · Coursera | 2024-01 | ◐ Falta liga de verificación |
 | Instructional Design Foundations and Applications | University of Illinois · Coursera | 2021-12 | ◐ Falta liga de verificación |
 | Scrum Master y Product Owner | Scrum Inc. | 2022-09 | ◐ |
@@ -88,8 +88,9 @@ República Dominicana.
 | Figma esencial | — | — | ◐ Falta emisor |
 | Metodologías de aprendizaje: CBL | — | — | ◐ Falta emisor |
 | Bootcamp para el diseño instruccional online | — | — | ◐ Falta emisor |
-| Desarrollo con IA | BIG school | 2026-06 | ◐ La liga del certificado ya no existe |
+| Desarrollo con IA | BIG school | 2026-06 | ✘ La liga del certificado ya no existe |
 | Introducción al Análisis de Datos en Educación | Universidad de la Ciudad (Argentina) | 2022-08 | ◐ |
+| IFE Explora Summer 2022 (incubación) | Tecnológico de Monterrey · IFE | 2022-11 | ✔ Credencial de Accredible |
 | IA Generativa · Fundamentos de ChatGPT | Santander Open Academy | 2024, 2025 | Acervo |
 
 ## Artificialia · Proyectos
