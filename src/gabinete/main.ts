@@ -1,5 +1,5 @@
-// Specs 0012, 0013 y 0014 · El gabinete en 3D: el estudio de un explorador del siglo XIX,
-// con un mueble por cada sección del portafolio.
+// Specs 0012 a 0016 · El gabinete en 3D: el estudio de un explorador del siglo XIX, con un
+// mueble por cada sección del portafolio y un lugar para cada proyecto. Nada de adornos sueltos.
 import {
   ACESFilmicToneMapping,
   Box3,
@@ -48,6 +48,8 @@ interface PiezaDato {
   objeto?: string;
   url: string;
   evidencia: Evidencia[];
+  /** Spec 0016: la captura del proyecto, para los que cuelgan en el muro. */
+  imagen3d?: string;
 }
 interface SeccionDato { id: string; nombre: string; corto: string; cuenta: string }
 type Accion = 'girar' | 'saltar' | 'balancear' | 'levantar' | 'mirar' | 'luz' | 'penumbra' | 'hora' | 'sentarse' | 'acercar' | 'biblioteca' | 'asistente';
@@ -72,13 +74,12 @@ const OJOS = 1.62;
 // FR-0014-05: cada sección tiene su mueble y su punto de vista.
 const ESTACIONES: Record<string, Estacion> = {
   centro: { nombre: 'Centro del estudio', vista: { cam: [0, OJOS, 3.55], mira: [0, 1.05, -1.6] } },
-  proyectos: { nombre: 'Proyectos', vista: { cam: [0, 1.58, -1.2], mira: [0, 1.08, -3.5] }, atril: [-1.45, 0, -2.75], atrilRot: 0.5 },
+  proyectos: { nombre: 'Proyectos', vista: { cam: [0, 1.62, -0.55], mira: [0, 1.36, -3.9] }, atril: [-0.95, 0, -2.25], atrilRot: 0.35 },
   titulos: { nombre: 'Títulos y diplomas', vista: { cam: [-2.35, 1.6, -1.25], mira: [-4.9, 1.45, -1.25] }, atril: [-3.85, 0, -0.1], atrilRot: 2.2 },
   certificaciones: { nombre: 'Certificaciones y cursos', vista: { cam: [2.15, 1.72, 0.45], mira: [4.4, 1.35, 0.45] }, atril: [3.7, 0, 1.45], atrilRot: -2.1 },
   experiencia: { nombre: 'Experiencia', vista: { cam: [-2.45, 1.62, 1.75], mira: [-4.2, 1.0, 1.45] }, atril: [-3.5, 0, 2.75], atrilRot: 2.1 },
   publicaciones: { nombre: 'Publicaciones', vista: { cam: [2.55, 1.45, -2.2], mira: [4.3, 0.72, -2.2] }, atril: [3.6, 0, -1.05], atrilRot: -2.2 },
   contacto: { nombre: 'Redes y contacto', vista: { cam: [0.3, 1.5, 1.95], mira: [0.05, 0.9, 0.55] } },
-  curiosidades: { nombre: 'Curiosidades', vista: { cam: [2.75, 1.45, 2.6], mira: [4.4, 1.0, 2.85] } },
 };
 
 const reducirMovimiento = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -547,11 +548,11 @@ export async function iniciar() {
   const focos: SpotLight[] = [];
   for (const [x, y, z] of [
     [0, 1.2, -3.4],
+    [-2.65, 1.6, -3.9],
+    [2.65, 1.6, -3.9],
     [-4.8, 1.6, -1.25],
-    [-4.35, 1.3, 2.35],
+    [-4.15, 1.1, 1.4],
     [4.3, 0.7, -2.2],
-    [4.4, 1.2, 0.45],
-    [4.35, 0.95, 2.75],
   ] as Vec3[]) {
     const foco = new SpotLight(0xffc98f, 26, 0, 0.42, 0.7, 1.7);
     foco.position.set(x * 0.55, ALTO - 0.2, z * 0.55 + (z < 0 ? 0.6 : -0.2));
@@ -561,9 +562,6 @@ export async function iniciar() {
   }
   const lampara = new PointLight(0xff9a4a, 2.4, 5, 1.8);
   escena.add(lampara);
-  const luzLinterna = new PointLight(0xffa24f, 0, 3.5, 1.8);
-  escena.add(luzLinterna);
-  const brillo = { lampara: 1, linterna: 0, penumbra: false };
 
   // ── Bucle: el salón se ve mientras llegan los muebles (FR-0012-12) ──
   const items: Item[] = [];
@@ -631,27 +629,17 @@ export async function iniciar() {
     mirada.actualizar(dt, fovBase);
     correr(dt);
     avanzar(anims, dt);
-    const flama = reducirMovimiento ? 0 : Math.sin(ahora * 0.011) * 0.18 + Math.sin(ahora * 0.037) * 0.12;
-    lampara.intensity = (2.4 + flama) * brillo.lampara;
-    luzLinterna.intensity = (1.6 + flama * 0.6) * brillo.linterna;
-    if (esferaGlobo && !reducirMovimiento && !anims.some((a) => a.obj === esferaGlobo)) esferaGlobo.rotation.y += dt * 0.08;
     colocarMarcas();
     renderer.render(escena, camara);
   };
-  let esferaGlobo: Object3D | null = null;
   renderer.setAnimationLoop(tick);
   document.addEventListener('visibilitychange', () => renderer.setAnimationLoop(document.hidden ? null : tick));
 
   // ── Muebles y objetos ──
   const gltf = new GLTFLoader();
   gltf.setMeshoptDecoder(MeshoptDecoder);
-  const modelos = [
-    'vintage_cabinet_01', 'GothicCabinet_01', 'vintage_wooden_drawer_01', 'vintage_grandfather_clock_01', 'ArmChair_01',
-    'treasure_chest', 'vintage_suitcase', 'wooden_table_02', 'vintage_pocket_watch', 'vintage_microscope',
-    'seadogs_compass', 'vintage_binocular', 'marble_bust_01', 'lambis_shell', 'bronze_whale_statue',
-    'book_encyclopedia_set_01', 'fancy_picture_frame_01', 'vintage_oil_lamp', 'lantern_chandelier_01',
-    'antique_ceramic_vase_01', 'Lantern_01',
-  ] as const;
+  // Spec 0016: solo los muebles que sostienen algo del portafolio.
+  const modelos = ['vintage_cabinet_01', 'treasure_chest', 'wooden_table_02', 'vintage_pocket_watch', 'book_encyclopedia_set_01'] as const;
   let cargados = 0;
   const cargar = async (id: string) => {
     const g = await gltf.loadAsync(`${datos.base}gabinete/modelos/${id}.glb`);
@@ -668,7 +656,6 @@ export async function iniciar() {
       for (const mat of (Array.isArray(m.material) ? m.material : [m.material]) as MeshStandardMaterial[]) mat.color?.multiply(new Color(hex));
     });
   entintar(M.wooden_table_02, 0x6a4a36);
-  entintar(M.vintage_wooden_drawer_01, 0x9a7a66);
 
   const poner = <O extends Object3D>(obj: O, pos: Vec3, rotY = 0, escala = 1) => {
     obj.position.set(...pos);
@@ -738,21 +725,7 @@ export async function iniciar() {
   const mesaCentro = poner(M.wooden_table_02, [0, 0, 0.35], 0.1, 1.15);
   const altoMesa = superficie(mesaCentro, 0.25, 0.35) || 0.92;
   registrar(mesaCentro, { tipo: 'estacion', id: 'centro', nombre: 'Mesa del explorador' }, false);
-  const globoT = poner(O.globo(T.globoTerraqueo()), [-0.32, altoMesa, 0.32], 0.4);
-  esferaGlobo = globoT.userData.esfera as Object3D;
-  curiosidad(globoT, 'globo');
-  const cartaMesa = O.cartaExtendida(T.carta(3, 'Mare Incognitum'));
-  cartaMesa.position.set(0.2, altoMesa + 0.003, 0.42);
-  cartaMesa.rotation.z = -0.12;
-  escena.add(cartaMesa);
-  curiosidad(cartaMesa, 'carta');
-  const lamp = poner(M.vintage_oil_lamp, [0.5, altoMesa, 0.18], 0, 0.85);
-  lampara.position.set(0.5, altoMesa + 0.48, 0.18);
-  curiosidad(lamp, 'lampara');
-  curiosidad(poner(M.ArmChair_01, [1.25, 0, 1.15], -2.35, 1.05), 'sillon');
-  const candelabro = poner(M.lantern_chandelier_01, [0, ALTO, 0.3], 0, 1.2);
-  candelabro.traverse((o) => (o.castShadow = false));
-  curiosidad(candelabro, 'candelabro');
+  lampara.position.set(0.3, altoMesa + 0.9, 0.3);
   // FR-0014-05 · Redes y contacto: la correspondencia sobre la mesa
   const cartas = poner(O.correspondencia(datos.redes.map((r, i) => T.sobre(r.etiqueta, r.cuenta, 21 + i))), [0.02, altoMesa + 0.006, 0.66], 0.05);
   registrar(cartas, { tipo: 'estacion', id: 'contacto', nombre: 'Redes y contacto' });
@@ -765,14 +738,32 @@ export async function iniciar() {
   if (document.documentElement.dataset.asistente === 'listo') ponerTelefono();
   else window.addEventListener('asistente:listo', ponerTelefono, { once: true });
 
-  // Atmósfera, también interactiva (FR-0013-02)
-  curiosidad(poner(M.GothicCabinet_01, [-3.35, 0, -3.42], 0, 0.95), 'gabinete-gotico');
-  curiosidad(poner(M.vintage_grandfather_clock_01, [3.4, 0, -3.75], 0, 1.05), 'reloj-pie');
-  curiosidad(poner(M.fancy_picture_frame_01, [4.96, 2.15, 0.45], -Math.PI / 2, 1.7), 'cuadro');
-  curiosidad(poner(M.vintage_suitcase, [-3.4, 0, 3.55], 0.25, 0.85), 'maletas');
-  const linterna = poner(M.Lantern_01, [-3.1, 0.48, 3.5], 0.6, 1.4);
-  luzLinterna.position.set(-3.1, 0.7, 3.5);
-  curiosidad(linterna, 'linterna');
+  // Spec 0016 · Los demás proyectos cuelgan junto a la alacena: su captura enmarcada y su placa.
+  const MUROS: [number, number][] = [[-1.5, 0], [1.5, 0], [-2.55, 0], [2.55, 0], [-3.6, 0], [3.6, 0], [-1.5, 1], [1.5, 1]];
+  const cuadros = piezaPor('cuadro').filter((p) => p.imagen3d);
+  const capturas = await Promise.all(
+    cuadros.map(async (p) => {
+      try {
+        const t = await cargadorTex.loadAsync(p.imagen3d!);
+        t.colorSpace = SRGBColorSpace;
+        t.anisotropy = renderer.capabilities.getMaxAnisotropy();
+        return t;
+      } catch {
+        return null;
+      }
+    }),
+  );
+  cuadros.forEach((p, i) => {
+    const lugar = MUROS[i];
+    const captura = capturas[i];
+    if (!lugar || !captura) return;
+    const [x, fila] = lugar;
+    const cuadro = poner(O.cuadroProyecto(captura, T.placa(p.titulo, 'Proyecto', false), 0.8, 0.5), [x, fila ? 2.45 : 1.62, -3.965]);
+    cuadro.userData.cuadro = true;
+    cuadro.userData.normal = new Vector3(0, 0, 1);
+    cuadro.userData.centro = new Box3().setFromObject(cuadro).getCenter(new Vector3());
+    pieza(cuadro, p);
+  });
 
   // Proyectos: alacena victoriana
   const alacena = poner(M.vintage_cabinet_01, [0, 0, -3.62], 0, 1.05);
@@ -815,9 +806,7 @@ export async function iniciar() {
     pieza(poner(O.diplomaEnmarcado(T.diploma(p.titulo, p.procedencia, p.fecha.slice(0, 4), 9 + i), w, w * 0.74), [-4.96, y, z], Math.PI / 2), p);
   });
 
-  // Experiencia: bitácora abierta junto al busto
-  registrar(poner(O.pedestal(), [-4.35, 0, 2.35], Math.PI / 2), { tipo: 'estacion', id: 'experiencia', nombre: 'Experiencia' }, false);
-  curiosidad(poner(M.marble_bust_01, [-4.35, 1.04, 2.35], Math.PI / 2, 1.2), 'busto');
+  // Experiencia: bitácora abierta
   const bitacora = poner(O.bitacora(T.paginasBitacora('Bitácora', datos.bitacora)), [-4.15, 0, 1.4], Math.PI / 2);
   registrar(bitacora, { tipo: 'estacion', id: 'experiencia', nombre: 'Experiencia' });
 
@@ -828,22 +817,6 @@ export async function iniciar() {
   curiosidad(poner(M.book_encyclopedia_set_01, [4.3, yBaul, -2.5], -Math.PI / 2, 0.62), 'libros');
   const [pRevista] = piezaPor('revista');
   if (pRevista) pieza(poner(O.revista(T.portadaRevista(pRevista.titulo, 'Revista Estilos de Aprendizaje')), [4.25, yBaul, -1.95], -Math.PI / 2 + 0.1), pRevista);
-
-  // Certificaciones y cursos: cajonera con instrumentos
-  const cajonera = poner(M.vintage_wooden_drawer_01, [4.45, 0, 0.45], -Math.PI / 2, 1);
-  registrar(cajonera, { tipo: 'estacion', id: 'certificaciones', nombre: 'Certificaciones y cursos' }, false);
-  const yCaj = superficie(cajonera, 4.45, 0.45) || 1.09;
-  curiosidad(poner(M.vintage_microscope, [4.42, yCaj, 0.05], -Math.PI / 2 - 0.4, 1.3), 'microscopio');
-  curiosidad(poner(M.seadogs_compass, [4.4, yCaj, 0.55], -Math.PI / 2, 1.6), 'brujula');
-  curiosidad(poner(M.vintage_binocular, [4.45, yCaj + 0.03, 0.95], -Math.PI / 2 + 0.6, 1.2), 'binoculares');
-
-  // Mesa de curiosidades
-  const mesaExo = poner(M.wooden_table_02.clone(), [4.35, 0, 2.75], -Math.PI / 2, 1);
-  registrar(mesaExo, { tipo: 'estacion', id: 'curiosidades', nombre: 'Curiosidades' }, false);
-  const yExo = superficie(mesaExo, 4.35, 2.75) || 0.8;
-  curiosidad(poner(M.lambis_shell, [4.3, yExo, 2.45], -1.2, 1.8), 'concha');
-  curiosidad(poner(M.bronze_whale_statue, [4.4, yExo, 2.9], -Math.PI / 2 - 0.5, 0.42), 'ballena');
-  curiosidad(poner(M.antique_ceramic_vase_01, [4.45, yExo, 3.25], 0, 0.9), 'porcelana');
 
   // Atriles con placa de latón: uno por sección visible, llevan a su mueble
   for (const sec of datos.secciones) {
@@ -867,33 +840,20 @@ export async function iniciar() {
     ui.estacion(id);
   };
   const acercarA = (it: Item) => {
-    const centro = new Vector3(0, it.ancla.y, 0.3);
-    const dir = centro.sub(it.ancla).setY(0).normalize();
-    const pos = it.ancla.clone().addScaledVector(dir, 1.05);
-    pos.y = MathUtils.clamp(it.ancla.y + 0.25, 0.9, 2.4);
-    mirada.viajar(pos, it.ancla.clone().setY(it.ancla.y - 0.08));
+    // Un cuadro se mira de frente y a su centro; un objeto, un poco desde arriba.
+    const cuadro = Boolean(it.raiz.userData.cuadro);
+    const objetivo = (it.raiz.userData.centro as Vector3 | undefined) ?? it.ancla;
+    const dir =
+      (it.raiz.userData.normal as Vector3 | undefined)?.clone() ?? new Vector3(0, objetivo.y, 0.3).sub(objetivo).setY(0).normalize();
+    const pos = objetivo.clone().addScaledVector(dir, cuadro ? 1.45 : 1.05);
+    pos.y = MathUtils.clamp(objetivo.y + (cuadro ? 0.02 : 0.25), 0.9, 2.4);
+    mirada.viajar(pos, objetivo.clone().setY(objetivo.y - (cuadro ? 0 : 0.08)));
     ui.estacion('');
   };
   const parteAnimable = (it: Item) => (it.raiz.userData.anima as Object3D | undefined) ?? it.raiz;
   const hacer = (it: Item, accion: Accion) => {
     const obj = parteAnimable(it);
     switch (accion) {
-      case 'luz':
-        if (it.dato.id === 'linterna') brillo.linterna = brillo.linterna ? 0 : 1;
-        else brillo.lampara = brillo.lampara === 1 ? 0.25 : 1;
-        break;
-      case 'penumbra': {
-        brillo.penumbra = !brillo.penumbra;
-        const f = brillo.penumbra ? 0.3 : 1;
-        hemisferio.intensity = 0.42 * f;
-        cenital.intensity = 52 * f;
-        for (const foco of focos) foco.intensity = 26 * (brillo.penumbra ? 0.55 : 1);
-        break;
-      }
-      case 'sentarse':
-        mirada.viajar(new Vector3(1.05, 1.12, 0.95), new Vector3(-0.2, 0.95, 0.1));
-        ui.estacion('');
-        break;
       case 'acercar':
         acercarA(it);
         break;
@@ -932,7 +892,8 @@ export async function iniciar() {
       irA(d.id);
       if (hayPanel(d.id)) ui.abrirSeccion(d.id);
     } else if (d.tipo === 'pieza') {
-      if (estacionActual !== d.estacion) irA(d.estacion);
+      if (it.raiz.userData.cuadro) acercarA(it);
+      else if (estacionActual !== d.estacion) irA(d.estacion);
       animar(anims, parteAnimable(it), d.animacion);
       ui.abrirCedula(d.id);
     } else {

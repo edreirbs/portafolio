@@ -33,6 +33,7 @@ aprobación, salvo en la constitución (ver su sección de gobierno).
 | [0013](0013-experiencia-gabinete/spec.md) | Experiencia del gabinete 3D | Hecha | F2 |
 | [0014](0014-portafolio-profesional/spec.md) | Portafolio profesional dentro del gabinete · [plan](0014-portafolio-profesional/plan.md) | Hecha | F2 |
 | [0015](0015-asistente/spec.md) | Asistente del portafolio · [plan](0015-asistente/plan.md) · [ADR-0003](../docs/adr/0003-asistente-netlify-claude.md) | Hecha | F2 |
+| [0016](0016-proyectos-al-centro/spec.md) | Proyectos al centro: todos los que valen la pena, sin adornos | Hecha | F2 |
 
 ## Decisiones pendientes
 
@@ -42,7 +43,8 @@ Las responde Edrei. Cada una bloquea lo que dice la última columna.
 |---|---|---|---|
 | D-2 | ¿Idiomas? | Español primero; inglés en F3. | 0009 |
 | D-3 | ¿URL? | El dominio propio `edreirobles.com` (hoy en Google Sites) apunta al gabinete; sus recursos migran como piezas. | 0011 |
-| D-4 | ¿Qué repos privados se pueden mostrar? | Como caso de estudio, sin código ni datos de clientes. | 0005 |
+| D-4 | ¿Qué repos privados se pueden mostrar? Hay siete; la lista está en el chat del 2026-11-27. | Como caso de estudio, sin código ni datos de clientes. | 0005, 0016 |
+| D-12 | ¿Son personales y se pueden mostrar `mapa-red-funciones-ia`, `entrevista` y `cerebro-CREA`? | Mostrar los personales; los de otro equipo, solo con su permiso. | 0016 |
 | D-5 | ¿Qué contacto es público? | LinkedIn y un correo dedicado; nada de teléfono. | 0003, 0004 |
 | D-6 | ¿Retrato o ilustración? | Retrato real tratado como grabado, para que encaje con el gabinete. | 0004 |
 | D-7 | ¿La mosca de "Mátala si puedes" es el ejemplar vivo del Vestíbulo? | Sí, en versión ligera que carga al final. | 0004 |
@@ -56,6 +58,7 @@ Las responde Edrei. Cada una bloquea lo que dice la última columna.
 | 2026-11-21 | **D-11 · El gabinete 3D es la portada.** Las secciones profesionales viven dentro del 3D; la vista clásica es la misma página cuando el navegador no puede con el 3D o el visitante la elige. | Spec 0014 |
 | 2026-11-21 | **Redes publicadas:** LinkedIn, GitHub, YouTube, X y edreirobles.com. | Spec 0014 |
 | 2026-11-21 | **Asistente:** Claude Haiku 5.5, límite de USD 1 al mes, servidor en Netlify. | Spec 0015, ADR-0003 |
+| 2026-11-27 | **Proyectos al centro:** todos los proyectos que valen la pena y ningún objeto de adorno en el gabinete. | Spec 0016 |
 | 2026-11-27 | **Asistente conectado por Claude:** usa el AI Gateway de Netlify mientras no exista la llave propia, con topes diarios más bajos. | Spec 0015, ADR-0003 |
 | 2026-11-20 | Claude crea ramas, commits y PRs y los fusiona sin pedir permiso. | `CLAUDE.md` |
 | 2026-11-20 | Alcance: solo lo personal. Nada del trabajo institucional del empleo actual de Edrei: ni sus proyectos, plataformas, métricas ni presentaciones internas. | Constitución, art. VIII |

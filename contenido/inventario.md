@@ -1,5 +1,11 @@
 # Inventario de repositorios
 
+> **Revisión del 2026-11-27 (spec 0016):** `second-brain`, `claude-for-business`, el kit de la
+> Sesión 7 y las simulaciones de física ya se exhiben. `gym-app` queda fuera porque trae datos de
+> otra persona. `mapa-red-funciones-ia`, `entrevista` y `cerebro-CREA` esperan respuesta de Edrei
+> (D-12). Las utilidades menores salen del Acervo. La curaduría vigente está en
+> [la spec 0016](../specs/0016-proyectos-al-centro/spec.md).
+
 Levantado el 2026-11-20 a partir de los repos **públicos** de Edrei: su README y, si existe,
 su página publicada. Los repos privados no se listan aquí porque este repositorio es público
 (ver decisión D-4 en `specs/README.md`).
