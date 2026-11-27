@@ -27,7 +27,8 @@ pública de verificación.
 | Pieza | Emisor | Verificación |
 |---|---|---|
 | Certificate Program in Agentic AI (2026) | Johns Hopkins University · Great Learning | Página de verificación de la universidad |
-| Claude 101 · Introduction to agent skills · Introduction to subagents (2026) | Anthropic Academy | Skilljar |
+| Claude 101 (2026) | Anthropic · Claude Academy | Insignia de Claude Academy |
+| Introduction to agent skills · Introduction to subagents (2026) | Anthropic Academy | Skilljar, mientras siga abierto |
 | 5-Day Gen AI Intensive (2024) | Google · Kaggle | Insignia en el perfil público de Kaggle |
 | Generative AI for Everyone (2024) | DeepLearning.AI · Coursera | `coursera.org/verify` |
 | IFE Explora Summer 2022 | Tecnológico de Monterrey · IFE | Credencial de Accredible |
@@ -43,11 +44,10 @@ pública de verificación.
 
 ## Pendiente: Skilljar cierra en diciembre de 2026
 
-Anthropic cierra Skilljar a principios de diciembre de 2026 y las ligas `verify.skilljar.com`
-pueden dejar de abrir. Edrei importará sus cursos a Claude Academy; después se cambian las tres
-ligas por las de sus insignias, una por pieza (`src/content/piezas/scientifica/`).
-
-Cuando Edrei comparta la liga pública de alguna, entra como pieza nueva sin tocar código.
+Anthropic cierra Skilljar a principios de diciembre de 2026. Claude 101 ya liga a su insignia de
+Claude Academy. *Introduction to agent skills* e *Introduction to subagents* no otorgan insignia
+en Claude Academy: siguen con su liga de Skilljar mientras abra, y salen del portafolio cuando
+deje de abrir (FR-0006-04).
 
 ## Cambios
 
@@ -55,3 +55,4 @@ Cuando Edrei comparta la liga pública de alguna, entra como pieza nueva sin toc
 |---|---|
 | 2026-11-27 | Creada, aprobada y hecha con permiso de Edrei para decidir y publicar. |
 | 2026-11-27 | Edrei consiguió las ligas públicas de Coursera, Anthropic Academy y Johns Hopkins: entran seis certificaciones (ocho en total). El muro del 3D pasa a dos filas de cuatro. |
+| 2026-11-27 | Claude 101 pasa a su insignia de Claude Academy. Los otros dos cursos de Anthropic no tienen insignia: se quedan con Skilljar mientras abra. |

@@ -1,22 +1,22 @@
 ---
 catalogo: SC-2026-001
 titulo: Claude 101
-subtitulo: Curso de Anthropic Academy
+subtitulo: Curso de Anthropic · insignia de Claude Academy
 sala: scientifica
 fecha: 2026-07
-procedencia: Anthropic · Anthropic Academy
+procedencia: Anthropic · Claude Academy
 materiales:
 - Claude
-resumen: Curso introductorio de Anthropic sobre Claude. Certificado de finalización verificable en Skilljar.
+resumen: Curso introductorio de Anthropic sobre Claude. Insignia de finalización verificable en Claude Academy, la plataforma de aprendizaje de Anthropic.
 evidencia:
 - tipo: credencial
-  url: https://verify.skilljar.com/c/enxo7yzx4fgv
-  etiqueta: Verificar el certificado
-  etiqueta_en: Verify the certificate
+  url: https://academy.claude.com/verify/362028558f4733f58f0d0dead61be12c
+  etiqueta: Verificar la insignia
+  etiqueta_en: Verify the badge
 objeto: certificado
 orden: 2
 revisada: 2026-11
 en:
-  subtitulo: Anthropic Academy course
-  resumen: Anthropic's introductory course on Claude. Certificate of completion, verifiable on Skilljar.
+  subtitulo: Anthropic course · Claude Academy badge
+  resumen: Anthropic's introductory course on Claude. Completion badge verifiable on Claude Academy, Anthropic's learning platform.
 ---
