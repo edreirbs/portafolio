@@ -31,6 +31,7 @@ import {
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { mayordomo as crearMayordomo } from './mayordomo';
 import * as T from './texturas';
 import * as O from './objetos';
 
@@ -624,8 +625,8 @@ export async function iniciar() {
     }
   };
 
-  /** Spec 0018: lo que se mueve solo (el mayordomo respira y mira). */
-  const vivos: ((t: number) => void)[] = [];
+  /** Spec 0018: lo que se mueve solo (el mayordomo camina, respira y mira). */
+  const vivos: ((t: number, dt: number) => void)[] = [];
   let previo = performance.now();
   const tick = (ahora: number) => {
     const dt = Math.min(0.05, (ahora - previo) / 1000);
@@ -633,7 +634,7 @@ export async function iniciar() {
     mirada.actualizar(dt, fovBase);
     correr(dt);
     avanzar(anims, dt);
-    for (const vivo of vivos) vivo(ahora / 1000);
+    for (const vivo of vivos) vivo(ahora / 1000, dt);
     colocarMarcas();
     renderer.render(escena, camara);
   };
@@ -735,10 +736,9 @@ export async function iniciar() {
   // FR-0014-05 · Redes y contacto: la correspondencia sobre la mesa
   const cartas = poner(O.correspondencia(datos.redes.map((r, i) => T.sobre(r.etiqueta, r.cuenta, 21 + i))), [0.02, altoMesa + 0.006, 0.66], 0.05);
   registrar(cartas, { tipo: 'estacion', id: 'contacto', nombre: 'Redes y contacto' });
-  // Spec 0018 · FR-0018-06: el mayordomo autómata, siempre junto a la mesa. Al tocarlo abre el asistente.
-  const mayordomo = poner(O.mayordomo(), [-1.08, 0, 0.3], 0.32);
-  curiosidad(mayordomo, 'mayordomo');
-  if (!reducirMovimiento) vivos.push(mayordomo.userData.vivo as (t: number) => void);
+  // Spec 0018 · FR-0018-06: el mayordomo autómata. Al tocarlo abre el asistente; camina contigo (abajo).
+  const mayordomo = poner(crearMayordomo(), [-1.08, 0, 0.3], 0.32, 0.95);
+  const itMayordomo = curiosidad(mayordomo, 'mayordomo')!;
 
   // Spec 0016 · Los demás proyectos cuelgan junto a la alacena: su captura enmarcada y su placa.
   const MUROS: [number, number][] = [[-1.4, 0], [1.4, 0], [-2.3, 0], [2.3, 0], [-3.2, 0], [3.2, 0], [-4.1, 0], [4.1, 0]];
@@ -832,12 +832,186 @@ export async function iniciar() {
   if (pRevista) pieza(poner(O.revista(T.portadaRevista(pRevista.titulo, 'Revista Estilos de Aprendizaje')), [4.25, yBaul, -1.95], -Math.PI / 2 + 0.1), pRevista);
 
   // Atriles con placa de latón: uno por sección visible, llevan a su mueble
+  const atriles: Object3D[] = [];
   for (const sec of datos.secciones) {
     const est = ESTACIONES[sec.id];
     if (!est?.atril) continue;
     const a = poner(O.atrilPlaca(T.placa(sec.nombre, sec.cuenta, false)), est.atril, est.atrilRot ?? 0);
+    atriles.push(a);
     registrar(a, { tipo: 'estacion', id: sec.id, nombre: sec.nombre }, false);
   }
+  // Spec 0018 · FR-0018-10 y 11: el mayordomo acompaña al visitante. Camina hacia donde va, rodea
+  // los muebles y, cuando el visitante se detiene, se queda a su izquierda, a la orilla del encuadre,
+  // mirándolo. Girar la vista no lo mueve.
+  const obstaculos = [mesaCentro, alacena, consola, baul, bitacora, ...atriles].map((o) => new Box3().setFromObject(o).expandByScalar(0.24));
+  const sigue = { pos: new Vector3(), meta: new Vector3(), ancla: new Vector3(), vel: 0, rumbo: 0, atravesar: false };
+  const plano = new Vector3();
+  const lado = new Vector3();
+  const angulo = (a: number) => Math.atan2(Math.sin(a), Math.cos(a));
+  /** Un lugar donde cabe de pie: lejos de las paredes y con aire alrededor de los muebles. */
+  const holgado = (x: number, z: number) =>
+    x > -4.0 && x < 4.0 && z > -2.75 && z < 3.4 && obstaculos.every((b) => x < b.min.x - 0.12 || x > b.max.x + 0.12 || z < b.min.z - 0.12 || z > b.max.z + 0.12);
+  const despejar = (p: Vector3, muebles = true) => {
+    p.x = MathUtils.clamp(p.x, -4.35, 4.35);
+    p.z = MathUtils.clamp(p.z, -3.05, 3.7);
+    if (muebles) for (const b of obstaculos) {
+      if (p.x <= b.min.x || p.x >= b.max.x || p.z <= b.min.z || p.z >= b.max.z) continue;
+      const salidas = [p.x - b.min.x, b.max.x - p.x, p.z - b.min.z, b.max.z - p.z];
+      const i = salidas.indexOf(Math.min(...salidas));
+      if (i === 0) p.x = b.min.x;
+      else if (i === 1) p.x = b.max.x;
+      else if (i === 2) p.z = b.min.z;
+      else p.z = b.max.z;
+    }
+    const dx = p.x - camara.position.x;
+    const dz = p.z - camara.position.z;
+    const d = Math.hypot(dx, dz);
+    if (d < 0.8) {
+      if (d < 1e-3) p.x = camara.position.x - 0.8;
+      else p.set(camara.position.x + (dx / d) * 0.8, 0, camara.position.z + (dz / d) * 0.8);
+    }
+  };
+  const calcularMeta = () => {
+    camara.getWorldDirection(plano);
+    plano.y = 0;
+    if (plano.lengthSq() < 1e-4) plano.set(0, 0, -1);
+    plano.normalize();
+    lado.set(plano.z, 0, -plano.x);
+    const mitad = Math.atan(Math.tan(MathUtils.degToRad(camara.fov) / 2) * camara.aspect);
+    // Lo bastante lejos para verse de cuerpo entero, a la orilla izquierda.
+    const a = Math.min(0.66, mitad * 0.9);
+    const dist = camara.aspect < 1 ? 3.1 : 2.7;
+    sigue.meta.copy(camara.position).addScaledVector(plano, Math.cos(a) * dist).addScaledVector(lado, Math.sin(a) * dist).setY(0);
+    // Si ahí no cabe (rincones, rendijas entre muebles), busca el lugar libre más cercano que no le
+    // estorbe al visitante. Si no hay, se queda detrás de él, fuera del encuadre, nunca enfrente.
+    const ideal = sigue.meta.clone();
+    const buscar = (cx: number, cz: number, minimo: number) => {
+      for (let r = 0; r <= 1.8; r += 0.15) {
+        for (let k = 0; k < (r ? 16 : 1); k++) {
+          const x = cx + Math.cos((k / 16) * Math.PI * 2) * r;
+          const z = cz + Math.sin((k / 16) * Math.PI * 2) * r;
+          if (holgado(x, z) && Math.hypot(x - camara.position.x, z - camara.position.z) >= minimo) {
+            sigue.meta.set(x, 0, z);
+            return true;
+          }
+        }
+      }
+      return false;
+    };
+    if (!holgado(ideal.x, ideal.z) && !buscar(ideal.x, ideal.z, 1.7)) {
+      const atras = camara.position.clone().addScaledVector(plano, -1).addScaledVector(lado, 0.5);
+      if (!buscar(atras.x, atras.z, 0.8)) sigue.meta.copy(ideal);
+    }
+    despejar(sigue.meta);
+  };
+  const cruza = (ax: number, az: number, bx: number, bz: number, b: Box3) => {
+    for (let i = 1; i < 10; i++) {
+      const x = ax + ((bx - ax) * i) / 10;
+      const z = az + ((bz - az) * i) / 10;
+      if (x > b.min.x && x < b.max.x && z > b.min.z && z < b.max.z) return true;
+    }
+    return false;
+  };
+  const libre = (ax: number, az: number, bx: number, bz: number) => obstaculos.every((b) => !cruza(ax, az, bx, bz, b));
+  const dentro = (x: number, z: number) =>
+    x < -4.35 || x > 4.35 || z < -3.05 || z > 3.7 || obstaculos.some((b) => x > b.min.x && x < b.max.x && z > b.min.z && z < b.max.z);
+  /** Esquinas de todos los muebles, un poco por fuera: los puntos por donde se puede rodear. */
+  const esquinas: [number, number][] = obstaculos
+    .flatMap((b): [number, number][] => [
+      [b.min.x - 0.12, b.min.z - 0.12],
+      [b.max.x + 0.12, b.min.z - 0.12],
+      [b.max.x + 0.12, b.max.z + 0.12],
+      [b.min.x - 0.12, b.max.z + 0.12],
+    ])
+    .filter(([x, z]) => !dentro(x, z));
+  /**
+   * Ruta más corta de la posición a la meta entre las esquinas de los muebles (grafo de
+   * visibilidad, Dijkstra). Se calcula al cambiar la meta, no en cada cuadro.
+   */
+  const ruta: Vector3[] = [];
+  const planear = () => {
+    ruta.length = 0;
+    const { pos, meta } = sigue;
+    sigue.atravesar = false;
+    if (libre(pos.x, pos.z, meta.x, meta.z)) {
+      ruta.push(meta.clone());
+      return;
+    }
+    const nodos: [number, number][] = [[pos.x, pos.z], ...esquinas, [meta.x, meta.z]];
+    const n = nodos.length;
+    const dist = new Array<number>(n).fill(Infinity);
+    const previo = new Array<number>(n).fill(-1);
+    const hecho = new Array<boolean>(n).fill(false);
+    dist[0] = 0;
+    for (let k = 0; k < n; k++) {
+      let u = -1;
+      for (let i = 0; i < n; i++) if (!hecho[i] && (u < 0 || dist[i]! < dist[u]!)) u = i;
+      if (u < 0 || dist[u] === Infinity || u === n - 1) break;
+      hecho[u] = true;
+      const [ax, az] = nodos[u]!;
+      for (let v = 0; v < n; v++) {
+        if (hecho[v]) continue;
+        const [bx, bz] = nodos[v]!;
+        const nd = dist[u]! + Math.hypot(bx - ax, bz - az);
+        if (nd < dist[v]! && libre(ax, az, bx, bz)) {
+          dist[v] = nd;
+          previo[v] = u;
+        }
+      }
+    }
+    if (dist[n - 1] === Infinity) {
+      // Sin ruta posible: mejor pasar de largo que quedarse atorado.
+      sigue.atravesar = true;
+      ruta.push(meta.clone());
+      return;
+    }
+    for (let v = n - 1; v > 0; v = previo[v]!) ruta.unshift(new Vector3(nodos[v]![0], 0, nodos[v]![1]));
+  };
+  calcularMeta();
+  sigue.pos.copy(sigue.meta);
+  planear();
+  sigue.ancla.copy(camara.position);
+  sigue.rumbo = Math.atan2(camara.position.x - sigue.pos.x, camara.position.z - sigue.pos.z);
+  const actualizarMayordomo = mayordomo.userData.actualizar as (dt: number, t: number, v: number, giro: number) => void;
+  vivos.push((t, dt) => {
+    // Solo cuenta moverse: girar la vista no cambia su lugar (FR-0018-11).
+    if (camara.position.distanceToSquared(sigue.ancla) > 0.09) {
+      sigue.ancla.copy(camara.position);
+      calcularMeta();
+      planear();
+    }
+    while (ruta.length > 1 && Math.hypot(ruta[0]!.x - sigue.pos.x, ruta[0]!.z - sigue.pos.z) < 0.06) ruta.shift();
+    const destino = ruta[0] ?? sigue.meta;
+    const dx = destino.x - sigue.pos.x;
+    const dz = destino.z - sigue.pos.z;
+    const d = Math.hypot(dx, dz);
+    const falta = Math.hypot(sigue.meta.x - sigue.pos.x, sigue.meta.z - sigue.pos.z);
+    if (reducirMovimiento) {
+      // FR-0018-08: sin animación; aparece a tu lado cuando llegas.
+      if (!mirada.viajando) sigue.pos.copy(sigue.meta);
+      sigue.vel = 0;
+    } else {
+      const deseada = falta > 0.06 ? Math.min(1.6, 0.5 + falta * 0.8) : 0;
+      sigue.vel += (deseada - sigue.vel) * Math.min(1, dt * 3.5);
+      if (d > 1e-3 && sigue.vel > 0.01) {
+        const paso = Math.min(d, sigue.vel * dt);
+        sigue.pos.x += (dx / d) * paso;
+        sigue.pos.z += (dz / d) * paso;
+      }
+      despejar(sigue.pos, !sigue.atravesar);
+    }
+    const haciaTi = Math.atan2(camara.position.x - sigue.pos.x, camara.position.z - sigue.pos.z);
+    const camina = sigue.vel > 0.12 && d > 0.02;
+    const objetivo = camina ? Math.atan2(dx, dz) : haciaTi;
+    sigue.rumbo += angulo(objetivo - sigue.rumbo) * Math.min(1, dt * (reducirMovimiento ? 60 : 4));
+    mayordomo.position.set(sigue.pos.x, 0, sigue.pos.z);
+    mayordomo.rotation.y = sigue.rumbo;
+    const giro = MathUtils.clamp(angulo(haciaTi - sigue.rumbo), -0.7, 0.7) * (camina ? 0.3 : 1);
+    if (reducirMovimiento) actualizarMayordomo(0, 0, 0, 0);
+    else actualizarMayordomo(dt, t, sigue.vel, giro);
+    itMayordomo.ancla.set(sigue.pos.x, 1.95, sigue.pos.z);
+  });
+
   const hayPanel = (id: string) => datos.secciones.some((x) => x.id === id);
   /** Recorrido con las flechas de la barra: el centro y luego las secciones en orden. */
   const RECORRIDO = ['centro', ...datos.secciones.map((x) => x.id)];
@@ -1121,5 +1295,5 @@ export async function iniciar() {
   ui.abrirGuia();
   desdeAncla();
   // Para pruebas automáticas
-  (window as unknown as { __gabinete?: unknown }).__gabinete = { irA, elegir, items, escena, camara, mirada };
+  (window as unknown as { __gabinete?: unknown }).__gabinete = { irA, elegir, items, escena, camara, mirada, sigue, obstaculos, ruta };
 }
